@@ -1,0 +1,29 @@
+<div class="media-list-item" data-id="${name}">
+    <div class="media-header">
+        <input type="checkbox"
+               data-id="${name}"
+               data-dojo-attach-point="checkbox"
+               data-dojo-type="dijit/form/CheckBox"/>
+        <label for="chb_1">${name}</label>
+    </div>
+    <div class="media-toolbar">
+
+        <div class="type">
+            {{#if image}}
+            <div class="icon-picture icon"></div>
+            {{else}}
+            <div class="icon-video icon"></div>
+            {{/if}}
+        </div>
+
+            <div class="icon-zoom-in icon"
+                 data-dojo-attach-point="zoomToLayerIcon"></div>
+
+        <!--<div class="icon-zoom-in icon"-->
+        <!--data-dojo-attach-point="zoomToLayerIcon"></div>-->
+        <!--<div data-dojo-type="dijit/form/ToggleButton"-->
+        <!--data-dojo-props="checked: false"-->
+        <!--disabled="disabled"-->
+        <!--data-dojo-attach-point="showLastPoint"></div>-->
+    </div>
+</div>
