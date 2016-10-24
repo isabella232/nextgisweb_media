@@ -8,7 +8,6 @@ from nextgisweb.resource import Widget
 from nextgisweb.env import env
 from nextgisweb.object_widget import ObjectWidget
 from nextgisweb.resource.model import Resource
-from .util import _
 from api import *
 
 
@@ -26,3 +25,7 @@ def setup_pyramid(comp, config):
     config.add_route(
         'api.media.items', '/api/media/items'
     ).add_view(get_media_items, renderer='json')
+
+    config.add_route(
+        'api.media.layer.corners.update', '/api/media/layer/corners'
+    ).add_view(update_corners_layer, renderer='json')
