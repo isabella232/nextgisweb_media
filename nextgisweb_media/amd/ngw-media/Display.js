@@ -54,32 +54,7 @@ define([
         },
 
         _layerVisibilityChangedHandler: function (mediaListItem, visibility) {
-            var layerId, filter;
-
-            layerId = mediaListItem.id;
-            if (visibility) {
-                var imageUrl = 'http://www.lib.utexas.edu/maps/historical/newark_nj_1922.jpg',
-                    imageBounds = [[40.712216, -74.22655], [40.773941, -74.12544]];
-                var layer = new L.DistortableCanvasOverlay(imageUrl, imageBounds);
-                layer.addTo(this.map._map);
-                // this._standby.show();
-                // filter = this.tracksPanel.getFilter();
-                // this.map.addTrackLayer(layerId, filter, {
-                //     displayName: mediaListItem.displayName,
-                //     color: mediaListItem.color,
-                //     zIndex: mediaListItem.zIndex
-                // }).then(lang.hitch(this, function () {
-                //     this.map.highlightLastPoint(layerId, mediaListItem.isShowLastPoint());
-                //     this.updateTracksTable();
-                //     topic.publish('/tracker/map/zoom/to/layer', mediaListItem.id);
-                //     mediaListItem.enableShowLastPoint();
-                //     this._standby.hide();
-                // }));
-            } else {
-                // mediaListItem.disableShowLastPoint();
-                // this.map.removeTrackLayer(layerId);
-                // this.updateTracksTable();
-            }
+            mediaListItem.toggleLayer(visibility);
         },
 
         updateTracksTable: function () {

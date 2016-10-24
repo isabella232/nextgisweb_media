@@ -25,7 +25,9 @@ define([
             declare.safeMixin(this, options);
         },
 
-        initialize: function () {
+        _map: null,
+        initialize: function (map) {
+            this._map = map;
             this.loadMedia();
         },
 
@@ -39,8 +41,11 @@ define([
         renderMediaItems: function (mediaItems) {
             var mediaListItem;
             array.forEach(mediaItems, function (mediaItemInfo) {
-                // trackLayerInfo.zIndex = i + 10;
-                mediaListItem = new MediaListItem(mediaItemInfo);
+                mediaListItem = new MediaListItem({
+                    mediaItemInfo: mediaItemInfo,
+                    map: this._map,
+                    ngwServiceFacade: this.ngwServiceFacade
+                });
                 mediaListItem.placeAt(this.domNode, 'first');
                 this.bindEvents(mediaListItem);
                 this._mediaItems.push(mediaListItem);
@@ -51,10 +56,6 @@ define([
             on(mediaListItem, 'change', lang.hitch(this, function () {
                 topic.publish('/media/layer/visibility/change', mediaListItem,
                     mediaListItem.checkbox.checked);
-            }));
-
-            on(mediaListItem.zoomToLayerIcon, 'click', lang.hitch(this, function () {
-                topic.publish('/tracker/map/zoom/to/layer', trackListItem.id);
             }));
         },
 

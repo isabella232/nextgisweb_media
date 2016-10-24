@@ -1,0 +1,25 @@
+div.media-toolbar.disabled {
+    opacity: 0.5;
+}
+
+div.media-toolbar div.icon {
+    display: inline-block;
+    color: #768092;
+}
+
+div.media-toolbar div.icon-zoom-in,
+div.media-toolbar div.icon-adjust {
+    cursor: pointer;
+}
+
+div.media-toolbar span.dijitReset.dijitStretch.dijitButtonContents {
+    display: none;
+}
+
+div.media-toolbar .dijitToggleButtonChecked span.dijitButtonNode {
+    background-color: #1385F2;
+}
+
+div.media-toolbar span.dijitDisabled span.dijitButtonNode {
+    background-color: #EAEAEA;
+}

@@ -1,29 +1,15 @@
-<div class="media-list-item" data-id="${name}">
+<div class="media-list-item">
     <div class="media-header">
         <input type="checkbox"
-               data-id="${name}"
                data-dojo-attach-point="checkbox"
                data-dojo-type="dijit/form/CheckBox"/>
-        <label for="chb_1">${name}</label>
+        <label for="chb_1">${mediaItemInfo.name}</label>
     </div>
-    <div class="media-toolbar">
+    <div data-dojo-type="ngw-media/VideoControls"
+         data-dojo-attach-point="videoControls"
+         data-dojo-props="mediaListItem: this"></div>
 
-        <div class="type">
-            {{#if image}}
-            <div class="icon-picture icon"></div>
-            {{else}}
-            <div class="icon-video icon"></div>
-            {{/if}}
-        </div>
-
-            <div class="icon-zoom-in icon"
-                 data-dojo-attach-point="zoomToLayerIcon"></div>
-
-        <!--<div class="icon-zoom-in icon"-->
-        <!--data-dojo-attach-point="zoomToLayerIcon"></div>-->
-        <!--<div data-dojo-type="dijit/form/ToggleButton"-->
-        <!--data-dojo-props="checked: false"-->
-        <!--disabled="disabled"-->
-        <!--data-dojo-attach-point="showLastPoint"></div>-->
-    </div>
+    <div data-dojo-type="ngw-media/MediaControls"
+         data-dojo-attach-point="mediaControls"
+         data-dojo-props="mediaListItem: this"></div>
 </div>

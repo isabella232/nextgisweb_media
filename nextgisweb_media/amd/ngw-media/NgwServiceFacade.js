@@ -16,6 +16,7 @@ define([
         GET_ALL_FEATURES: new dtl.Template('/api/resource/{{resourceId}}/feature/', true),
         GET_RESOURCE: new dtl.Template('/api/resource/{{resourceId}}', true),
         GET_MEDIA_LIST: '/api/media/items',
+        UPDATE_MEDIA_LAYER_CORNERS: '/api/media/layer/corners',
 
         ngwApplicationUrl: null,
 
@@ -46,6 +47,16 @@ define([
         getMediaList: function () {
             return xhr.get(this.GET_MEDIA_LIST, {
                 handleAs: 'json'
+            });
+        },
+
+        updateCorners: function (layerName, corners) {
+            return xhr.post(this.UPDATE_MEDIA_LAYER_CORNERS, {
+                handleAs: 'json',
+                data: {
+                    name: layerName,
+                    corners: JSON.stringify(corners)
+                }
             });
         }
     });

@@ -1,6 +1,0 @@
-@charset "UTF-8";
-
- 
-.icon-zoom-in:before { content: '\e750'; } /* '' */
-.icon-picture:before { content: '🌄'; } /* '\1f304' */
-.icon-video:before { content: '🎬'; } /* '\1f3ac' */

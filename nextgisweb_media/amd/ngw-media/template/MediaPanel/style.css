@@ -1,0 +1,30 @@
+div.media-panel div.media-list {
+    position: absolute;
+    left: 5px;
+    right: 5px;
+}
+
+div.media-panel div.media-list-item {
+    width: 100%;
+    box-sizing: border-box;
+    border: solid 1px #B5BCC7;
+    padding: 5px;
+    margin-top: 5px;
+    background-color: #FAFAFA;
+    overflow: hidden;
+}
+
+div.media-panel div.media-list-item div.media-header {
+    padding-bottom: 5px;
+    margin-bottom: 2px;
+}
+
+div.media-panel div.media-list-item div.media-toolbar {
+    text-align: left;
+    border-top: solid 1px #D9DCE1;
+}
+
+div.media-panel div.media-list-item div.media-toolbar div.type {
+    display: inline-block;
+    text-align: left;
+}

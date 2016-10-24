@@ -1,0 +1,39 @@
+<div class="media-toolbar media-controls disabled">
+    <div class="type">
+        {{#if mediaType.image}}
+        <div class="icon-picture icon"></div>
+        {{/if}}
+        {{#if mediaType.video}}
+        <div class="icon-video icon"></div>
+        {{/if}}
+    </div>
+
+    <div data-dojo-type="dijit/form/Button"
+         data-dojo-props=""
+         disabled="disabled"
+         data-dojo-attach-point="zoomToLayerButton"></div>
+
+    <div data-dojo-type="dijit/form/ToggleButton"
+         data-dojo-props="checked: false, 'class': 'transparency'"
+         disabled="disabled"
+         data-dojo-attach-point="transparencyButton"></div>
+
+    <div data-dojo-type="dijit/form/ToggleButton"
+         data-dojo-props="checked: false, 'class': 'rotate'"
+         disabled="disabled"
+         data-dojo-attach-point="rotateButton"></div>
+
+    <div data-dojo-type="dijit/form/Button"
+         data-dojo-props=""
+         disabled="disabled"
+         data-dojo-attach-point="resetButton"></div>
+
+    <div data-dojo-type="dijit/form/Button"
+         data-dojo-props=""
+         disabled="disabled"
+         data-dojo-attach-point="saveButton"></div>
+</div>
+
+
+
+

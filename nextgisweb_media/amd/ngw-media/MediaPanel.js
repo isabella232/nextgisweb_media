@@ -9,11 +9,10 @@ define([
     'dijit/_WidgetsInTemplateMixin',
     'ngw-pyramid/i18n!webmap',
     'ngw-pyramid/hbs-i18n',
-    'dojo/text!./template/MediaPanel.hbs',
+    'dojo/text!./template/MediaPanel/MediaPanel.hbs',
     'dijit/form/DateTextBox',
     'ngw-media/MediaList',
-    'xstyle/css!' + ngwConfig.amdUrl + 'ngw-media/template/resources/MediaPanel.css',
-    'xstyle/css!' + ngwConfig.amdUrl + 'ngw-media/template/resources/css/fontello.css'
+    'xstyle/css!' + ngwConfig.amdUrl + 'ngw-media/template/MediaPanel/style.css'
 ], function (declare, lang, on, topic, ready, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
              i18n, hbsI18n, template) {
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
@@ -23,7 +22,7 @@ define([
             declare.safeMixin(this, options);
 
             ready(lang.hitch(this, function () {
-                this.mediaList.initialize();
+                this.mediaList.initialize(this.display.map);
                 this._bindEvents();
             }));
         },
