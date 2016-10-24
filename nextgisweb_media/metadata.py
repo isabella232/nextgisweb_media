@@ -15,10 +15,12 @@ class Media(Base):
     width = Column(Integer)
     height = Column(Integer)
     type = Column(types.Enum('video', 'image'), nullable=False)
-    transform = Column(Text)
+    corners = Column(Text)
     lat = Column(Float)
     lon = Column(Float)
     mime = Column(Text)
+    fps = Column(Integer)
+    duration = Column(Integer)
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -26,7 +28,7 @@ class Media(Base):
 path_to_db = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'media_metadata.db')
 engine = create_engine('sqlite:///' + path_to_db)
 
-Base.metadata.drop_all(engine)
+# Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
 
 Base.metadata.bind = engine
@@ -45,6 +47,7 @@ for filename in os.listdir(media_files_dir):
         file_path = os.path.join(media_files_dir, filename)
         mime = magic.from_file(file_path, mime=True)
         mime_type = mime.split('/')[0]
+        fps, duration = None, None
         if mime_type == 'image':
             with Image.open(file_path) as im:
                 width, height = im.size
@@ -52,6 +55,8 @@ for filename in os.listdir(media_files_dir):
             cap = cv2.VideoCapture(file_path)
             width = cap.get(cv2.cv.CV_CAP_PROP_FRAME_WIDTH)
             height = cap.get(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT)
+            fps = int(cap.get(cv2.cv.CV_CAP_PROP_FPS))
+            duration = int(cap.get(cv2.cv.CV_CAP_PROP_FRAME_COUNT) / fps)
         else:
             raise Exception('Type "' + mime_type + '" is not supported.')
         media = Media(
@@ -59,7 +64,9 @@ for filename in os.listdir(media_files_dir):
             width=width,
             height=height,
             type=mime_type,
-            mime=mime
+            mime=mime,
+            fps=fps,
+            duration=duration
         )
         session.add(media)
 session.commit()
