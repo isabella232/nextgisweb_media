@@ -45,7 +45,7 @@ define([
         },
 
         getMediaList: function () {
-            return xhr.get(this.GET_MEDIA_LIST, {
+            return xhr.get(this.ngwApplicationUrl + this.GET_MEDIA_LIST, {
                 handleAs: 'json'
             });
         },
