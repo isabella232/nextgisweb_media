@@ -1,7 +1,11582 @@
-!function(a,b,c){function d(){var b=a.L;e.noConflict=function(){return a.L=b,this},a.L=e}var e={version:"1.0.1"};"object"==typeof module&&"object"==typeof module.exports?module.exports=e:"function"==typeof define&&define.amd&&define(e),"undefined"!=typeof a&&d(),e.Util={extend:function(a){var b,c,d,e;for(c=1,d=arguments.length;c<d;c++){e=arguments[c];for(b in e)a[b]=e[b]}return a},create:Object.create||function(){function a(){}return function(b){return a.prototype=b,new a}}(),bind:function(a,b){var c=Array.prototype.slice;if(a.bind)return a.bind.apply(a,c.call(arguments,1));var d=c.call(arguments,2);return function(){return a.apply(b,d.length?d.concat(c.call(arguments)):arguments)}},stamp:function(a){return a._leaflet_id=a._leaflet_id||++e.Util.lastId,a._leaflet_id},lastId:0,throttle:function(a,b,c){var d,e,f,g;return g=function(){d=!1,e&&(f.apply(c,e),e=!1)},f=function(){d?e=arguments:(a.apply(c,arguments),setTimeout(g,b),d=!0)}},wrapNum:function(a,b,c){var d=b[1],e=b[0],f=d-e;return a===d&&c?a:((a-e)%f+f)%f+e},falseFn:function(){return!1},formatNum:function(a,b){var c=Math.pow(10,b||5);return Math.round(a*c)/c},trim:function(a){return a.trim?a.trim():a.replace(/^\s+|\s+$/g,"")},splitWords:function(a){return e.Util.trim(a).split(/\s+/)},setOptions:function(a,b){a.hasOwnProperty("options")||(a.options=a.options?e.Util.create(a.options):{});for(var c in b)a.options[c]=b[c];return a.options},getParamString:function(a,b,c){var d=[];for(var e in a)d.push(encodeURIComponent(c?e.toUpperCase():e)+"="+encodeURIComponent(a[e]));return(b&&b.indexOf("?")!==-1?"&":"?")+d.join("&")},template:function(a,b){return a.replace(e.Util.templateRe,function(a,d){var e=b[d];if(e===c)throw new Error("No value provided for variable "+a);return"function"==typeof e&&(e=e(b)),e})},templateRe:/\{ *([\w_\-]+) *\}/g,isArray:Array.isArray||function(a){return"[object Array]"===Object.prototype.toString.call(a)},indexOf:function(a,b){for(var c=0;c<a.length;c++)if(a[c]===b)return c;return-1},emptyImageUrl:"data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="},function(){function b(b){return a["webkit"+b]||a["moz"+b]||a["ms"+b]}function c(b){var c=+new Date,e=Math.max(0,16-(c-d));return d=c+e,a.setTimeout(b,e)}var d=0,f=a.requestAnimationFrame||b("RequestAnimationFrame")||c,g=a.cancelAnimationFrame||b("CancelAnimationFrame")||b("CancelRequestAnimationFrame")||function(b){a.clearTimeout(b)};e.Util.requestAnimFrame=function(b,d,g){return g&&f===c?void b.call(d):f.call(a,e.bind(b,d))},e.Util.cancelAnimFrame=function(b){b&&g.call(a,b)}}(),e.extend=e.Util.extend,e.bind=e.Util.bind,e.stamp=e.Util.stamp,e.setOptions=e.Util.setOptions,e.Class=function(){},e.Class.extend=function(a){var b=function(){this.initialize&&this.initialize.apply(this,arguments),this.callInitHooks()},c=b.__super__=this.prototype,d=e.Util.create(c);d.constructor=b,b.prototype=d;for(var f in this)this.hasOwnProperty(f)&&"prototype"!==f&&(b[f]=this[f]);return a.statics&&(e.extend(b,a.statics),delete a.statics),a.includes&&(e.Util.extend.apply(null,[d].concat(a.includes)),delete a.includes),d.options&&(a.options=e.Util.extend(e.Util.create(d.options),a.options)),e.extend(d,a),d._initHooks=[],d.callInitHooks=function(){if(!this._initHooksCalled){c.callInitHooks&&c.callInitHooks.call(this),this._initHooksCalled=!0;for(var a=0,b=d._initHooks.length;a<b;a++)d._initHooks[a].call(this)}},b},e.Class.include=function(a){return e.extend(this.prototype,a),this},e.Class.mergeOptions=function(a){return e.extend(this.prototype.options,a),this},e.Class.addInitHook=function(a){var b=Array.prototype.slice.call(arguments,1),c="function"==typeof a?a:function(){this[a].apply(this,b)};return this.prototype._initHooks=this.prototype._initHooks||[],this.prototype._initHooks.push(c),this},e.Evented=e.Class.extend({on:function(a,b,c){if("object"==typeof a)for(var d in a)this._on(d,a[d],b);else{a=e.Util.splitWords(a);for(var f=0,g=a.length;f<g;f++)this._on(a[f],b,c)}return this},off:function(a,b,c){if(a)if("object"==typeof a)for(var d in a)this._off(d,a[d],b);else{a=e.Util.splitWords(a);for(var f=0,g=a.length;f<g;f++)this._off(a[f],b,c)}else delete this._events;return this},_on:function(a,b,d){this._events=this._events||{};var e=this._events[a];e||(e=[],this._events[a]=e),d===this&&(d=c);for(var f={fn:b,ctx:d},g=e,h=0,i=g.length;h<i;h++)if(g[h].fn===b&&g[h].ctx===d)return;g.push(f),e.count++},_off:function(a,b,d){var f,g,h;if(this._events&&(f=this._events[a])){if(!b){for(g=0,h=f.length;g<h;g++)f[g].fn=e.Util.falseFn;return void delete this._events[a]}if(d===this&&(d=c),f)for(g=0,h=f.length;g<h;g++){var i=f[g];if(i.ctx===d&&i.fn===b)return i.fn=e.Util.falseFn,this._firingCount&&(this._events[a]=f=f.slice()),void f.splice(g,1)}}},fire:function(a,b,c){if(!this.listens(a,c))return this;var d=e.Util.extend({},b,{type:a,target:this});if(this._events){var f=this._events[a];if(f){this._firingCount=this._firingCount+1||1;for(var g=0,h=f.length;g<h;g++){var i=f[g];i.fn.call(i.ctx||this,d)}this._firingCount--}}return c&&this._propagateEvent(d),this},listens:function(a,b){var c=this._events&&this._events[a];if(c&&c.length)return!0;if(b)for(var d in this._eventParents)if(this._eventParents[d].listens(a,b))return!0;return!1},once:function(a,b,c){if("object"==typeof a){for(var d in a)this.once(d,a[d],b);return this}var f=e.bind(function(){this.off(a,b,c).off(a,f,c)},this);return this.on(a,b,c).on(a,f,c)},addEventParent:function(a){return this._eventParents=this._eventParents||{},this._eventParents[e.stamp(a)]=a,this},removeEventParent:function(a){return this._eventParents&&delete this._eventParents[e.stamp(a)],this},_propagateEvent:function(a){for(var b in this._eventParents)this._eventParents[b].fire(a.type,e.extend({layer:a.target},a),!0)}});var f=e.Evented.prototype;f.addEventListener=f.on,f.removeEventListener=f.clearAllEventListeners=f.off,f.addOneTimeEventListener=f.once,f.fireEvent=f.fire,f.hasEventListeners=f.listens,e.Mixin={Events:f},function(){var c=navigator.userAgent.toLowerCase(),d=b.documentElement,f="ActiveXObject"in a,g=c.indexOf("webkit")!==-1,h=c.indexOf("phantom")!==-1,i=c.search("android [23]")!==-1,j=c.indexOf("chrome")!==-1,k=c.indexOf("gecko")!==-1&&!g&&!a.opera&&!f,l=0===navigator.platform.indexOf("Win"),m="undefined"!=typeof orientation||c.indexOf("mobile")!==-1,n=!a.PointerEvent&&a.MSPointerEvent,o=a.PointerEvent||n,p=f&&"transition"in d.style,q="WebKitCSSMatrix"in a&&"m11"in new a.WebKitCSSMatrix&&!i,r="MozPerspective"in d.style,s="OTransition"in d.style,t=!a.L_NO_TOUCH&&(o||"ontouchstart"in a||a.DocumentTouch&&b instanceof a.DocumentTouch);e.Browser={ie:f,ielt9:f&&!b.addEventListener,edge:"msLaunchUri"in navigator&&!("documentMode"in b),webkit:g,gecko:k,android:c.indexOf("android")!==-1,android23:i,chrome:j,safari:!j&&c.indexOf("safari")!==-1,win:l,ie3d:p,webkit3d:q,gecko3d:r,opera12:s,any3d:!a.L_DISABLE_3D&&(p||q||r)&&!s&&!h,mobile:m,mobileWebkit:m&&g,mobileWebkit3d:m&&q,mobileOpera:m&&a.opera,mobileGecko:m&&k,touch:!!t,msPointer:!!n,pointer:!!o,retina:(a.devicePixelRatio||a.screen.deviceXDPI/a.screen.logicalXDPI)>1}}(),e.Point=function(a,b,c){this.x=c?Math.round(a):a,this.y=c?Math.round(b):b},e.Point.prototype={clone:function(){return new e.Point(this.x,this.y)},add:function(a){return this.clone()._add(e.point(a))},_add:function(a){return this.x+=a.x,this.y+=a.y,this},subtract:function(a){return this.clone()._subtract(e.point(a))},_subtract:function(a){return this.x-=a.x,this.y-=a.y,this},divideBy:function(a){return this.clone()._divideBy(a)},_divideBy:function(a){return this.x/=a,this.y/=a,this},multiplyBy:function(a){return this.clone()._multiplyBy(a)},_multiplyBy:function(a){return this.x*=a,this.y*=a,this},scaleBy:function(a){return new e.Point(this.x*a.x,this.y*a.y)},unscaleBy:function(a){return new e.Point(this.x/a.x,this.y/a.y)},round:function(){return this.clone()._round()},_round:function(){return this.x=Math.round(this.x),this.y=Math.round(this.y),this},floor:function(){return this.clone()._floor()},_floor:function(){return this.x=Math.floor(this.x),this.y=Math.floor(this.y),this},ceil:function(){return this.clone()._ceil()},_ceil:function(){return this.x=Math.ceil(this.x),this.y=Math.ceil(this.y),this},distanceTo:function(a){a=e.point(a);var b=a.x-this.x,c=a.y-this.y;return Math.sqrt(b*b+c*c)},equals:function(a){return a=e.point(a),a.x===this.x&&a.y===this.y},contains:function(a){return a=e.point(a),Math.abs(a.x)<=Math.abs(this.x)&&Math.abs(a.y)<=Math.abs(this.y)},toString:function(){return"Point("+e.Util.formatNum(this.x)+", "+e.Util.formatNum(this.y)+")"}},e.point=function(a,b,d){return a instanceof e.Point?a:e.Util.isArray(a)?new e.Point(a[0],a[1]):a===c||null===a?a:"object"==typeof a&&"x"in a&&"y"in a?new e.Point(a.x,a.y):new e.Point(a,b,d)},e.Bounds=function(a,b){if(a)for(var c=b?[a,b]:a,d=0,e=c.length;d<e;d++)this.extend(c[d])},e.Bounds.prototype={extend:function(a){return a=e.point(a),this.min||this.max?(this.min.x=Math.min(a.x,this.min.x),this.max.x=Math.max(a.x,this.max.x),this.min.y=Math.min(a.y,this.min.y),this.max.y=Math.max(a.y,this.max.y)):(this.min=a.clone(),this.max=a.clone()),this},getCenter:function(a){return new e.Point((this.min.x+this.max.x)/2,(this.min.y+this.max.y)/2,a)},getBottomLeft:function(){return new e.Point(this.min.x,this.max.y)},getTopRight:function(){return new e.Point(this.max.x,this.min.y)},getSize:function(){return this.max.subtract(this.min)},contains:function(a){var b,c;return a="number"==typeof a[0]||a instanceof e.Point?e.point(a):e.bounds(a),a instanceof e.Bounds?(b=a.min,c=a.max):b=c=a,b.x>=this.min.x&&c.x<=this.max.x&&b.y>=this.min.y&&c.y<=this.max.y},intersects:function(a){a=e.bounds(a);var b=this.min,c=this.max,d=a.min,f=a.max,g=f.x>=b.x&&d.x<=c.x,h=f.y>=b.y&&d.y<=c.y;return g&&h},overlaps:function(a){a=e.bounds(a);var b=this.min,c=this.max,d=a.min,f=a.max,g=f.x>b.x&&d.x<c.x,h=f.y>b.y&&d.y<c.y;return g&&h},isValid:function(){return!(!this.min||!this.max)}},e.bounds=function(a,b){return!a||a instanceof e.Bounds?a:new e.Bounds(a,b)},e.Transformation=function(a,b,c,d){this._a=a,this._b=b,this._c=c,this._d=d},e.Transformation.prototype={transform:function(a,b){return this._transform(a.clone(),b)},_transform:function(a,b){return b=b||1,a.x=b*(this._a*a.x+this._b),a.y=b*(this._c*a.y+this._d),a},untransform:function(a,b){return b=b||1,new e.Point((a.x/b-this._b)/this._a,(a.y/b-this._d)/this._c)}},e.DomUtil={get:function(a){return"string"==typeof a?b.getElementById(a):a},getStyle:function(a,c){var d=a.style[c]||a.currentStyle&&a.currentStyle[c];if((!d||"auto"===d)&&b.defaultView){var e=b.defaultView.getComputedStyle(a,null);d=e?e[c]:null}return"auto"===d?null:d},create:function(a,c,d){var e=b.createElement(a);return e.className=c||"",d&&d.appendChild(e),e},remove:function(a){var b=a.parentNode;b&&b.removeChild(a)},empty:function(a){for(;a.firstChild;)a.removeChild(a.firstChild)},toFront:function(a){a.parentNode.appendChild(a)},toBack:function(a){var b=a.parentNode;b.insertBefore(a,b.firstChild)},hasClass:function(a,b){if(a.classList!==c)return a.classList.contains(b);var d=e.DomUtil.getClass(a);return d.length>0&&new RegExp("(^|\\s)"+b+"(\\s|$)").test(d)},addClass:function(a,b){if(a.classList!==c)for(var d=e.Util.splitWords(b),f=0,g=d.length;f<g;f++)a.classList.add(d[f]);else if(!e.DomUtil.hasClass(a,b)){var h=e.DomUtil.getClass(a);e.DomUtil.setClass(a,(h?h+" ":"")+b)}},removeClass:function(a,b){a.classList!==c?a.classList.remove(b):e.DomUtil.setClass(a,e.Util.trim((" "+e.DomUtil.getClass(a)+" ").replace(" "+b+" "," ")))},setClass:function(a,b){a.className.baseVal===c?a.className=b:a.className.baseVal=b},getClass:function(a){return a.className.baseVal===c?a.className:a.className.baseVal},setOpacity:function(a,b){"opacity"in a.style?a.style.opacity=b:"filter"in a.style&&e.DomUtil._setOpacityIE(a,b)},_setOpacityIE:function(a,b){var c=!1,d="DXImageTransform.Microsoft.Alpha";try{c=a.filters.item(d)}catch(a){if(1===b)return}b=Math.round(100*b),c?(c.Enabled=100!==b,c.Opacity=b):a.style.filter+=" progid:"+d+"(opacity="+b+")"},testProp:function(a){for(var c=b.documentElement.style,d=0;d<a.length;d++)if(a[d]in c)return a[d];return!1},setTransform:function(a,b,c){var d=b||new e.Point(0,0);a.style[e.DomUtil.TRANSFORM]=(e.Browser.ie3d?"translate("+d.x+"px,"+d.y+"px)":"translate3d("+d.x+"px,"+d.y+"px,0)")+(c?" scale("+c+")":"")},setPosition:function(a,b){a._leaflet_pos=b,e.Browser.any3d?e.DomUtil.setTransform(a,b):(a.style.left=b.x+"px",a.style.top=b.y+"px")},getPosition:function(a){return a._leaflet_pos||new e.Point(0,0)}},function(){e.DomUtil.TRANSFORM=e.DomUtil.testProp(["transform","WebkitTransform","OTransform","MozTransform","msTransform"]);var c=e.DomUtil.TRANSITION=e.DomUtil.testProp(["webkitTransition","transition","OTransition","MozTransition","msTransition"]);if(e.DomUtil.TRANSITION_END="webkitTransition"===c||"OTransition"===c?c+"End":"transitionend","onselectstart"in b)e.DomUtil.disableTextSelection=function(){e.DomEvent.on(a,"selectstart",e.DomEvent.preventDefault)},e.DomUtil.enableTextSelection=function(){e.DomEvent.off(a,"selectstart",e.DomEvent.preventDefault)};else{var d=e.DomUtil.testProp(["userSelect","WebkitUserSelect","OUserSelect","MozUserSelect","msUserSelect"]);e.DomUtil.disableTextSelection=function(){if(d){var a=b.documentElement.style;this._userSelect=a[d],a[d]="none"}},e.DomUtil.enableTextSelection=function(){d&&(b.documentElement.style[d]=this._userSelect,delete this._userSelect)}}e.DomUtil.disableImageDrag=function(){e.DomEvent.on(a,"dragstart",e.DomEvent.preventDefault)},e.DomUtil.enableImageDrag=function(){e.DomEvent.off(a,"dragstart",e.DomEvent.preventDefault)},e.DomUtil.preventOutline=function(b){for(;b.tabIndex===-1;)b=b.parentNode;b&&b.style&&(e.DomUtil.restoreOutline(),this._outlineElement=b,this._outlineStyle=b.style.outline,b.style.outline="none",e.DomEvent.on(a,"keydown",e.DomUtil.restoreOutline,this))},e.DomUtil.restoreOutline=function(){this._outlineElement&&(this._outlineElement.style.outline=this._outlineStyle,delete this._outlineElement,delete this._outlineStyle,e.DomEvent.off(a,"keydown",e.DomUtil.restoreOutline,this))}}(),e.LatLng=function(a,b,d){if(isNaN(a)||isNaN(b))throw new Error("Invalid LatLng object: ("+a+", "+b+")");this.lat=+a,this.lng=+b,d!==c&&(this.alt=+d)},e.LatLng.prototype={equals:function(a,b){if(!a)return!1;a=e.latLng(a);var d=Math.max(Math.abs(this.lat-a.lat),Math.abs(this.lng-a.lng));return d<=(b===c?1e-9:b)},toString:function(a){return"LatLng("+e.Util.formatNum(this.lat,a)+", "+e.Util.formatNum(this.lng,a)+")"},distanceTo:function(a){return e.CRS.Earth.distance(this,e.latLng(a))},wrap:function(){return e.CRS.Earth.wrapLatLng(this)},toBounds:function(a){var b=180*a/40075017,c=b/Math.cos(Math.PI/180*this.lat);return e.latLngBounds([this.lat-b,this.lng-c],[this.lat+b,this.lng+c])},clone:function(){return new e.LatLng(this.lat,this.lng,this.alt)}},e.latLng=function(a,b,d){return a instanceof e.LatLng?a:e.Util.isArray(a)&&"object"!=typeof a[0]?3===a.length?new e.LatLng(a[0],a[1],a[2]):2===a.length?new e.LatLng(a[0],a[1]):null:a===c||null===a?a:"object"==typeof a&&"lat"in a?new e.LatLng(a.lat,"lng"in a?a.lng:a.lon,a.alt):b===c?null:new e.LatLng(a,b,d)},e.LatLngBounds=function(a,b){if(a)for(var c=b?[a,b]:a,d=0,e=c.length;d<e;d++)this.extend(c[d])},e.LatLngBounds.prototype={extend:function(a){var b,c,d=this._southWest,f=this._northEast;if(a instanceof e.LatLng)b=a,c=a;else{if(!(a instanceof e.LatLngBounds))return a?this.extend(e.latLng(a)||e.latLngBounds(a)):this;if(b=a._southWest,c=a._northEast,!b||!c)return this}return d||f?(d.lat=Math.min(b.lat,d.lat),d.lng=Math.min(b.lng,d.lng),f.lat=Math.max(c.lat,f.lat),f.lng=Math.max(c.lng,f.lng)):(this._southWest=new e.LatLng(b.lat,b.lng),this._northEast=new e.LatLng(c.lat,c.lng)),this},pad:function(a){var b=this._southWest,c=this._northEast,d=Math.abs(b.lat-c.lat)*a,f=Math.abs(b.lng-c.lng)*a;return new e.LatLngBounds(new e.LatLng(b.lat-d,b.lng-f),new e.LatLng(c.lat+d,c.lng+f))},getCenter:function(){return new e.LatLng((this._southWest.lat+this._northEast.lat)/2,(this._southWest.lng+this._northEast.lng)/2)},getSouthWest:function(){return this._southWest},getNorthEast:function(){return this._northEast},getNorthWest:function(){return new e.LatLng(this.getNorth(),this.getWest())},getSouthEast:function(){return new e.LatLng(this.getSouth(),this.getEast())},getWest:function(){return this._southWest.lng},getSouth:function(){return this._southWest.lat},getEast:function(){return this._northEast.lng},getNorth:function(){return this._northEast.lat},contains:function(a){a="number"==typeof a[0]||a instanceof e.LatLng?e.latLng(a):e.latLngBounds(a);var b,c,d=this._southWest,f=this._northEast;return a instanceof e.LatLngBounds?(b=a.getSouthWest(),c=a.getNorthEast()):b=c=a,b.lat>=d.lat&&c.lat<=f.lat&&b.lng>=d.lng&&c.lng<=f.lng},intersects:function(a){a=e.latLngBounds(a);var b=this._southWest,c=this._northEast,d=a.getSouthWest(),f=a.getNorthEast(),g=f.lat>=b.lat&&d.lat<=c.lat,h=f.lng>=b.lng&&d.lng<=c.lng;return g&&h},overlaps:function(a){a=e.latLngBounds(a);var b=this._southWest,c=this._northEast,d=a.getSouthWest(),f=a.getNorthEast(),g=f.lat>b.lat&&d.lat<c.lat,h=f.lng>b.lng&&d.lng<c.lng;return g&&h},toBBoxString:function(){return[this.getWest(),this.getSouth(),this.getEast(),this.getNorth()].join(",")},equals:function(a){return!!a&&(a=e.latLngBounds(a),this._southWest.equals(a.getSouthWest())&&this._northEast.equals(a.getNorthEast()))},isValid:function(){return!(!this._southWest||!this._northEast)}},e.latLngBounds=function(a,b){return a instanceof e.LatLngBounds?a:new e.LatLngBounds(a,b)},e.Projection={},e.Projection.LonLat={project:function(a){return new e.Point(a.lng,a.lat)},unproject:function(a){return new e.LatLng(a.y,a.x)},bounds:e.bounds([-180,-90],[180,90])},e.Projection.SphericalMercator={R:6378137,MAX_LATITUDE:85.0511287798,project:function(a){var b=Math.PI/180,c=this.MAX_LATITUDE,d=Math.max(Math.min(c,a.lat),-c),f=Math.sin(d*b);return new e.Point(this.R*a.lng*b,this.R*Math.log((1+f)/(1-f))/2)},unproject:function(a){var b=180/Math.PI;return new e.LatLng((2*Math.atan(Math.exp(a.y/this.R))-Math.PI/2)*b,a.x*b/this.R)},bounds:function(){var a=6378137*Math.PI;return e.bounds([-a,-a],[a,a])}()},e.CRS={latLngToPoint:function(a,b){var c=this.projection.project(a),d=this.scale(b);return this.transformation._transform(c,d)},pointToLatLng:function(a,b){var c=this.scale(b),d=this.transformation.untransform(a,c);return this.projection.unproject(d)},project:function(a){return this.projection.project(a)},unproject:function(a){return this.projection.unproject(a)},scale:function(a){return 256*Math.pow(2,a)},zoom:function(a){return Math.log(a/256)/Math.LN2},getProjectedBounds:function(a){if(this.infinite)return null;var b=this.projection.bounds,c=this.scale(a),d=this.transformation.transform(b.min,c),f=this.transformation.transform(b.max,c);return e.bounds(d,f)},infinite:!1,wrapLatLng:function(a){var b=this.wrapLng?e.Util.wrapNum(a.lng,this.wrapLng,!0):a.lng,c=this.wrapLat?e.Util.wrapNum(a.lat,this.wrapLat,!0):a.lat,d=a.alt;return e.latLng(c,b,d)}},e.CRS.Simple=e.extend({},e.CRS,{projection:e.Projection.LonLat,transformation:new e.Transformation(1,0,-1,0),scale:function(a){return Math.pow(2,a)},zoom:function(a){return Math.log(a)/Math.LN2},distance:function(a,b){var c=b.lng-a.lng,d=b.lat-a.lat;return Math.sqrt(c*c+d*d)},infinite:!0}),e.CRS.Earth=e.extend({},e.CRS,{wrapLng:[-180,180],R:6371e3,distance:function(a,b){var c=Math.PI/180,d=a.lat*c,e=b.lat*c,f=Math.sin(d)*Math.sin(e)+Math.cos(d)*Math.cos(e)*Math.cos((b.lng-a.lng)*c);return this.R*Math.acos(Math.min(f,1))}}),e.CRS.EPSG3857=e.extend({},e.CRS.Earth,{code:"EPSG:3857",projection:e.Projection.SphericalMercator,transformation:function(){var a=.5/(Math.PI*e.Projection.SphericalMercator.R);return new e.Transformation(a,.5,-a,.5)}()}),e.CRS.EPSG900913=e.extend({},e.CRS.EPSG3857,{code:"EPSG:900913"}),e.CRS.EPSG4326=e.extend({},e.CRS.Earth,{code:"EPSG:4326",projection:e.Projection.LonLat,transformation:new e.Transformation(1/180,1,-1/180,.5)}),e.Map=e.Evented.extend({options:{crs:e.CRS.EPSG3857,center:c,zoom:c,minZoom:c,maxZoom:c,layers:[],maxBounds:c,renderer:c,fadeAnimation:!0,markerZoomAnimation:!0,transform3DLimit:8388608,zoomSnap:1,zoomDelta:1,trackResize:!0},initialize:function(a,b){b=e.setOptions(this,b),this._initContainer(a),this._initLayout(),this._onResize=e.bind(this._onResize,this),this._initEvents(),b.maxBounds&&this.setMaxBounds(b.maxBounds),b.zoom!==c&&(this._zoom=this._limitZoom(b.zoom)),b.center&&b.zoom!==c&&this.setView(e.latLng(b.center),b.zoom,{reset:!0}),this._handlers=[],this._layers={},this._zoomBoundLayers={},this._sizeChanged=!0,this.callInitHooks(),this._addLayers(this.options.layers)},setView:function(a,b){return b=b===c?this.getZoom():b,this._resetView(e.latLng(a),b),this},setZoom:function(a,b){return this._loaded?this.setView(this.getCenter(),a,{zoom:b}):(this._zoom=a,this)},zoomIn:function(a,b){return a=a||(e.Browser.any3d?this.options.zoomDelta:1),this.setZoom(this._zoom+a,b)},zoomOut:function(a,b){return a=a||(e.Browser.any3d?this.options.zoomDelta:1),this.setZoom(this._zoom-a,b)},setZoomAround:function(a,b,c){var d=this.getZoomScale(b),f=this.getSize().divideBy(2),g=a instanceof e.Point?a:this.latLngToContainerPoint(a),h=g.subtract(f).multiplyBy(1-1/d),i=this.containerPointToLatLng(f.add(h));return this.setView(i,b,{zoom:c})},_getBoundsCenterZoom:function(a,b){b=b||{},a=a.getBounds?a.getBounds():e.latLngBounds(a);var c=e.point(b.paddingTopLeft||b.padding||[0,0]),d=e.point(b.paddingBottomRight||b.padding||[0,0]),f=this.getBoundsZoom(a,!1,c.add(d));f="number"==typeof b.maxZoom?Math.min(b.maxZoom,f):f;var g=d.subtract(c).divideBy(2),h=this.project(a.getSouthWest(),f),i=this.project(a.getNorthEast(),f),j=this.unproject(h.add(i).divideBy(2).add(g),f);return{center:j,zoom:f}},fitBounds:function(a,b){if(a=e.latLngBounds(a),!a.isValid())throw new Error("Bounds are not valid.");var c=this._getBoundsCenterZoom(a,b);return this.setView(c.center,c.zoom,b)},fitWorld:function(a){return this.fitBounds([[-90,-180],[90,180]],a)},panTo:function(a,b){return this.setView(a,this._zoom,{pan:b})},panBy:function(a){return this.fire("movestart"),this._rawPanBy(e.point(a)),this.fire("move"),this.fire("moveend")},setMaxBounds:function(a){return a=e.latLngBounds(a),a.isValid()?(this.options.maxBounds&&this.off("moveend",this._panInsideMaxBounds),this.options.maxBounds=a,this._loaded&&this._panInsideMaxBounds(),this.on("moveend",this._panInsideMaxBounds)):(this.options.maxBounds=null,this.off("moveend",this._panInsideMaxBounds))},setMinZoom:function(a){return this.options.minZoom=a,this._loaded&&this.getZoom()<this.options.minZoom?this.setZoom(a):this},setMaxZoom:function(a){return this.options.maxZoom=a,this._loaded&&this.getZoom()>this.options.maxZoom?this.setZoom(a):this},panInsideBounds:function(a,b){this._enforcingBounds=!0;var c=this.getCenter(),d=this._limitCenter(c,this._zoom,e.latLngBounds(a));return c.equals(d)||this.panTo(d,b),this._enforcingBounds=!1,this},invalidateSize:function(a){if(!this._loaded)return this;a=e.extend({animate:!1,pan:!0},a===!0?{animate:!0}:a);var b=this.getSize();this._sizeChanged=!0,this._lastCenter=null;var c=this.getSize(),d=b.divideBy(2).round(),f=c.divideBy(2).round(),g=d.subtract(f);return g.x||g.y?(a.animate&&a.pan?this.panBy(g):(a.pan&&this._rawPanBy(g),this.fire("move"),a.debounceMoveend?(clearTimeout(this._sizeTimer),this._sizeTimer=setTimeout(e.bind(this.fire,this,"moveend"),200)):this.fire("moveend")),this.fire("resize",{oldSize:b,newSize:c})):this},stop:function(){return this.setZoom(this._limitZoom(this._zoom)),this.options.zoomSnap||this.fire("viewreset"),this._stop()},addHandler:function(a,b){if(!b)return this;var c=this[a]=new b(this);return this._handlers.push(c),this.options[a]&&c.enable(),this},remove:function(){if(this._initEvents(!0),this._containerId!==this._container._leaflet_id)throw new Error("Map container is being reused by another instance");try{delete this._container._leaflet_id,delete this._containerId}catch(a){this._container._leaflet_id=c,this._containerId=c}e.DomUtil.remove(this._mapPane),this._clearControlPos&&this._clearControlPos(),this._clearHandlers(),this._loaded&&this.fire("unload");for(var a in this._layers)this._layers[a].remove();return this},createPane:function(a,b){var c="leaflet-pane"+(a?" leaflet-"+a.replace("Pane","")+"-pane":""),d=e.DomUtil.create("div",c,b||this._mapPane);return a&&(this._panes[a]=d),d},getCenter:function(){return this._checkIfLoaded(),this._lastCenter&&!this._moved()?this._lastCenter:this.layerPointToLatLng(this._getCenterLayerPoint())},getZoom:function(){return this._zoom},getBounds:function(){var a=this.getPixelBounds(),b=this.unproject(a.getBottomLeft()),c=this.unproject(a.getTopRight());return new e.LatLngBounds(b,c)},getMinZoom:function(){return this.options.minZoom===c?this._layersMinZoom||0:this.options.minZoom},getMaxZoom:function(){return this.options.maxZoom===c?this._layersMaxZoom===c?1/0:this._layersMaxZoom:this.options.maxZoom},getBoundsZoom:function(a,b,c){a=e.latLngBounds(a),c=e.point(c||[0,0]);var d=this.getZoom()||0,f=this.getMinZoom(),g=this.getMaxZoom(),h=a.getNorthWest(),i=a.getSouthEast(),j=this.getSize().subtract(c),k=this.project(i,d).subtract(this.project(h,d)),l=e.Browser.any3d?this.options.zoomSnap:1,m=Math.min(j.x/k.x,j.y/k.y);return d=this.getScaleZoom(m,d),l&&(d=Math.round(d/(l/100))*(l/100),d=b?Math.ceil(d/l)*l:Math.floor(d/l)*l),Math.max(f,Math.min(g,d))},getSize:function(){return this._size&&!this._sizeChanged||(this._size=new e.Point(this._container.clientWidth,this._container.clientHeight),this._sizeChanged=!1),this._size.clone()},getPixelBounds:function(a,b){var c=this._getTopLeftPoint(a,b);return new e.Bounds(c,c.add(this.getSize()))},getPixelOrigin:function(){return this._checkIfLoaded(),this._pixelOrigin},getPixelWorldBounds:function(a){return this.options.crs.getProjectedBounds(a===c?this.getZoom():a)},getPane:function(a){return"string"==typeof a?this._panes[a]:a},getPanes:function(){return this._panes},getContainer:function(){return this._container},getZoomScale:function(a,b){var d=this.options.crs;return b=b===c?this._zoom:b,d.scale(a)/d.scale(b)},getScaleZoom:function(a,b){var d=this.options.crs;b=b===c?this._zoom:b;var e=d.zoom(a*d.scale(b));return isNaN(e)?1/0:e},project:function(a,b){return b=b===c?this._zoom:b,this.options.crs.latLngToPoint(e.latLng(a),b)},unproject:function(a,b){return b=b===c?this._zoom:b,this.options.crs.pointToLatLng(e.point(a),b)},layerPointToLatLng:function(a){var b=e.point(a).add(this.getPixelOrigin());return this.unproject(b)},latLngToLayerPoint:function(a){var b=this.project(e.latLng(a))._round();return b._subtract(this.getPixelOrigin())},wrapLatLng:function(a){return this.options.crs.wrapLatLng(e.latLng(a))},distance:function(a,b){return this.options.crs.distance(e.latLng(a),e.latLng(b))},containerPointToLayerPoint:function(a){return e.point(a).subtract(this._getMapPanePos())},layerPointToContainerPoint:function(a){return e.point(a).add(this._getMapPanePos())},containerPointToLatLng:function(a){var b=this.containerPointToLayerPoint(e.point(a));return this.layerPointToLatLng(b)},latLngToContainerPoint:function(a){return this.layerPointToContainerPoint(this.latLngToLayerPoint(e.latLng(a)))},mouseEventToContainerPoint:function(a){return e.DomEvent.getMousePosition(a,this._container)},mouseEventToLayerPoint:function(a){return this.containerPointToLayerPoint(this.mouseEventToContainerPoint(a))},mouseEventToLatLng:function(a){return this.layerPointToLatLng(this.mouseEventToLayerPoint(a))},_initContainer:function(a){var b=this._container=e.DomUtil.get(a);if(!b)throw new Error("Map container not found.");if(b._leaflet_id)throw new Error("Map container is already initialized.");e.DomEvent.addListener(b,"scroll",this._onScroll,this),this._containerId=e.Util.stamp(b)},_initLayout:function(){var a=this._container;this._fadeAnimated=this.options.fadeAnimation&&e.Browser.any3d,e.DomUtil.addClass(a,"leaflet-container"+(e.Browser.touch?" leaflet-touch":"")+(e.Browser.retina?" leaflet-retina":"")+(e.Browser.ielt9?" leaflet-oldie":"")+(e.Browser.safari?" leaflet-safari":"")+(this._fadeAnimated?" leaflet-fade-anim":""));var b=e.DomUtil.getStyle(a,"position");"absolute"!==b&&"relative"!==b&&"fixed"!==b&&(a.style.position="relative"),this._initPanes(),this._initControlPos&&this._initControlPos()},_initPanes:function(){var a=this._panes={};this._paneRenderers={},this._mapPane=this.createPane("mapPane",this._container),e.DomUtil.setPosition(this._mapPane,new e.Point(0,0)),this.createPane("tilePane"),this.createPane("shadowPane"),this.createPane("overlayPane"),this.createPane("markerPane"),this.createPane("tooltipPane"),this.createPane("popupPane"),this.options.markerZoomAnimation||(e.DomUtil.addClass(a.markerPane,"leaflet-zoom-hide"),e.DomUtil.addClass(a.shadowPane,"leaflet-zoom-hide"))},_resetView:function(a,b){e.DomUtil.setPosition(this._mapPane,new e.Point(0,0));var c=!this._loaded;this._loaded=!0,b=this._limitZoom(b),this.fire("viewprereset");var d=this._zoom!==b;this._moveStart(d)._move(a,b)._moveEnd(d),this.fire("viewreset"),c&&this.fire("load")},_moveStart:function(a){return a&&this.fire("zoomstart"),this.fire("movestart")},_move:function(a,b,d){b===c&&(b=this._zoom);var e=this._zoom!==b;return this._zoom=b,this._lastCenter=a,this._pixelOrigin=this._getNewPixelOrigin(a),(e||d&&d.pinch)&&this.fire("zoom",d),this.fire("move",d)},_moveEnd:function(a){return a&&this.fire("zoomend"),this.fire("moveend")},_stop:function(){return e.Util.cancelAnimFrame(this._flyToFrame),this._panAnim&&this._panAnim.stop(),this},_rawPanBy:function(a){e.DomUtil.setPosition(this._mapPane,this._getMapPanePos().subtract(a))},_getZoomSpan:function(){return this.getMaxZoom()-this.getMinZoom()},_panInsideMaxBounds:function(){this._enforcingBounds||this.panInsideBounds(this.options.maxBounds)},_checkIfLoaded:function(){if(!this._loaded)throw new Error("Set map center and zoom first.")},_initEvents:function(b){if(e.DomEvent){this._targets={},this._targets[e.stamp(this._container)]=this;var c=b?"off":"on";e.DomEvent[c](this._container,"click dblclick mousedown mouseup mouseover mouseout mousemove contextmenu keypress",this._handleDOMEvent,this),this.options.trackResize&&e.DomEvent[c](a,"resize",this._onResize,this),e.Browser.any3d&&this.options.transform3DLimit&&this[c]("moveend",this._onMoveEnd)}},_onResize:function(){e.Util.cancelAnimFrame(this._resizeRequest),this._resizeRequest=e.Util.requestAnimFrame(function(){this.invalidateSize({debounceMoveend:!0})},this)},_onScroll:function(){this._container.scrollTop=0,this._container.scrollLeft=0},_onMoveEnd:function(){var a=this._getMapPanePos();Math.max(Math.abs(a.x),Math.abs(a.y))>=this.options.transform3DLimit&&this._resetView(this.getCenter(),this.getZoom())},_findEventTargets:function(a,b){for(var c,d=[],f="mouseout"===b||"mouseover"===b,g=a.target||a.srcElement,h=!1;g;){if(c=this._targets[e.stamp(g)],c&&("click"===b||"preclick"===b)&&!a._simulated&&this._draggableMoved(c)){h=!0;break}if(c&&c.listens(b,!0)){if(f&&!e.DomEvent._isExternalTarget(g,a))break;if(d.push(c),f)break}if(g===this._container)break;g=g.parentNode}return d.length||h||f||!e.DomEvent._isExternalTarget(g,a)||(d=[this]),d},_handleDOMEvent:function(a){if(this._loaded&&!e.DomEvent._skipped(a)){var b="keypress"===a.type&&13===a.keyCode?"click":a.type;"mousedown"===b&&e.DomUtil.preventOutline(a.target||a.srcElement),this._fireDOMEvent(a,b)}},_fireDOMEvent:function(a,b,c){if("click"===a.type){var d=e.Util.extend({},a);d.type="preclick",this._fireDOMEvent(d,d.type,c)}if(!a._stopped&&(c=(c||[]).concat(this._findEventTargets(a,b)),c.length)){var f=c[0];"contextmenu"===b&&f.listens(b,!0)&&e.DomEvent.preventDefault(a);var g={originalEvent:a};if("keypress"!==a.type){var h=f instanceof e.Marker;g.containerPoint=h?this.latLngToContainerPoint(f.getLatLng()):this.mouseEventToContainerPoint(a),g.layerPoint=this.containerPointToLayerPoint(g.containerPoint),g.latlng=h?f.getLatLng():this.layerPointToLatLng(g.layerPoint);
-}for(var i=0;i<c.length;i++)if(c[i].fire(b,g,!0),g.originalEvent._stopped||c[i].options.nonBubblingEvents&&e.Util.indexOf(c[i].options.nonBubblingEvents,b)!==-1)return}},_draggableMoved:function(a){return a=a.dragging&&a.dragging.enabled()?a:this,a.dragging&&a.dragging.moved()||this.boxZoom&&this.boxZoom.moved()},_clearHandlers:function(){for(var a=0,b=this._handlers.length;a<b;a++)this._handlers[a].disable()},whenReady:function(a,b){return this._loaded?a.call(b||this,{target:this}):this.on("load",a,b),this},_getMapPanePos:function(){return e.DomUtil.getPosition(this._mapPane)||new e.Point(0,0)},_moved:function(){var a=this._getMapPanePos();return a&&!a.equals([0,0])},_getTopLeftPoint:function(a,b){var d=a&&b!==c?this._getNewPixelOrigin(a,b):this.getPixelOrigin();return d.subtract(this._getMapPanePos())},_getNewPixelOrigin:function(a,b){var c=this.getSize()._divideBy(2);return this.project(a,b)._subtract(c)._add(this._getMapPanePos())._round()},_latLngToNewLayerPoint:function(a,b,c){var d=this._getNewPixelOrigin(c,b);return this.project(a,b)._subtract(d)},_getCenterLayerPoint:function(){return this.containerPointToLayerPoint(this.getSize()._divideBy(2))},_getCenterOffset:function(a){return this.latLngToLayerPoint(a).subtract(this._getCenterLayerPoint())},_limitCenter:function(a,b,c){if(!c)return a;var d=this.project(a,b),f=this.getSize().divideBy(2),g=new e.Bounds(d.subtract(f),d.add(f)),h=this._getBoundsOffset(g,c,b);return h.round().equals([0,0])?a:this.unproject(d.add(h),b)},_limitOffset:function(a,b){if(!b)return a;var c=this.getPixelBounds(),d=new e.Bounds(c.min.add(a),c.max.add(a));return a.add(this._getBoundsOffset(d,b))},_getBoundsOffset:function(a,b,c){var d=e.bounds(this.project(b.getNorthEast(),c),this.project(b.getSouthWest(),c)),f=d.min.subtract(a.min),g=d.max.subtract(a.max),h=this._rebound(f.x,-g.x),i=this._rebound(f.y,-g.y);return new e.Point(h,i)},_rebound:function(a,b){return a+b>0?Math.round(a-b)/2:Math.max(0,Math.ceil(a))-Math.max(0,Math.floor(b))},_limitZoom:function(a){var b=this.getMinZoom(),c=this.getMaxZoom(),d=e.Browser.any3d?this.options.zoomSnap:1;return d&&(a=Math.round(a/d)*d),Math.max(b,Math.min(c,a))}}),e.map=function(a,b){return new e.Map(a,b)},e.Layer=e.Evented.extend({options:{pane:"overlayPane",nonBubblingEvents:[]},addTo:function(a){return a.addLayer(this),this},remove:function(){return this.removeFrom(this._map||this._mapToAdd)},removeFrom:function(a){return a&&a.removeLayer(this),this},getPane:function(a){return this._map.getPane(a?this.options[a]||a:this.options.pane)},addInteractiveTarget:function(a){return this._map._targets[e.stamp(a)]=this,this},removeInteractiveTarget:function(a){return delete this._map._targets[e.stamp(a)],this},_layerAdd:function(a){var b=a.target;if(b.hasLayer(this)){if(this._map=b,this._zoomAnimated=b._zoomAnimated,this.getEvents){var c=this.getEvents();b.on(c,this),this.once("remove",function(){b.off(c,this)},this)}this.onAdd(b),this.getAttribution&&this._map.attributionControl&&this._map.attributionControl.addAttribution(this.getAttribution()),this.fire("add"),b.fire("layeradd",{layer:this})}}}),e.Map.include({addLayer:function(a){var b=e.stamp(a);return this._layers[b]?this:(this._layers[b]=a,a._mapToAdd=this,a.beforeAdd&&a.beforeAdd(this),this.whenReady(a._layerAdd,a),this)},removeLayer:function(a){var b=e.stamp(a);return this._layers[b]?(this._loaded&&a.onRemove(this),a.getAttribution&&this.attributionControl&&this.attributionControl.removeAttribution(a.getAttribution()),delete this._layers[b],this._loaded&&(this.fire("layerremove",{layer:a}),a.fire("remove")),a._map=a._mapToAdd=null,this):this},hasLayer:function(a){return!!a&&e.stamp(a)in this._layers},eachLayer:function(a,b){for(var c in this._layers)a.call(b,this._layers[c]);return this},_addLayers:function(a){a=a?e.Util.isArray(a)?a:[a]:[];for(var b=0,c=a.length;b<c;b++)this.addLayer(a[b])},_addZoomLimit:function(a){!isNaN(a.options.maxZoom)&&isNaN(a.options.minZoom)||(this._zoomBoundLayers[e.stamp(a)]=a,this._updateZoomLevels())},_removeZoomLimit:function(a){var b=e.stamp(a);this._zoomBoundLayers[b]&&(delete this._zoomBoundLayers[b],this._updateZoomLevels())},_updateZoomLevels:function(){var a=1/0,b=-(1/0),d=this._getZoomSpan();for(var e in this._zoomBoundLayers){var f=this._zoomBoundLayers[e].options;a=f.minZoom===c?a:Math.min(a,f.minZoom),b=f.maxZoom===c?b:Math.max(b,f.maxZoom)}this._layersMaxZoom=b===-(1/0)?c:b,this._layersMinZoom=a===1/0?c:a,d!==this._getZoomSpan()&&this.fire("zoomlevelschange")}}),e.Projection.Mercator={R:6378137,R_MINOR:6356752.314245179,bounds:e.bounds([-20037508.34279,-15496570.73972],[20037508.34279,18764656.23138]),project:function(a){var b=Math.PI/180,c=this.R,d=a.lat*b,f=this.R_MINOR/c,g=Math.sqrt(1-f*f),h=g*Math.sin(d),i=Math.tan(Math.PI/4-d/2)/Math.pow((1-h)/(1+h),g/2);return d=-c*Math.log(Math.max(i,1e-10)),new e.Point(a.lng*b*c,d)},unproject:function(a){for(var b,c=180/Math.PI,d=this.R,f=this.R_MINOR/d,g=Math.sqrt(1-f*f),h=Math.exp(-a.y/d),i=Math.PI/2-2*Math.atan(h),j=0,k=.1;j<15&&Math.abs(k)>1e-7;j++)b=g*Math.sin(i),b=Math.pow((1-b)/(1+b),g/2),k=Math.PI/2-2*Math.atan(h*b)-i,i+=k;return new e.LatLng(i*c,a.x*c/d)}},e.CRS.EPSG3395=e.extend({},e.CRS.Earth,{code:"EPSG:3395",projection:e.Projection.Mercator,transformation:function(){var a=.5/(Math.PI*e.Projection.Mercator.R);return new e.Transformation(a,.5,-a,.5)}()}),e.GridLayer=e.Layer.extend({options:{tileSize:256,opacity:1,updateWhenIdle:e.Browser.mobile,updateWhenZooming:!0,updateInterval:200,attribution:null,zIndex:1,bounds:null,minZoom:0,maxZoom:c,noWrap:!1,pane:"tilePane",className:"",keepBuffer:2},initialize:function(a){e.setOptions(this,a)},onAdd:function(){this._initContainer(),this._levels={},this._tiles={},this._resetView(),this._update()},beforeAdd:function(a){a._addZoomLimit(this)},onRemove:function(a){this._removeAllTiles(),e.DomUtil.remove(this._container),a._removeZoomLimit(this),this._container=null,this._tileZoom=null},bringToFront:function(){return this._map&&(e.DomUtil.toFront(this._container),this._setAutoZIndex(Math.max)),this},bringToBack:function(){return this._map&&(e.DomUtil.toBack(this._container),this._setAutoZIndex(Math.min)),this},getAttribution:function(){return this.options.attribution},getContainer:function(){return this._container},setOpacity:function(a){return this.options.opacity=a,this._updateOpacity(),this},setZIndex:function(a){return this.options.zIndex=a,this._updateZIndex(),this},isLoading:function(){return this._loading},redraw:function(){return this._map&&(this._removeAllTiles(),this._update()),this},getEvents:function(){var a={viewprereset:this._invalidateAll,viewreset:this._resetView,zoom:this._resetView,moveend:this._onMoveEnd};return this.options.updateWhenIdle||(this._onMove||(this._onMove=e.Util.throttle(this._onMoveEnd,this.options.updateInterval,this)),a.move=this._onMove),this._zoomAnimated&&(a.zoomanim=this._animateZoom),a},createTile:function(){return b.createElement("div")},getTileSize:function(){var a=this.options.tileSize;return a instanceof e.Point?a:new e.Point(a,a)},_updateZIndex:function(){this._container&&this.options.zIndex!==c&&null!==this.options.zIndex&&(this._container.style.zIndex=this.options.zIndex)},_setAutoZIndex:function(a){for(var b,c=this.getPane().children,d=-a(-(1/0),1/0),e=0,f=c.length;e<f;e++)b=c[e].style.zIndex,c[e]!==this._container&&b&&(d=a(d,+b));isFinite(d)&&(this.options.zIndex=d+a(-1,1),this._updateZIndex())},_updateOpacity:function(){if(this._map&&!e.Browser.ielt9){e.DomUtil.setOpacity(this._container,this.options.opacity);var a=+new Date,b=!1,c=!1;for(var d in this._tiles){var f=this._tiles[d];if(f.current&&f.loaded){var g=Math.min(1,(a-f.loaded)/200);e.DomUtil.setOpacity(f.el,g),g<1?b=!0:(f.active&&(c=!0),f.active=!0)}}c&&!this._noPrune&&this._pruneTiles(),b&&(e.Util.cancelAnimFrame(this._fadeFrame),this._fadeFrame=e.Util.requestAnimFrame(this._updateOpacity,this))}},_initContainer:function(){this._container||(this._container=e.DomUtil.create("div","leaflet-layer "+(this.options.className||"")),this._updateZIndex(),this.options.opacity<1&&this._updateOpacity(),this.getPane().appendChild(this._container))},_updateLevels:function(){var a=this._tileZoom,b=this.options.maxZoom;if(a===c)return c;for(var d in this._levels)this._levels[d].el.children.length||d===a?this._levels[d].el.style.zIndex=b-Math.abs(a-d):(e.DomUtil.remove(this._levels[d].el),this._removeTilesAtZoom(d),delete this._levels[d]);var f=this._levels[a],g=this._map;return f||(f=this._levels[a]={},f.el=e.DomUtil.create("div","leaflet-tile-container leaflet-zoom-animated",this._container),f.el.style.zIndex=b,f.origin=g.project(g.unproject(g.getPixelOrigin()),a).round(),f.zoom=a,this._setZoomTransform(f,g.getCenter(),g.getZoom()),e.Util.falseFn(f.el.offsetWidth)),this._level=f,f},_pruneTiles:function(){if(this._map){var a,b,c=this._map.getZoom();if(c>this.options.maxZoom||c<this.options.minZoom)return void this._removeAllTiles();for(a in this._tiles)b=this._tiles[a],b.retain=b.current;for(a in this._tiles)if(b=this._tiles[a],b.current&&!b.active){var d=b.coords;this._retainParent(d.x,d.y,d.z,d.z-5)||this._retainChildren(d.x,d.y,d.z,d.z+2)}for(a in this._tiles)this._tiles[a].retain||this._removeTile(a)}},_removeTilesAtZoom:function(a){for(var b in this._tiles)this._tiles[b].coords.z===a&&this._removeTile(b)},_removeAllTiles:function(){for(var a in this._tiles)this._removeTile(a)},_invalidateAll:function(){for(var a in this._levels)e.DomUtil.remove(this._levels[a].el),delete this._levels[a];this._removeAllTiles(),this._tileZoom=null},_retainParent:function(a,b,c,d){var f=Math.floor(a/2),g=Math.floor(b/2),h=c-1,i=new e.Point(+f,+g);i.z=+h;var j=this._tileCoordsToKey(i),k=this._tiles[j];return k&&k.active?(k.retain=!0,!0):(k&&k.loaded&&(k.retain=!0),h>d&&this._retainParent(f,g,h,d))},_retainChildren:function(a,b,c,d){for(var f=2*a;f<2*a+2;f++)for(var g=2*b;g<2*b+2;g++){var h=new e.Point(f,g);h.z=c+1;var i=this._tileCoordsToKey(h),j=this._tiles[i];j&&j.active?j.retain=!0:(j&&j.loaded&&(j.retain=!0),c+1<d&&this._retainChildren(f,g,c+1,d))}},_resetView:function(a){var b=a&&(a.pinch||a.flyTo);this._setView(this._map.getCenter(),this._map.getZoom(),b,b)},_animateZoom:function(a){this._setView(a.center,a.zoom,!0,a.noUpdate)},_setView:function(a,b,d,e){var f=Math.round(b);(this.options.maxZoom!==c&&f>this.options.maxZoom||this.options.minZoom!==c&&f<this.options.minZoom)&&(f=c);var g=this.options.updateWhenZooming&&f!==this._tileZoom;e&&!g||(this._tileZoom=f,this._abortLoading&&this._abortLoading(),this._updateLevels(),this._resetGrid(),f!==c&&this._update(a),d||this._pruneTiles(),this._noPrune=!!d),this._setZoomTransforms(a,b)},_setZoomTransforms:function(a,b){for(var c in this._levels)this._setZoomTransform(this._levels[c],a,b)},_setZoomTransform:function(a,b,c){var d=this._map.getZoomScale(c,a.zoom),f=a.origin.multiplyBy(d).subtract(this._map._getNewPixelOrigin(b,c)).round();e.Browser.any3d?e.DomUtil.setTransform(a.el,f,d):e.DomUtil.setPosition(a.el,f)},_resetGrid:function(){var a=this._map,b=a.options.crs,c=this._tileSize=this.getTileSize(),d=this._tileZoom,e=this._map.getPixelWorldBounds(this._tileZoom);e&&(this._globalTileRange=this._pxBoundsToTileRange(e)),this._wrapX=b.wrapLng&&!this.options.noWrap&&[Math.floor(a.project([0,b.wrapLng[0]],d).x/c.x),Math.ceil(a.project([0,b.wrapLng[1]],d).x/c.y)],this._wrapY=b.wrapLat&&!this.options.noWrap&&[Math.floor(a.project([b.wrapLat[0],0],d).y/c.x),Math.ceil(a.project([b.wrapLat[1],0],d).y/c.y)]},_onMoveEnd:function(){this._map&&!this._map._animatingZoom&&this._update()},_getTiledPixelBounds:function(a){var b=this._map,c=b._animatingZoom?Math.max(b._animateToZoom,b.getZoom()):b.getZoom(),d=b.getZoomScale(c,this._tileZoom),f=b.project(a,this._tileZoom).floor(),g=b.getSize().divideBy(2*d);return new e.Bounds(f.subtract(g),f.add(g))},_update:function(a){var d=this._map;if(d){var f=d.getZoom();if(a===c&&(a=d.getCenter()),this._tileZoom!==c){var g=this._getTiledPixelBounds(a),h=this._pxBoundsToTileRange(g),i=h.getCenter(),j=[],k=this.options.keepBuffer,l=new e.Bounds(h.getBottomLeft().subtract([k,-k]),h.getTopRight().add([k,-k]));for(var m in this._tiles){var n=this._tiles[m].coords;n.z===this._tileZoom&&l.contains(e.point(n.x,n.y))||(this._tiles[m].current=!1)}if(Math.abs(f-this._tileZoom)>1)return void this._setView(a,f);for(var o=h.min.y;o<=h.max.y;o++)for(var p=h.min.x;p<=h.max.x;p++){var q=new e.Point(p,o);if(q.z=this._tileZoom,this._isValidTile(q)){var r=this._tiles[this._tileCoordsToKey(q)];r?r.current=!0:j.push(q)}}if(j.sort(function(a,b){return a.distanceTo(i)-b.distanceTo(i)}),0!==j.length){this._loading||(this._loading=!0,this.fire("loading"));var s=b.createDocumentFragment();for(p=0;p<j.length;p++)this._addTile(j[p],s);this._level.el.appendChild(s)}}}},_isValidTile:function(a){var b=this._map.options.crs;if(!b.infinite){var c=this._globalTileRange;if(!b.wrapLng&&(a.x<c.min.x||a.x>c.max.x)||!b.wrapLat&&(a.y<c.min.y||a.y>c.max.y))return!1}if(!this.options.bounds)return!0;var d=this._tileCoordsToBounds(a);return e.latLngBounds(this.options.bounds).overlaps(d)},_keyToBounds:function(a){return this._tileCoordsToBounds(this._keyToTileCoords(a))},_tileCoordsToBounds:function(a){var b=this._map,c=this.getTileSize(),d=a.scaleBy(c),f=d.add(c),g=b.unproject(d,a.z),h=b.unproject(f,a.z);return this.options.noWrap||(g=b.wrapLatLng(g),h=b.wrapLatLng(h)),new e.LatLngBounds(g,h)},_tileCoordsToKey:function(a){return a.x+":"+a.y+":"+a.z},_keyToTileCoords:function(a){var b=a.split(":"),c=new e.Point(+b[0],+b[1]);return c.z=+b[2],c},_removeTile:function(a){var b=this._tiles[a];b&&(e.DomUtil.remove(b.el),delete this._tiles[a],this.fire("tileunload",{tile:b.el,coords:this._keyToTileCoords(a)}))},_initTile:function(a){e.DomUtil.addClass(a,"leaflet-tile");var b=this.getTileSize();a.style.width=b.x+"px",a.style.height=b.y+"px",a.onselectstart=e.Util.falseFn,a.onmousemove=e.Util.falseFn,e.Browser.ielt9&&this.options.opacity<1&&e.DomUtil.setOpacity(a,this.options.opacity),e.Browser.android&&!e.Browser.android23&&(a.style.WebkitBackfaceVisibility="hidden")},_addTile:function(a,b){var c=this._getTilePos(a),d=this._tileCoordsToKey(a),f=this.createTile(this._wrapCoords(a),e.bind(this._tileReady,this,a));this._initTile(f),this.createTile.length<2&&e.Util.requestAnimFrame(e.bind(this._tileReady,this,a,null,f)),e.DomUtil.setPosition(f,c),this._tiles[d]={el:f,coords:a,current:!0},b.appendChild(f),this.fire("tileloadstart",{tile:f,coords:a})},_tileReady:function(a,b,c){if(this._map){b&&this.fire("tileerror",{error:b,tile:c,coords:a});var d=this._tileCoordsToKey(a);c=this._tiles[d],c&&(c.loaded=+new Date,this._map._fadeAnimated?(e.DomUtil.setOpacity(c.el,0),e.Util.cancelAnimFrame(this._fadeFrame),this._fadeFrame=e.Util.requestAnimFrame(this._updateOpacity,this)):(c.active=!0,this._pruneTiles()),b||(e.DomUtil.addClass(c.el,"leaflet-tile-loaded"),this.fire("tileload",{tile:c.el,coords:a})),this._noTilesToLoad()&&(this._loading=!1,this.fire("load"),e.Browser.ielt9||!this._map._fadeAnimated?e.Util.requestAnimFrame(this._pruneTiles,this):setTimeout(e.bind(this._pruneTiles,this),250)))}},_getTilePos:function(a){return a.scaleBy(this.getTileSize()).subtract(this._level.origin)},_wrapCoords:function(a){var b=new e.Point(this._wrapX?e.Util.wrapNum(a.x,this._wrapX):a.x,this._wrapY?e.Util.wrapNum(a.y,this._wrapY):a.y);return b.z=a.z,b},_pxBoundsToTileRange:function(a){var b=this.getTileSize();return new e.Bounds(a.min.unscaleBy(b).floor(),a.max.unscaleBy(b).ceil().subtract([1,1]))},_noTilesToLoad:function(){for(var a in this._tiles)if(!this._tiles[a].loaded)return!1;return!0}}),e.gridLayer=function(a){return new e.GridLayer(a)},e.TileLayer=e.GridLayer.extend({options:{minZoom:0,maxZoom:18,maxNativeZoom:null,subdomains:"abc",errorTileUrl:"",zoomOffset:0,tms:!1,zoomReverse:!1,detectRetina:!1,crossOrigin:!1},initialize:function(a,b){this._url=a,b=e.setOptions(this,b),b.detectRetina&&e.Browser.retina&&b.maxZoom>0&&(b.tileSize=Math.floor(b.tileSize/2),b.zoomReverse?(b.zoomOffset--,b.minZoom++):(b.zoomOffset++,b.maxZoom--),b.minZoom=Math.max(0,b.minZoom)),"string"==typeof b.subdomains&&(b.subdomains=b.subdomains.split("")),e.Browser.android||this.on("tileunload",this._onTileRemove)},setUrl:function(a,b){return this._url=a,b||this.redraw(),this},createTile:function(a,c){var d=b.createElement("img");return e.DomEvent.on(d,"load",e.bind(this._tileOnLoad,this,c,d)),e.DomEvent.on(d,"error",e.bind(this._tileOnError,this,c,d)),this.options.crossOrigin&&(d.crossOrigin=""),d.alt="",d.src=this.getTileUrl(a),d},getTileUrl:function(a){var b={r:e.Browser.retina?"@2x":"",s:this._getSubdomain(a),x:a.x,y:a.y,z:this._getZoomForUrl()};if(this._map&&!this._map.options.crs.infinite){var c=this._globalTileRange.max.y-a.y;this.options.tms&&(b.y=c),b["-y"]=c}return e.Util.template(this._url,e.extend(b,this.options))},_tileOnLoad:function(a,b){e.Browser.ielt9?setTimeout(e.bind(a,this,null,b),0):a(null,b)},_tileOnError:function(a,b,c){var d=this.options.errorTileUrl;d&&(b.src=d),a(c,b)},getTileSize:function(){var a=this._map,b=e.GridLayer.prototype.getTileSize.call(this),c=this._tileZoom+this.options.zoomOffset,d=this.options.maxNativeZoom;return null!==d&&c>d?b.divideBy(a.getZoomScale(d,c)).round():b},_onTileRemove:function(a){a.tile.onload=null},_getZoomForUrl:function(){var a=this.options,b=this._tileZoom;return a.zoomReverse&&(b=a.maxZoom-b),b+=a.zoomOffset,null!==a.maxNativeZoom?Math.min(b,a.maxNativeZoom):b},_getSubdomain:function(a){var b=Math.abs(a.x+a.y)%this.options.subdomains.length;return this.options.subdomains[b]},_abortLoading:function(){var a,b;for(a in this._tiles)this._tiles[a].coords.z!==this._tileZoom&&(b=this._tiles[a].el,b.onload=e.Util.falseFn,b.onerror=e.Util.falseFn,b.complete||(b.src=e.Util.emptyImageUrl,e.DomUtil.remove(b)))}}),e.tileLayer=function(a,b){return new e.TileLayer(a,b)},e.TileLayer.WMS=e.TileLayer.extend({defaultWmsParams:{service:"WMS",request:"GetMap",layers:"",styles:"",format:"image/jpeg",transparent:!1,version:"1.1.1"},options:{crs:null,uppercase:!1},initialize:function(a,b){this._url=a;var c=e.extend({},this.defaultWmsParams);for(var d in b)d in this.options||(c[d]=b[d]);b=e.setOptions(this,b),c.width=c.height=b.tileSize*(b.detectRetina&&e.Browser.retina?2:1),this.wmsParams=c},onAdd:function(a){this._crs=this.options.crs||a.options.crs,this._wmsVersion=parseFloat(this.wmsParams.version);var b=this._wmsVersion>=1.3?"crs":"srs";this.wmsParams[b]=this._crs.code,e.TileLayer.prototype.onAdd.call(this,a)},getTileUrl:function(a){var b=this._tileCoordsToBounds(a),c=this._crs.project(b.getNorthWest()),d=this._crs.project(b.getSouthEast()),f=(this._wmsVersion>=1.3&&this._crs===e.CRS.EPSG4326?[d.y,c.x,c.y,d.x]:[c.x,d.y,d.x,c.y]).join(","),g=e.TileLayer.prototype.getTileUrl.call(this,a);return g+e.Util.getParamString(this.wmsParams,g,this.options.uppercase)+(this.options.uppercase?"&BBOX=":"&bbox=")+f},setParams:function(a,b){return e.extend(this.wmsParams,a),b||this.redraw(),this}}),e.tileLayer.wms=function(a,b){return new e.TileLayer.WMS(a,b)},e.ImageOverlay=e.Layer.extend({options:{opacity:1,alt:"",interactive:!1,attribution:null,crossOrigin:!1},initialize:function(a,b,c){this._url=a,this._bounds=e.latLngBounds(b),e.setOptions(this,c)},onAdd:function(){this._image||(this._initImage(),this.options.opacity<1&&this._updateOpacity()),this.options.interactive&&(e.DomUtil.addClass(this._image,"leaflet-interactive"),this.addInteractiveTarget(this._image)),this.getPane().appendChild(this._image),this._reset()},onRemove:function(){e.DomUtil.remove(this._image),this.options.interactive&&this.removeInteractiveTarget(this._image)},setOpacity:function(a){return this.options.opacity=a,this._image&&this._updateOpacity(),this},setStyle:function(a){return a.opacity&&this.setOpacity(a.opacity),this},bringToFront:function(){return this._map&&e.DomUtil.toFront(this._image),this},bringToBack:function(){return this._map&&e.DomUtil.toBack(this._image),this},setUrl:function(a){return this._url=a,this._image&&(this._image.src=a),this},setBounds:function(a){return this._bounds=a,this._map&&this._reset(),this},getAttribution:function(){return this.options.attribution},getEvents:function(){var a={zoom:this._reset,viewreset:this._reset};return this._zoomAnimated&&(a.zoomanim=this._animateZoom),a},getBounds:function(){return this._bounds},getElement:function(){return this._image},_initImage:function(){var a=this._image=e.DomUtil.create("img","leaflet-image-layer "+(this._zoomAnimated?"leaflet-zoom-animated":""));a.onselectstart=e.Util.falseFn,a.onmousemove=e.Util.falseFn,a.onload=e.bind(this.fire,this,"load"),this.options.crossOrigin&&(a.crossOrigin=""),a.src=this._url,a.alt=this.options.alt},_animateZoom:function(a){var b=this._map.getZoomScale(a.zoom),c=this._map._latLngToNewLayerPoint(this._bounds.getNorthWest(),a.zoom,a.center);e.DomUtil.setTransform(this._image,c,b)},_reset:function(){var a=this._image,b=new e.Bounds(this._map.latLngToLayerPoint(this._bounds.getNorthWest()),this._map.latLngToLayerPoint(this._bounds.getSouthEast())),c=b.getSize();e.DomUtil.setPosition(a,b.min),a.style.width=c.x+"px",a.style.height=c.y+"px"},_updateOpacity:function(){e.DomUtil.setOpacity(this._image,this.options.opacity)}}),e.imageOverlay=function(a,b,c){return new e.ImageOverlay(a,b,c)},e.Icon=e.Class.extend({initialize:function(a){e.setOptions(this,a)},createIcon:function(a){return this._createIcon("icon",a)},createShadow:function(a){return this._createIcon("shadow",a)},_createIcon:function(a,b){var c=this._getIconUrl(a);if(!c){if("icon"===a)throw new Error("iconUrl not set in Icon options (see the docs).");return null}var d=this._createImg(c,b&&"IMG"===b.tagName?b:null);return this._setIconStyles(d,a),d},_setIconStyles:function(a,b){var c=this.options,d=c[b+"Size"];"number"==typeof d&&(d=[d,d]);var f=e.point(d),g=e.point("shadow"===b&&c.shadowAnchor||c.iconAnchor||f&&f.divideBy(2,!0));a.className="leaflet-marker-"+b+" "+(c.className||""),g&&(a.style.marginLeft=-g.x+"px",a.style.marginTop=-g.y+"px"),f&&(a.style.width=f.x+"px",a.style.height=f.y+"px")},_createImg:function(a,c){return c=c||b.createElement("img"),c.src=a,c},_getIconUrl:function(a){return e.Browser.retina&&this.options[a+"RetinaUrl"]||this.options[a+"Url"]}}),e.icon=function(a){return new e.Icon(a)},e.Icon.Default=e.Icon.extend({options:{iconUrl:"marker-icon.png",iconRetinaUrl:"marker-icon-2x.png",shadowUrl:"marker-shadow.png",iconSize:[25,41],iconAnchor:[12,41],popupAnchor:[1,-34],tooltipAnchor:[16,-28],shadowSize:[41,41]},_getIconUrl:function(a){return e.Icon.Default.imagePath||(e.Icon.Default.imagePath=this._detectIconPath()),(this.options.imagePath||e.Icon.Default.imagePath)+e.Icon.prototype._getIconUrl.call(this,a)},_detectIconPath:function(){var a=e.DomUtil.create("div","leaflet-default-icon-path",b.body),c=e.DomUtil.getStyle(a,"background-image")||e.DomUtil.getStyle(a,"backgroundImage");return b.body.removeChild(a),0===c.indexOf("url")?c.replace(/^url\([\"\']?/,"").replace(/marker-icon\.png[\"\']?\)$/,""):""}}),e.Marker=e.Layer.extend({options:{icon:new e.Icon.Default,interactive:!0,draggable:!1,keyboard:!0,title:"",alt:"",zIndexOffset:0,opacity:1,riseOnHover:!1,riseOffset:250,pane:"markerPane",nonBubblingEvents:["click","dblclick","mouseover","mouseout","contextmenu"]},initialize:function(a,b){e.setOptions(this,b),this._latlng=e.latLng(a)},onAdd:function(a){this._zoomAnimated=this._zoomAnimated&&a.options.markerZoomAnimation,this._zoomAnimated&&a.on("zoomanim",this._animateZoom,this),this._initIcon(),this.update()},onRemove:function(a){this.dragging&&this.dragging.enabled()&&(this.options.draggable=!0,this.dragging.removeHooks()),this._zoomAnimated&&a.off("zoomanim",this._animateZoom,this),this._removeIcon(),this._removeShadow()},getEvents:function(){return{zoom:this.update,viewreset:this.update}},getLatLng:function(){return this._latlng},setLatLng:function(a){var b=this._latlng;return this._latlng=e.latLng(a),this.update(),this.fire("move",{oldLatLng:b,latlng:this._latlng})},setZIndexOffset:function(a){return this.options.zIndexOffset=a,this.update()},setIcon:function(a){return this.options.icon=a,this._map&&(this._initIcon(),this.update()),this._popup&&this.bindPopup(this._popup,this._popup.options),this},getElement:function(){return this._icon},update:function(){if(this._icon){var a=this._map.latLngToLayerPoint(this._latlng).round();this._setPos(a)}return this},_initIcon:function(){var a=this.options,b="leaflet-zoom-"+(this._zoomAnimated?"animated":"hide"),c=a.icon.createIcon(this._icon),d=!1;c!==this._icon&&(this._icon&&this._removeIcon(),d=!0,a.title&&(c.title=a.title),a.alt&&(c.alt=a.alt)),e.DomUtil.addClass(c,b),a.keyboard&&(c.tabIndex="0"),this._icon=c,a.riseOnHover&&this.on({mouseover:this._bringToFront,mouseout:this._resetZIndex});var f=a.icon.createShadow(this._shadow),g=!1;f!==this._shadow&&(this._removeShadow(),g=!0),f&&e.DomUtil.addClass(f,b),this._shadow=f,a.opacity<1&&this._updateOpacity(),d&&this.getPane().appendChild(this._icon),this._initInteraction(),f&&g&&this.getPane("shadowPane").appendChild(this._shadow)},_removeIcon:function(){this.options.riseOnHover&&this.off({mouseover:this._bringToFront,mouseout:this._resetZIndex}),e.DomUtil.remove(this._icon),this.removeInteractiveTarget(this._icon),this._icon=null},_removeShadow:function(){this._shadow&&e.DomUtil.remove(this._shadow),this._shadow=null},_setPos:function(a){e.DomUtil.setPosition(this._icon,a),this._shadow&&e.DomUtil.setPosition(this._shadow,a),this._zIndex=a.y+this.options.zIndexOffset,this._resetZIndex()},_updateZIndex:function(a){this._icon.style.zIndex=this._zIndex+a},_animateZoom:function(a){var b=this._map._latLngToNewLayerPoint(this._latlng,a.zoom,a.center).round();this._setPos(b)},_initInteraction:function(){if(this.options.interactive&&(e.DomUtil.addClass(this._icon,"leaflet-interactive"),this.addInteractiveTarget(this._icon),e.Handler.MarkerDrag)){var a=this.options.draggable;this.dragging&&(a=this.dragging.enabled(),this.dragging.disable()),this.dragging=new e.Handler.MarkerDrag(this),a&&this.dragging.enable()}},setOpacity:function(a){return this.options.opacity=a,this._map&&this._updateOpacity(),this},_updateOpacity:function(){var a=this.options.opacity;e.DomUtil.setOpacity(this._icon,a),this._shadow&&e.DomUtil.setOpacity(this._shadow,a)},_bringToFront:function(){this._updateZIndex(this.options.riseOffset)},_resetZIndex:function(){this._updateZIndex(0)}}),e.marker=function(a,b){return new e.Marker(a,b)},e.DivIcon=e.Icon.extend({options:{iconSize:[12,12],html:!1,bgPos:null,className:"leaflet-div-icon"},createIcon:function(a){var c=a&&"DIV"===a.tagName?a:b.createElement("div"),d=this.options;if(c.innerHTML=d.html!==!1?d.html:"",d.bgPos){var f=e.point(d.bgPos);c.style.backgroundPosition=-f.x+"px "+-f.y+"px"}return this._setIconStyles(c,"icon"),c},createShadow:function(){return null}}),e.divIcon=function(a){return new e.DivIcon(a)},e.DivOverlay=e.Layer.extend({options:{offset:[0,7],className:"",pane:"popupPane"},initialize:function(a,b){e.setOptions(this,a),this._source=b},onAdd:function(a){this._zoomAnimated=a._zoomAnimated,this._container||this._initLayout(),a._fadeAnimated&&e.DomUtil.setOpacity(this._container,0),clearTimeout(this._removeTimeout),this.getPane().appendChild(this._container),this.update(),a._fadeAnimated&&e.DomUtil.setOpacity(this._container,1),this.bringToFront()},onRemove:function(a){a._fadeAnimated?(e.DomUtil.setOpacity(this._container,0),this._removeTimeout=setTimeout(e.bind(e.DomUtil.remove,e.DomUtil,this._container),200)):e.DomUtil.remove(this._container)},getLatLng:function(){return this._latlng},setLatLng:function(a){return this._latlng=e.latLng(a),this._map&&(this._updatePosition(),this._adjustPan()),this},getContent:function(){return this._content},setContent:function(a){return this._content=a,this.update(),this},getElement:function(){return this._container},update:function(){this._map&&(this._container.style.visibility="hidden",this._updateContent(),this._updateLayout(),this._updatePosition(),this._container.style.visibility="",this._adjustPan())},getEvents:function(){var a={zoom:this._updatePosition,viewreset:this._updatePosition};return this._zoomAnimated&&(a.zoomanim=this._animateZoom),a},isOpen:function(){return!!this._map&&this._map.hasLayer(this)},bringToFront:function(){return this._map&&e.DomUtil.toFront(this._container),this},bringToBack:function(){return this._map&&e.DomUtil.toBack(this._container),this},_updateContent:function(){if(this._content){var a=this._contentNode,b="function"==typeof this._content?this._content(this._source||this):this._content;if("string"==typeof b)a.innerHTML=b;else{for(;a.hasChildNodes();)a.removeChild(a.firstChild);a.appendChild(b)}this.fire("contentupdate")}},_updatePosition:function(){if(this._map){var a=this._map.latLngToLayerPoint(this._latlng),b=e.point(this.options.offset),c=this._getAnchor();this._zoomAnimated?e.DomUtil.setPosition(this._container,a.add(c)):b=b.add(a).add(c);var d=this._containerBottom=-b.y,f=this._containerLeft=-Math.round(this._containerWidth/2)+b.x;this._container.style.bottom=d+"px",this._container.style.left=f+"px"}},_getAnchor:function(){return[0,0]}}),e.Popup=e.DivOverlay.extend({options:{maxWidth:300,minWidth:50,maxHeight:null,autoPan:!0,autoPanPaddingTopLeft:null,autoPanPaddingBottomRight:null,autoPanPadding:[5,5],keepInView:!1,closeButton:!0,autoClose:!0,className:""},openOn:function(a){return a.openPopup(this),this},onAdd:function(a){e.DivOverlay.prototype.onAdd.call(this,a),a.fire("popupopen",{popup:this}),this._source&&(this._source.fire("popupopen",{popup:this},!0),this._source instanceof e.Path||this._source.on("preclick",e.DomEvent.stopPropagation))},onRemove:function(a){e.DivOverlay.prototype.onRemove.call(this,a),a.fire("popupclose",{popup:this}),this._source&&(this._source.fire("popupclose",{popup:this},!0),this._source instanceof e.Path||this._source.off("preclick",e.DomEvent.stopPropagation))},getEvents:function(){var a=e.DivOverlay.prototype.getEvents.call(this);return("closeOnClick"in this.options?this.options.closeOnClick:this._map.options.closePopupOnClick)&&(a.preclick=this._close),this.options.keepInView&&(a.moveend=this._adjustPan),a},_close:function(){this._map&&this._map.closePopup(this)},_initLayout:function(){var a="leaflet-popup",b=this._container=e.DomUtil.create("div",a+" "+(this.options.className||"")+" leaflet-zoom-animated");if(this.options.closeButton){var c=this._closeButton=e.DomUtil.create("a",a+"-close-button",b);c.href="#close",c.innerHTML="&#215;",e.DomEvent.on(c,"click",this._onCloseButtonClick,this)}var d=this._wrapper=e.DomUtil.create("div",a+"-content-wrapper",b);this._contentNode=e.DomUtil.create("div",a+"-content",d),e.DomEvent.disableClickPropagation(d).disableScrollPropagation(this._contentNode).on(d,"contextmenu",e.DomEvent.stopPropagation),this._tipContainer=e.DomUtil.create("div",a+"-tip-container",b),this._tip=e.DomUtil.create("div",a+"-tip",this._tipContainer)},_updateLayout:function(){var a=this._contentNode,b=a.style;b.width="",b.whiteSpace="nowrap";var c=a.offsetWidth;c=Math.min(c,this.options.maxWidth),c=Math.max(c,this.options.minWidth),b.width=c+1+"px",b.whiteSpace="",b.height="";var d=a.offsetHeight,f=this.options.maxHeight,g="leaflet-popup-scrolled";f&&d>f?(b.height=f+"px",e.DomUtil.addClass(a,g)):e.DomUtil.removeClass(a,g),this._containerWidth=this._container.offsetWidth},_animateZoom:function(a){var b=this._map._latLngToNewLayerPoint(this._latlng,a.zoom,a.center),c=this._getAnchor();e.DomUtil.setPosition(this._container,b.add(c))},_adjustPan:function(){if(!(!this.options.autoPan||this._map._panAnim&&this._map._panAnim._inProgress)){var a=this._map,b=parseInt(e.DomUtil.getStyle(this._container,"marginBottom"),10)||0,c=this._container.offsetHeight+b,d=this._containerWidth,f=new e.Point(this._containerLeft,-c-this._containerBottom);f._add(e.DomUtil.getPosition(this._container));var g=a.layerPointToContainerPoint(f),h=e.point(this.options.autoPanPadding),i=e.point(this.options.autoPanPaddingTopLeft||h),j=e.point(this.options.autoPanPaddingBottomRight||h),k=a.getSize(),l=0,m=0;
-g.x+d+j.x>k.x&&(l=g.x+d-k.x+j.x),g.x-l-i.x<0&&(l=g.x-i.x),g.y+c+j.y>k.y&&(m=g.y+c-k.y+j.y),g.y-m-i.y<0&&(m=g.y-i.y),(l||m)&&a.fire("autopanstart").panBy([l,m])}},_onCloseButtonClick:function(a){this._close(),e.DomEvent.stop(a)},_getAnchor:function(){return e.point(this._source&&this._source._getPopupAnchor?this._source._getPopupAnchor():[0,0])}}),e.popup=function(a,b){return new e.Popup(a,b)},e.Map.mergeOptions({closePopupOnClick:!0}),e.Map.include({openPopup:function(a,b,c){return a instanceof e.Popup||(a=new e.Popup(c).setContent(a)),b&&a.setLatLng(b),this.hasLayer(a)?this:(this._popup&&this._popup.options.autoClose&&this.closePopup(),this._popup=a,this.addLayer(a))},closePopup:function(a){return a&&a!==this._popup||(a=this._popup,this._popup=null),a&&this.removeLayer(a),this}}),e.Layer.include({bindPopup:function(a,b){return a instanceof e.Popup?(e.setOptions(a,b),this._popup=a,a._source=this):(this._popup&&!b||(this._popup=new e.Popup(b,this)),this._popup.setContent(a)),this._popupHandlersAdded||(this.on({click:this._openPopup,remove:this.closePopup,move:this._movePopup}),this._popupHandlersAdded=!0),this},unbindPopup:function(){return this._popup&&(this.off({click:this._openPopup,remove:this.closePopup,move:this._movePopup}),this._popupHandlersAdded=!1,this._popup=null),this},openPopup:function(a,b){if(a instanceof e.Layer||(b=a,a=this),a instanceof e.FeatureGroup)for(var c in this._layers){a=this._layers[c];break}return b||(b=a.getCenter?a.getCenter():a.getLatLng()),this._popup&&this._map&&(this._popup._source=a,this._popup.update(),this._map.openPopup(this._popup,b)),this},closePopup:function(){return this._popup&&this._popup._close(),this},togglePopup:function(a){return this._popup&&(this._popup._map?this.closePopup():this.openPopup(a)),this},isPopupOpen:function(){return this._popup.isOpen()},setPopupContent:function(a){return this._popup&&this._popup.setContent(a),this},getPopup:function(){return this._popup},_openPopup:function(a){var b=a.layer||a.target;if(this._popup&&this._map)return e.DomEvent.stop(a),b instanceof e.Path?void this.openPopup(a.layer||a.target,a.latlng):void(this._map.hasLayer(this._popup)&&this._popup._source===b?this.closePopup():this.openPopup(b,a.latlng))},_movePopup:function(a){this._popup.setLatLng(a.latlng)}}),e.Marker.include({_getPopupAnchor:function(){return this.options.icon.options.popupAnchor||[0,0]}}),e.Tooltip=e.DivOverlay.extend({options:{pane:"tooltipPane",offset:[0,0],direction:"auto",permanent:!1,sticky:!1,interactive:!1,opacity:.9},onAdd:function(a){e.DivOverlay.prototype.onAdd.call(this,a),this.setOpacity(this.options.opacity),a.fire("tooltipopen",{tooltip:this}),this._source&&this._source.fire("tooltipopen",{tooltip:this},!0)},onRemove:function(a){e.DivOverlay.prototype.onRemove.call(this,a),a.fire("tooltipclose",{tooltip:this}),this._source&&this._source.fire("tooltipclose",{tooltip:this},!0)},getEvents:function(){var a=e.DivOverlay.prototype.getEvents.call(this);return e.Browser.touch&&!this.options.permanent&&(a.preclick=this._close),a},_close:function(){this._map&&this._map.closeTooltip(this)},_initLayout:function(){var a="leaflet-tooltip",b=a+" "+(this.options.className||"")+" leaflet-zoom-"+(this._zoomAnimated?"animated":"hide");this._contentNode=this._container=e.DomUtil.create("div",b)},_updateLayout:function(){},_adjustPan:function(){},_setPosition:function(a){var b=this._map,c=this._container,d=b.latLngToContainerPoint(b.getCenter()),f=b.layerPointToContainerPoint(a),g=this.options.direction,h=c.offsetWidth,i=c.offsetHeight,j=e.point(this.options.offset),k=this._getAnchor();"top"===g?a=a.add(e.point(-h/2+j.x,-i+j.y+k.y)):"bottom"===g?a=a.subtract(e.point(h/2-j.x,-j.y)):"center"===g?a=a.subtract(e.point(h/2+j.x,i/2-k.y+j.y)):"right"===g||"auto"===g&&f.x<d.x?(g="right",a=a.add([j.x+k.x,k.y-i/2+j.y])):(g="left",a=a.subtract(e.point(h+k.x-j.x,i/2-k.y-j.y))),e.DomUtil.removeClass(c,"leaflet-tooltip-right"),e.DomUtil.removeClass(c,"leaflet-tooltip-left"),e.DomUtil.removeClass(c,"leaflet-tooltip-top"),e.DomUtil.removeClass(c,"leaflet-tooltip-bottom"),e.DomUtil.addClass(c,"leaflet-tooltip-"+g),e.DomUtil.setPosition(c,a)},_updatePosition:function(){var a=this._map.latLngToLayerPoint(this._latlng);this._setPosition(a)},setOpacity:function(a){this.options.opacity=a,this._container&&e.DomUtil.setOpacity(this._container,a)},_animateZoom:function(a){var b=this._map._latLngToNewLayerPoint(this._latlng,a.zoom,a.center);this._setPosition(b)},_getAnchor:function(){return e.point(this._source&&this._source._getTooltipAnchor&&!this.options.sticky?this._source._getTooltipAnchor():[0,0])}}),e.tooltip=function(a,b){return new e.Tooltip(a,b)},e.Map.include({openTooltip:function(a,b,c){return a instanceof e.Tooltip||(a=new e.Tooltip(c).setContent(a)),b&&a.setLatLng(b),this.hasLayer(a)?this:this.addLayer(a)},closeTooltip:function(a){return a&&this.removeLayer(a),this}}),e.Layer.include({bindTooltip:function(a,b){return a instanceof e.Tooltip?(e.setOptions(a,b),this._tooltip=a,a._source=this):(this._tooltip&&!b||(this._tooltip=e.tooltip(b,this)),this._tooltip.setContent(a)),this._initTooltipInteractions(),this._tooltip.options.permanent&&this._map&&this._map.hasLayer(this)&&this.openTooltip(),this},unbindTooltip:function(){return this._tooltip&&(this._initTooltipInteractions(!0),this.closeTooltip(),this._tooltip=null),this},_initTooltipInteractions:function(a){if(a||!this._tooltipHandlersAdded){var b=a?"off":"on",c={remove:this.closeTooltip,move:this._moveTooltip};this._tooltip.options.permanent?c.add=this._openTooltip:(c.mouseover=this._openTooltip,c.mouseout=this.closeTooltip,this._tooltip.options.sticky&&(c.mousemove=this._moveTooltip),e.Browser.touch&&(c.click=this._openTooltip)),this[b](c),this._tooltipHandlersAdded=!a}},openTooltip:function(a,b){if(a instanceof e.Layer||(b=a,a=this),a instanceof e.FeatureGroup)for(var c in this._layers){a=this._layers[c];break}return b||(b=a.getCenter?a.getCenter():a.getLatLng()),this._tooltip&&this._map&&(this._tooltip._source=a,this._tooltip.update(),this._map.openTooltip(this._tooltip,b),this._tooltip.options.interactive&&this._tooltip._container&&(e.DomUtil.addClass(this._tooltip._container,"leaflet-clickable"),this.addInteractiveTarget(this._tooltip._container))),this},closeTooltip:function(){return this._tooltip&&(this._tooltip._close(),this._tooltip.options.interactive&&this._tooltip._container&&(e.DomUtil.removeClass(this._tooltip._container,"leaflet-clickable"),this.removeInteractiveTarget(this._tooltip._container))),this},toggleTooltip:function(a){return this._tooltip&&(this._tooltip._map?this.closeTooltip():this.openTooltip(a)),this},isTooltipOpen:function(){return this._tooltip.isOpen()},setTooltipContent:function(a){return this._tooltip&&this._tooltip.setContent(a),this},getTooltip:function(){return this._tooltip},_openTooltip:function(a){var b=a.layer||a.target;this._tooltip&&this._map&&this.openTooltip(b,this._tooltip.options.sticky?a.latlng:c)},_moveTooltip:function(a){var b,c,d=a.latlng;this._tooltip.options.sticky&&a.originalEvent&&(b=this._map.mouseEventToContainerPoint(a.originalEvent),c=this._map.containerPointToLayerPoint(b),d=this._map.layerPointToLatLng(c)),this._tooltip.setLatLng(d)}}),e.Marker.include({_getTooltipAnchor:function(){return this.options.icon.options.tooltipAnchor||[0,0]}}),e.LayerGroup=e.Layer.extend({initialize:function(a){this._layers={};var b,c;if(a)for(b=0,c=a.length;b<c;b++)this.addLayer(a[b])},addLayer:function(a){var b=this.getLayerId(a);return this._layers[b]=a,this._map&&this._map.addLayer(a),this},removeLayer:function(a){var b=a in this._layers?a:this.getLayerId(a);return this._map&&this._layers[b]&&this._map.removeLayer(this._layers[b]),delete this._layers[b],this},hasLayer:function(a){return!!a&&(a in this._layers||this.getLayerId(a)in this._layers)},clearLayers:function(){for(var a in this._layers)this.removeLayer(this._layers[a]);return this},invoke:function(a){var b,c,d=Array.prototype.slice.call(arguments,1);for(b in this._layers)c=this._layers[b],c[a]&&c[a].apply(c,d);return this},onAdd:function(a){for(var b in this._layers)a.addLayer(this._layers[b])},onRemove:function(a){for(var b in this._layers)a.removeLayer(this._layers[b])},eachLayer:function(a,b){for(var c in this._layers)a.call(b,this._layers[c]);return this},getLayer:function(a){return this._layers[a]},getLayers:function(){var a=[];for(var b in this._layers)a.push(this._layers[b]);return a},setZIndex:function(a){return this.invoke("setZIndex",a)},getLayerId:function(a){return e.stamp(a)}}),e.layerGroup=function(a){return new e.LayerGroup(a)},e.FeatureGroup=e.LayerGroup.extend({addLayer:function(a){return this.hasLayer(a)?this:(a.addEventParent(this),e.LayerGroup.prototype.addLayer.call(this,a),this.fire("layeradd",{layer:a}))},removeLayer:function(a){return this.hasLayer(a)?(a in this._layers&&(a=this._layers[a]),a.removeEventParent(this),e.LayerGroup.prototype.removeLayer.call(this,a),this.fire("layerremove",{layer:a})):this},setStyle:function(a){return this.invoke("setStyle",a)},bringToFront:function(){return this.invoke("bringToFront")},bringToBack:function(){return this.invoke("bringToBack")},getBounds:function(){var a=new e.LatLngBounds;for(var b in this._layers){var c=this._layers[b];a.extend(c.getBounds?c.getBounds():c.getLatLng())}return a}}),e.featureGroup=function(a){return new e.FeatureGroup(a)},e.Renderer=e.Layer.extend({options:{padding:.1},initialize:function(a){e.setOptions(this,a),e.stamp(this)},onAdd:function(){this._container||(this._initContainer(),this._zoomAnimated&&e.DomUtil.addClass(this._container,"leaflet-zoom-animated")),this.getPane().appendChild(this._container),this._update()},onRemove:function(){e.DomUtil.remove(this._container)},getEvents:function(){var a={viewreset:this._reset,zoom:this._onZoom,moveend:this._update};return this._zoomAnimated&&(a.zoomanim=this._onAnimZoom),a},_onAnimZoom:function(a){this._updateTransform(a.center,a.zoom)},_onZoom:function(){this._updateTransform(this._map.getCenter(),this._map.getZoom())},_updateTransform:function(a,b){var c=this._map.getZoomScale(b,this._zoom),d=e.DomUtil.getPosition(this._container),f=this._map.getSize().multiplyBy(.5+this.options.padding),g=this._map.project(this._center,b),h=this._map.project(a,b),i=h.subtract(g),j=f.multiplyBy(-c).add(d).add(f).subtract(i);e.Browser.any3d?e.DomUtil.setTransform(this._container,j,c):e.DomUtil.setPosition(this._container,j)},_reset:function(){this._update(),this._updateTransform(this._center,this._zoom)},_update:function(){var a=this.options.padding,b=this._map.getSize(),c=this._map.containerPointToLayerPoint(b.multiplyBy(-a)).round();this._bounds=new e.Bounds(c,c.add(b.multiplyBy(1+2*a)).round()),this._center=this._map.getCenter(),this._zoom=this._map.getZoom()}}),e.Map.include({getRenderer:function(a){var b=a.options.renderer||this._getPaneRenderer(a.options.pane)||this.options.renderer||this._renderer;return b||(b=this._renderer=this.options.preferCanvas&&e.canvas()||e.svg()),this.hasLayer(b)||this.addLayer(b),b},_getPaneRenderer:function(a){if("overlayPane"===a||a===c)return!1;var b=this._paneRenderers[a];return b===c&&(b=e.SVG&&e.svg({pane:a})||e.Canvas&&e.canvas({pane:a}),this._paneRenderers[a]=b),b}}),e.Path=e.Layer.extend({options:{stroke:!0,color:"#3388ff",weight:3,opacity:1,lineCap:"round",lineJoin:"round",dashArray:null,dashOffset:null,fill:!1,fillColor:null,fillOpacity:.2,fillRule:"evenodd",interactive:!0},beforeAdd:function(a){this._renderer=a.getRenderer(this)},onAdd:function(){this._renderer._initPath(this),this._reset(),this._renderer._addPath(this),this._renderer.on("update",this._update,this)},onRemove:function(){this._renderer._removePath(this),this._renderer.off("update",this._update,this)},getEvents:function(){return{zoomend:this._project,viewreset:this._reset}},redraw:function(){return this._map&&this._renderer._updatePath(this),this},setStyle:function(a){return e.setOptions(this,a),this._renderer&&this._renderer._updateStyle(this),this},bringToFront:function(){return this._renderer&&this._renderer._bringToFront(this),this},bringToBack:function(){return this._renderer&&this._renderer._bringToBack(this),this},getElement:function(){return this._path},_reset:function(){this._project(),this._update()},_clickTolerance:function(){return(this.options.stroke?this.options.weight/2:0)+(e.Browser.touch?10:0)}}),e.LineUtil={simplify:function(a,b){if(!b||!a.length)return a.slice();var c=b*b;return a=this._reducePoints(a,c),a=this._simplifyDP(a,c)},pointToSegmentDistance:function(a,b,c){return Math.sqrt(this._sqClosestPointOnSegment(a,b,c,!0))},closestPointOnSegment:function(a,b,c){return this._sqClosestPointOnSegment(a,b,c)},_simplifyDP:function(a,b){var d=a.length,e=typeof Uint8Array!=c+""?Uint8Array:Array,f=new e(d);f[0]=f[d-1]=1,this._simplifyDPStep(a,f,b,0,d-1);var g,h=[];for(g=0;g<d;g++)f[g]&&h.push(a[g]);return h},_simplifyDPStep:function(a,b,c,d,e){var f,g,h,i=0;for(g=d+1;g<=e-1;g++)h=this._sqClosestPointOnSegment(a[g],a[d],a[e],!0),h>i&&(f=g,i=h);i>c&&(b[f]=1,this._simplifyDPStep(a,b,c,d,f),this._simplifyDPStep(a,b,c,f,e))},_reducePoints:function(a,b){for(var c=[a[0]],d=1,e=0,f=a.length;d<f;d++)this._sqDist(a[d],a[e])>b&&(c.push(a[d]),e=d);return e<f-1&&c.push(a[f-1]),c},clipSegment:function(a,b,c,d,e){var f,g,h,i=d?this._lastCode:this._getBitCode(a,c),j=this._getBitCode(b,c);for(this._lastCode=j;;){if(!(i|j))return[a,b];if(i&j)return!1;f=i||j,g=this._getEdgeIntersection(a,b,f,c,e),h=this._getBitCode(g,c),f===i?(a=g,i=h):(b=g,j=h)}},_getEdgeIntersection:function(a,b,c,d,f){var g,h,i=b.x-a.x,j=b.y-a.y,k=d.min,l=d.max;return 8&c?(g=a.x+i*(l.y-a.y)/j,h=l.y):4&c?(g=a.x+i*(k.y-a.y)/j,h=k.y):2&c?(g=l.x,h=a.y+j*(l.x-a.x)/i):1&c&&(g=k.x,h=a.y+j*(k.x-a.x)/i),new e.Point(g,h,f)},_getBitCode:function(a,b){var c=0;return a.x<b.min.x?c|=1:a.x>b.max.x&&(c|=2),a.y<b.min.y?c|=4:a.y>b.max.y&&(c|=8),c},_sqDist:function(a,b){var c=b.x-a.x,d=b.y-a.y;return c*c+d*d},_sqClosestPointOnSegment:function(a,b,c,d){var f,g=b.x,h=b.y,i=c.x-g,j=c.y-h,k=i*i+j*j;return k>0&&(f=((a.x-g)*i+(a.y-h)*j)/k,f>1?(g=c.x,h=c.y):f>0&&(g+=i*f,h+=j*f)),i=a.x-g,j=a.y-h,d?i*i+j*j:new e.Point(g,h)}},e.Polyline=e.Path.extend({options:{smoothFactor:1,noClip:!1},initialize:function(a,b){e.setOptions(this,b),this._setLatLngs(a)},getLatLngs:function(){return this._latlngs},setLatLngs:function(a){return this._setLatLngs(a),this.redraw()},isEmpty:function(){return!this._latlngs.length},closestLayerPoint:function(a){for(var b,c,d=1/0,f=null,g=e.LineUtil._sqClosestPointOnSegment,h=0,i=this._parts.length;h<i;h++)for(var j=this._parts[h],k=1,l=j.length;k<l;k++){b=j[k-1],c=j[k];var m=g(a,b,c,!0);m<d&&(d=m,f=g(a,b,c))}return f&&(f.distance=Math.sqrt(d)),f},getCenter:function(){if(!this._map)throw new Error("Must add layer to map before using getCenter()");var a,b,c,d,e,f,g,h=this._rings[0],i=h.length;if(!i)return null;for(a=0,b=0;a<i-1;a++)b+=h[a].distanceTo(h[a+1])/2;if(0===b)return this._map.layerPointToLatLng(h[0]);for(a=0,d=0;a<i-1;a++)if(e=h[a],f=h[a+1],c=e.distanceTo(f),d+=c,d>b)return g=(d-b)/c,this._map.layerPointToLatLng([f.x-g*(f.x-e.x),f.y-g*(f.y-e.y)])},getBounds:function(){return this._bounds},addLatLng:function(a,b){return b=b||this._defaultShape(),a=e.latLng(a),b.push(a),this._bounds.extend(a),this.redraw()},_setLatLngs:function(a){this._bounds=new e.LatLngBounds,this._latlngs=this._convertLatLngs(a)},_defaultShape:function(){return e.Polyline._flat(this._latlngs)?this._latlngs:this._latlngs[0]},_convertLatLngs:function(a){for(var b=[],c=e.Polyline._flat(a),d=0,f=a.length;d<f;d++)c?(b[d]=e.latLng(a[d]),this._bounds.extend(b[d])):b[d]=this._convertLatLngs(a[d]);return b},_project:function(){var a=new e.Bounds;this._rings=[],this._projectLatlngs(this._latlngs,this._rings,a);var b=this._clickTolerance(),c=new e.Point(b,b);this._bounds.isValid()&&a.isValid()&&(a.min._subtract(c),a.max._add(c),this._pxBounds=a)},_projectLatlngs:function(a,b,c){var d,f,g=a[0]instanceof e.LatLng,h=a.length;if(g){for(f=[],d=0;d<h;d++)f[d]=this._map.latLngToLayerPoint(a[d]),c.extend(f[d]);b.push(f)}else for(d=0;d<h;d++)this._projectLatlngs(a[d],b,c)},_clipPoints:function(){var a=this._renderer._bounds;if(this._parts=[],this._pxBounds&&this._pxBounds.intersects(a)){if(this.options.noClip)return void(this._parts=this._rings);var b,c,d,f,g,h,i,j=this._parts;for(b=0,d=0,f=this._rings.length;b<f;b++)for(i=this._rings[b],c=0,g=i.length;c<g-1;c++)h=e.LineUtil.clipSegment(i[c],i[c+1],a,c,!0),h&&(j[d]=j[d]||[],j[d].push(h[0]),h[1]===i[c+1]&&c!==g-2||(j[d].push(h[1]),d++))}},_simplifyPoints:function(){for(var a=this._parts,b=this.options.smoothFactor,c=0,d=a.length;c<d;c++)a[c]=e.LineUtil.simplify(a[c],b)},_update:function(){this._map&&(this._clipPoints(),this._simplifyPoints(),this._updatePath())},_updatePath:function(){this._renderer._updatePoly(this)}}),e.polyline=function(a,b){return new e.Polyline(a,b)},e.Polyline._flat=function(a){return!e.Util.isArray(a[0])||"object"!=typeof a[0][0]&&"undefined"!=typeof a[0][0]},e.PolyUtil={},e.PolyUtil.clipPolygon=function(a,b,c){var d,f,g,h,i,j,k,l,m,n=[1,4,2,8],o=e.LineUtil;for(f=0,k=a.length;f<k;f++)a[f]._code=o._getBitCode(a[f],b);for(h=0;h<4;h++){for(l=n[h],d=[],f=0,k=a.length,g=k-1;f<k;g=f++)i=a[f],j=a[g],i._code&l?j._code&l||(m=o._getEdgeIntersection(j,i,l,b,c),m._code=o._getBitCode(m,b),d.push(m)):(j._code&l&&(m=o._getEdgeIntersection(j,i,l,b,c),m._code=o._getBitCode(m,b),d.push(m)),d.push(i));a=d}return a},e.Polygon=e.Polyline.extend({options:{fill:!0},isEmpty:function(){return!this._latlngs.length||!this._latlngs[0].length},getCenter:function(){if(!this._map)throw new Error("Must add layer to map before using getCenter()");var a,b,c,d,e,f,g,h,i,j=this._rings[0],k=j.length;if(!k)return null;for(f=g=h=0,a=0,b=k-1;a<k;b=a++)c=j[a],d=j[b],e=c.y*d.x-d.y*c.x,g+=(c.x+d.x)*e,h+=(c.y+d.y)*e,f+=3*e;return i=0===f?j[0]:[g/f,h/f],this._map.layerPointToLatLng(i)},_convertLatLngs:function(a){var b=e.Polyline.prototype._convertLatLngs.call(this,a),c=b.length;return c>=2&&b[0]instanceof e.LatLng&&b[0].equals(b[c-1])&&b.pop(),b},_setLatLngs:function(a){e.Polyline.prototype._setLatLngs.call(this,a),e.Polyline._flat(this._latlngs)&&(this._latlngs=[this._latlngs])},_defaultShape:function(){return e.Polyline._flat(this._latlngs[0])?this._latlngs[0]:this._latlngs[0][0]},_clipPoints:function(){var a=this._renderer._bounds,b=this.options.weight,c=new e.Point(b,b);if(a=new e.Bounds(a.min.subtract(c),a.max.add(c)),this._parts=[],this._pxBounds&&this._pxBounds.intersects(a)){if(this.options.noClip)return void(this._parts=this._rings);for(var d,f=0,g=this._rings.length;f<g;f++)d=e.PolyUtil.clipPolygon(this._rings[f],a,!0),d.length&&this._parts.push(d)}},_updatePath:function(){this._renderer._updatePoly(this,!0)}}),e.polygon=function(a,b){return new e.Polygon(a,b)},e.Rectangle=e.Polygon.extend({initialize:function(a,b){e.Polygon.prototype.initialize.call(this,this._boundsToLatLngs(a),b)},setBounds:function(a){return this.setLatLngs(this._boundsToLatLngs(a))},_boundsToLatLngs:function(a){return a=e.latLngBounds(a),[a.getSouthWest(),a.getNorthWest(),a.getNorthEast(),a.getSouthEast()]}}),e.rectangle=function(a,b){return new e.Rectangle(a,b)},e.CircleMarker=e.Path.extend({options:{fill:!0,radius:10},initialize:function(a,b){e.setOptions(this,b),this._latlng=e.latLng(a),this._radius=this.options.radius},setLatLng:function(a){return this._latlng=e.latLng(a),this.redraw(),this.fire("move",{latlng:this._latlng})},getLatLng:function(){return this._latlng},setRadius:function(a){return this.options.radius=this._radius=a,this.redraw()},getRadius:function(){return this._radius},setStyle:function(a){var b=a&&a.radius||this._radius;return e.Path.prototype.setStyle.call(this,a),this.setRadius(b),this},_project:function(){this._point=this._map.latLngToLayerPoint(this._latlng),this._updateBounds()},_updateBounds:function(){var a=this._radius,b=this._radiusY||a,c=this._clickTolerance(),d=[a+c,b+c];this._pxBounds=new e.Bounds(this._point.subtract(d),this._point.add(d))},_update:function(){this._map&&this._updatePath()},_updatePath:function(){this._renderer._updateCircle(this)},_empty:function(){return this._radius&&!this._renderer._bounds.intersects(this._pxBounds)}}),e.circleMarker=function(a,b){return new e.CircleMarker(a,b)},e.Circle=e.CircleMarker.extend({initialize:function(a,b,c){if("number"==typeof b&&(b=e.extend({},c,{radius:b})),e.setOptions(this,b),this._latlng=e.latLng(a),isNaN(this.options.radius))throw new Error("Circle radius cannot be NaN");this._mRadius=this.options.radius},setRadius:function(a){return this._mRadius=a,this.redraw()},getRadius:function(){return this._mRadius},getBounds:function(){var a=[this._radius,this._radiusY||this._radius];return new e.LatLngBounds(this._map.layerPointToLatLng(this._point.subtract(a)),this._map.layerPointToLatLng(this._point.add(a)))},setStyle:e.Path.prototype.setStyle,_project:function(){var a=this._latlng.lng,b=this._latlng.lat,c=this._map,d=c.options.crs;if(d.distance===e.CRS.Earth.distance){var f=Math.PI/180,g=this._mRadius/e.CRS.Earth.R/f,h=c.project([b+g,a]),i=c.project([b-g,a]),j=h.add(i).divideBy(2),k=c.unproject(j).lat,l=Math.acos((Math.cos(g*f)-Math.sin(b*f)*Math.sin(k*f))/(Math.cos(b*f)*Math.cos(k*f)))/f;(isNaN(l)||0===l)&&(l=g/Math.cos(Math.PI/180*b)),this._point=j.subtract(c.getPixelOrigin()),this._radius=isNaN(l)?0:Math.max(Math.round(j.x-c.project([k,a-l]).x),1),this._radiusY=Math.max(Math.round(j.y-h.y),1)}else{var m=d.unproject(d.project(this._latlng).subtract([this._mRadius,0]));this._point=c.latLngToLayerPoint(this._latlng),this._radius=this._point.x-c.latLngToLayerPoint(m).x}this._updateBounds()}}),e.circle=function(a,b,c){return new e.Circle(a,b,c)},e.SVG=e.Renderer.extend({getEvents:function(){var a=e.Renderer.prototype.getEvents.call(this);return a.zoomstart=this._onZoomStart,a},_initContainer:function(){this._container=e.SVG.create("svg"),this._container.setAttribute("pointer-events","none"),this._rootGroup=e.SVG.create("g"),this._container.appendChild(this._rootGroup)},_onZoomStart:function(){this._update()},_update:function(){if(!this._map._animatingZoom||!this._bounds){e.Renderer.prototype._update.call(this);var a=this._bounds,b=a.getSize(),c=this._container;this._svgSize&&this._svgSize.equals(b)||(this._svgSize=b,c.setAttribute("width",b.x),c.setAttribute("height",b.y)),e.DomUtil.setPosition(c,a.min),c.setAttribute("viewBox",[a.min.x,a.min.y,b.x,b.y].join(" ")),this.fire("update")}},_initPath:function(a){var b=a._path=e.SVG.create("path");a.options.className&&e.DomUtil.addClass(b,a.options.className),a.options.interactive&&e.DomUtil.addClass(b,"leaflet-interactive"),this._updateStyle(a)},_addPath:function(a){this._rootGroup.appendChild(a._path),a.addInteractiveTarget(a._path)},_removePath:function(a){e.DomUtil.remove(a._path),a.removeInteractiveTarget(a._path)},_updatePath:function(a){a._project(),a._update()},_updateStyle:function(a){var b=a._path,c=a.options;b&&(c.stroke?(b.setAttribute("stroke",c.color),b.setAttribute("stroke-opacity",c.opacity),b.setAttribute("stroke-width",c.weight),b.setAttribute("stroke-linecap",c.lineCap),b.setAttribute("stroke-linejoin",c.lineJoin),c.dashArray?b.setAttribute("stroke-dasharray",c.dashArray):b.removeAttribute("stroke-dasharray"),c.dashOffset?b.setAttribute("stroke-dashoffset",c.dashOffset):b.removeAttribute("stroke-dashoffset")):b.setAttribute("stroke","none"),c.fill?(b.setAttribute("fill",c.fillColor||c.color),b.setAttribute("fill-opacity",c.fillOpacity),b.setAttribute("fill-rule",c.fillRule||"evenodd")):b.setAttribute("fill","none"))},_updatePoly:function(a,b){this._setPath(a,e.SVG.pointsToPath(a._parts,b))},_updateCircle:function(a){var b=a._point,c=a._radius,d=a._radiusY||c,e="a"+c+","+d+" 0 1,0 ",f=a._empty()?"M0 0":"M"+(b.x-c)+","+b.y+e+2*c+",0 "+e+2*-c+",0 ";this._setPath(a,f)},_setPath:function(a,b){a._path.setAttribute("d",b)},_bringToFront:function(a){e.DomUtil.toFront(a._path)},_bringToBack:function(a){e.DomUtil.toBack(a._path)}}),e.extend(e.SVG,{create:function(a){return b.createElementNS("http://www.w3.org/2000/svg",a)},pointsToPath:function(a,b){var c,d,f,g,h,i,j="";for(c=0,f=a.length;c<f;c++){for(h=a[c],d=0,g=h.length;d<g;d++)i=h[d],j+=(d?"L":"M")+i.x+" "+i.y;j+=b?e.Browser.svg?"z":"x":""}return j||"M0 0"}}),e.Browser.svg=!(!b.createElementNS||!e.SVG.create("svg").createSVGRect),e.svg=function(a){return e.Browser.svg||e.Browser.vml?new e.SVG(a):null},e.Browser.vml=!e.Browser.svg&&function(){try{var a=b.createElement("div");a.innerHTML='<v:shape adj="1"/>';var c=a.firstChild;return c.style.behavior="url(#default#VML)",c&&"object"==typeof c.adj}catch(a){return!1}}(),e.SVG.include(e.Browser.vml?{_initContainer:function(){this._container=e.DomUtil.create("div","leaflet-vml-container")},_update:function(){this._map._animatingZoom||(e.Renderer.prototype._update.call(this),this.fire("update"))},_initPath:function(a){var b=a._container=e.SVG.create("shape");e.DomUtil.addClass(b,"leaflet-vml-shape "+(this.options.className||"")),b.coordsize="1 1",a._path=e.SVG.create("path"),b.appendChild(a._path),this._updateStyle(a)},_addPath:function(a){var b=a._container;this._container.appendChild(b),a.options.interactive&&a.addInteractiveTarget(b)},_removePath:function(a){var b=a._container;e.DomUtil.remove(b),a.removeInteractiveTarget(b)},_updateStyle:function(a){var b=a._stroke,c=a._fill,d=a.options,f=a._container;f.stroked=!!d.stroke,f.filled=!!d.fill,d.stroke?(b||(b=a._stroke=e.SVG.create("stroke")),f.appendChild(b),b.weight=d.weight+"px",b.color=d.color,b.opacity=d.opacity,d.dashArray?b.dashStyle=e.Util.isArray(d.dashArray)?d.dashArray.join(" "):d.dashArray.replace(/( *, *)/g," "):b.dashStyle="",b.endcap=d.lineCap.replace("butt","flat"),b.joinstyle=d.lineJoin):b&&(f.removeChild(b),a._stroke=null),d.fill?(c||(c=a._fill=e.SVG.create("fill")),f.appendChild(c),c.color=d.fillColor||d.color,c.opacity=d.fillOpacity):c&&(f.removeChild(c),a._fill=null)},_updateCircle:function(a){var b=a._point.round(),c=Math.round(a._radius),d=Math.round(a._radiusY||c);this._setPath(a,a._empty()?"M0 0":"AL "+b.x+","+b.y+" "+c+","+d+" 0,23592600")},_setPath:function(a,b){a._path.v=b},_bringToFront:function(a){e.DomUtil.toFront(a._container)},_bringToBack:function(a){e.DomUtil.toBack(a._container)}}:{}),e.Browser.vml&&(e.SVG.create=function(){try{return b.namespaces.add("lvml","urn:schemas-microsoft-com:vml"),function(a){return b.createElement("<lvml:"+a+' class="lvml">')}}catch(a){return function(a){return b.createElement("<"+a+' xmlns="urn:schemas-microsoft.com:vml" class="lvml">')}}}()),e.Canvas=e.Renderer.extend({onAdd:function(){e.Renderer.prototype.onAdd.call(this),this._layers=this._layers||{},this._draw()},_initContainer:function(){var a=this._container=b.createElement("canvas");e.DomEvent.on(a,"mousemove",e.Util.throttle(this._onMouseMove,32,this),this).on(a,"click dblclick mousedown mouseup contextmenu",this._onClick,this).on(a,"mouseout",this._handleMouseOut,this),this._ctx=a.getContext("2d")},_update:function(){if(!this._map._animatingZoom||!this._bounds){this._drawnLayers={},e.Renderer.prototype._update.call(this);var a=this._bounds,b=this._container,c=a.getSize(),d=e.Browser.retina?2:1;e.DomUtil.setPosition(b,a.min),b.width=d*c.x,b.height=d*c.y,b.style.width=c.x+"px",b.style.height=c.y+"px",e.Browser.retina&&this._ctx.scale(2,2),this._ctx.translate(-a.min.x,-a.min.y),this.fire("update")}},_initPath:function(a){this._updateDashArray(a),this._layers[e.stamp(a)]=a},_addPath:e.Util.falseFn,_removePath:function(a){a._removed=!0,this._requestRedraw(a)},_updatePath:function(a){this._redrawBounds=a._pxBounds,this._draw(!0),a._project(),a._update(),this._draw(),this._redrawBounds=null},_updateStyle:function(a){this._updateDashArray(a),this._requestRedraw(a)},_updateDashArray:function(a){if(a.options.dashArray){var b,c=a.options.dashArray.split(","),d=[];for(b=0;b<c.length;b++)d.push(Number(c[b]));a.options._dashArray=d}},_requestRedraw:function(a){if(this._map){var b=(a.options.weight||0)+1;this._redrawBounds=this._redrawBounds||new e.Bounds,this._redrawBounds.extend(a._pxBounds.min.subtract([b,b])),this._redrawBounds.extend(a._pxBounds.max.add([b,b])),this._redrawRequest=this._redrawRequest||e.Util.requestAnimFrame(this._redraw,this)}},_redraw:function(){this._redrawRequest=null,this._draw(!0),this._draw(),this._redrawBounds=null},_draw:function(a){this._clear=a;var b,c=this._redrawBounds;this._ctx.save(),c&&(this._ctx.beginPath(),this._ctx.rect(c.min.x,c.min.y,c.max.x-c.min.x,c.max.y-c.min.y),this._ctx.clip());for(var d in this._layers)b=this._layers[d],(!c||b._pxBounds&&b._pxBounds.intersects(c))&&b._updatePath(),a&&b._removed&&(delete b._removed,delete this._layers[d]);this._ctx.restore()},_updatePoly:function(a,b){var c,d,e,f,g=a._parts,h=g.length,i=this._ctx;if(h){for(this._drawnLayers[a._leaflet_id]=a,i.beginPath(),i.setLineDash&&i.setLineDash(a.options&&a.options._dashArray||[]),c=0;c<h;c++){for(d=0,e=g[c].length;d<e;d++)f=g[c][d],i[d?"lineTo":"moveTo"](f.x,f.y);b&&i.closePath()}this._fillStroke(i,a)}},_updateCircle:function(a){if(!a._empty()){var b=a._point,c=this._ctx,d=a._radius,e=(a._radiusY||d)/d;this._drawnLayers[a._leaflet_id]=a,1!==e&&(c.save(),c.scale(1,e)),c.beginPath(),c.arc(b.x,b.y/e,d,0,2*Math.PI,!1),1!==e&&c.restore(),this._fillStroke(c,a)}},_fillStroke:function(a,b){var c=this._clear,d=b.options;a.globalCompositeOperation=c?"destination-out":"source-over",d.fill&&(a.globalAlpha=c?1:d.fillOpacity,a.fillStyle=d.fillColor||d.color,a.fill(d.fillRule||"evenodd")),d.stroke&&0!==d.weight&&(a.globalAlpha=c?1:d.opacity,b._prevWeight=a.lineWidth=c?b._prevWeight+1:d.weight,a.strokeStyle=d.color,a.lineCap=d.lineCap,a.lineJoin=d.lineJoin,a.stroke())},_onClick:function(a){var b,c=this._map.mouseEventToLayerPoint(a),d=[];for(var f in this._layers)b=this._layers[f],b.options.interactive&&b._containsPoint(c)&&!this._map._draggableMoved(b)&&(e.DomEvent._fakeStop(a),d.push(b));d.length&&this._fireEvent(d,a)},_onMouseMove:function(a){if(this._map&&!this._map.dragging.moving()&&!this._map._animatingZoom){var b=this._map.mouseEventToLayerPoint(a);this._handleMouseOut(a,b),this._handleMouseHover(a,b)}},_handleMouseOut:function(a,b){var c=this._hoveredLayer;!c||"mouseout"!==a.type&&c._containsPoint(b)||(e.DomUtil.removeClass(this._container,"leaflet-interactive"),this._fireEvent([c],a,"mouseout"),this._hoveredLayer=null)},_handleMouseHover:function(a,b){var c,d;for(c in this._drawnLayers)d=this._drawnLayers[c],d.options.interactive&&d._containsPoint(b)&&(e.DomUtil.addClass(this._container,"leaflet-interactive"),this._fireEvent([d],a,"mouseover"),this._hoveredLayer=d);this._hoveredLayer&&this._fireEvent([this._hoveredLayer],a)},_fireEvent:function(a,b,c){this._map._fireDOMEvent(b,c||b.type,a)},_bringToFront:e.Util.falseFn,_bringToBack:e.Util.falseFn}),e.Browser.canvas=function(){return!!b.createElement("canvas").getContext}(),e.canvas=function(a){return e.Browser.canvas?new e.Canvas(a):null},e.Polyline.prototype._containsPoint=function(a,b){var c,d,f,g,h,i,j=this._clickTolerance();if(!this._pxBounds.contains(a))return!1;for(c=0,g=this._parts.length;c<g;c++)for(i=this._parts[c],d=0,h=i.length,f=h-1;d<h;f=d++)if((b||0!==d)&&e.LineUtil.pointToSegmentDistance(a,i[f],i[d])<=j)return!0;return!1},e.Polygon.prototype._containsPoint=function(a){var b,c,d,f,g,h,i,j,k=!1;if(!this._pxBounds.contains(a))return!1;for(f=0,i=this._parts.length;f<i;f++)for(b=this._parts[f],g=0,j=b.length,h=j-1;g<j;h=g++)c=b[g],d=b[h],c.y>a.y!=d.y>a.y&&a.x<(d.x-c.x)*(a.y-c.y)/(d.y-c.y)+c.x&&(k=!k);return k||e.Polyline.prototype._containsPoint.call(this,a,!0)},e.CircleMarker.prototype._containsPoint=function(a){return a.distanceTo(this._point)<=this._radius+this._clickTolerance()},e.GeoJSON=e.FeatureGroup.extend({initialize:function(a,b){e.setOptions(this,b),this._layers={},a&&this.addData(a)},addData:function(a){var b,c,d,f=e.Util.isArray(a)?a:a.features;if(f){for(b=0,c=f.length;b<c;b++)d=f[b],(d.geometries||d.geometry||d.features||d.coordinates)&&this.addData(d);return this;
-}var g=this.options;if(g.filter&&!g.filter(a))return this;var h=e.GeoJSON.geometryToLayer(a,g);return h?(h.feature=e.GeoJSON.asFeature(a),h.defaultOptions=h.options,this.resetStyle(h),g.onEachFeature&&g.onEachFeature(a,h),this.addLayer(h)):this},resetStyle:function(a){return a.options=e.Util.extend({},a.defaultOptions),this._setLayerStyle(a,this.options.style),this},setStyle:function(a){return this.eachLayer(function(b){this._setLayerStyle(b,a)},this)},_setLayerStyle:function(a,b){"function"==typeof b&&(b=b(a.feature)),a.setStyle&&a.setStyle(b)}}),e.extend(e.GeoJSON,{geometryToLayer:function(a,b){var c,d,f,g,h="Feature"===a.type?a.geometry:a,i=h?h.coordinates:null,j=[],k=b&&b.pointToLayer,l=b&&b.coordsToLatLng||this.coordsToLatLng;if(!i&&!h)return null;switch(h.type){case"Point":return c=l(i),k?k(a,c):new e.Marker(c);case"MultiPoint":for(f=0,g=i.length;f<g;f++)c=l(i[f]),j.push(k?k(a,c):new e.Marker(c));return new e.FeatureGroup(j);case"LineString":case"MultiLineString":return d=this.coordsToLatLngs(i,"LineString"===h.type?0:1,l),new e.Polyline(d,b);case"Polygon":case"MultiPolygon":return d=this.coordsToLatLngs(i,"Polygon"===h.type?1:2,l),new e.Polygon(d,b);case"GeometryCollection":for(f=0,g=h.geometries.length;f<g;f++){var m=this.geometryToLayer({geometry:h.geometries[f],type:"Feature",properties:a.properties},b);m&&j.push(m)}return new e.FeatureGroup(j);default:throw new Error("Invalid GeoJSON object.")}},coordsToLatLng:function(a){return new e.LatLng(a[1],a[0],a[2])},coordsToLatLngs:function(a,b,c){for(var d,e=[],f=0,g=a.length;f<g;f++)d=b?this.coordsToLatLngs(a[f],b-1,c):(c||this.coordsToLatLng)(a[f]),e.push(d);return e},latLngToCoords:function(a){return a.alt!==c?[a.lng,a.lat,a.alt]:[a.lng,a.lat]},latLngsToCoords:function(a,b,c){for(var d=[],f=0,g=a.length;f<g;f++)d.push(b?e.GeoJSON.latLngsToCoords(a[f],b-1,c):e.GeoJSON.latLngToCoords(a[f]));return!b&&c&&d.push(d[0]),d},getFeature:function(a,b){return a.feature?e.extend({},a.feature,{geometry:b}):e.GeoJSON.asFeature(b)},asFeature:function(a){return"Feature"===a.type?a:{type:"Feature",properties:{},geometry:a}}});var g={toGeoJSON:function(){return e.GeoJSON.getFeature(this,{type:"Point",coordinates:e.GeoJSON.latLngToCoords(this.getLatLng())})}};e.Marker.include(g),e.Circle.include(g),e.CircleMarker.include(g),e.Polyline.prototype.toGeoJSON=function(){var a=!e.Polyline._flat(this._latlngs),b=e.GeoJSON.latLngsToCoords(this._latlngs,a?1:0);return e.GeoJSON.getFeature(this,{type:(a?"Multi":"")+"LineString",coordinates:b})},e.Polygon.prototype.toGeoJSON=function(){var a=!e.Polyline._flat(this._latlngs),b=a&&!e.Polyline._flat(this._latlngs[0]),c=e.GeoJSON.latLngsToCoords(this._latlngs,b?2:a?1:0,!0);return a||(c=[c]),e.GeoJSON.getFeature(this,{type:(b?"Multi":"")+"Polygon",coordinates:c})},e.LayerGroup.include({toMultiPoint:function(){var a=[];return this.eachLayer(function(b){a.push(b.toGeoJSON().geometry.coordinates)}),e.GeoJSON.getFeature(this,{type:"MultiPoint",coordinates:a})},toGeoJSON:function(){var a=this.feature&&this.feature.geometry&&this.feature.geometry.type;if("MultiPoint"===a)return this.toMultiPoint();var b="GeometryCollection"===a,c=[];return this.eachLayer(function(a){if(a.toGeoJSON){var d=a.toGeoJSON();c.push(b?d.geometry:e.GeoJSON.asFeature(d))}}),b?e.GeoJSON.getFeature(this,{geometries:c,type:"GeometryCollection"}):{type:"FeatureCollection",features:c}}}),e.geoJSON=function(a,b){return new e.GeoJSON(a,b)},e.geoJson=e.geoJSON;var h="_leaflet_events";e.DomEvent={on:function(a,b,c,d){if("object"==typeof b)for(var f in b)this._on(a,f,b[f],c);else{b=e.Util.splitWords(b);for(var g=0,h=b.length;g<h;g++)this._on(a,b[g],c,d)}return this},off:function(a,b,c,d){if("object"==typeof b)for(var f in b)this._off(a,f,b[f],c);else{b=e.Util.splitWords(b);for(var g=0,h=b.length;g<h;g++)this._off(a,b[g],c,d)}return this},_on:function(b,c,d,f){var g=c+e.stamp(d)+(f?"_"+e.stamp(f):"");if(b[h]&&b[h][g])return this;var i=function(c){return d.call(f||b,c||a.event)},j=i;return e.Browser.pointer&&0===c.indexOf("touch")?this.addPointerListener(b,c,i,g):e.Browser.touch&&"dblclick"===c&&this.addDoubleTapListener?this.addDoubleTapListener(b,i,g):"addEventListener"in b?"mousewheel"===c?b.addEventListener("onwheel"in b?"wheel":"mousewheel",i,!1):"mouseenter"===c||"mouseleave"===c?(i=function(c){c=c||a.event,e.DomEvent._isExternalTarget(b,c)&&j(c)},b.addEventListener("mouseenter"===c?"mouseover":"mouseout",i,!1)):("click"===c&&e.Browser.android&&(i=function(a){return e.DomEvent._filterClick(a,j)}),b.addEventListener(c,i,!1)):"attachEvent"in b&&b.attachEvent("on"+c,i),b[h]=b[h]||{},b[h][g]=i,this},_off:function(a,b,c,d){var f=b+e.stamp(c)+(d?"_"+e.stamp(d):""),g=a[h]&&a[h][f];return g?(e.Browser.pointer&&0===b.indexOf("touch")?this.removePointerListener(a,b,f):e.Browser.touch&&"dblclick"===b&&this.removeDoubleTapListener?this.removeDoubleTapListener(a,f):"removeEventListener"in a?"mousewheel"===b?a.removeEventListener("onwheel"in a?"wheel":"mousewheel",g,!1):a.removeEventListener("mouseenter"===b?"mouseover":"mouseleave"===b?"mouseout":b,g,!1):"detachEvent"in a&&a.detachEvent("on"+b,g),a[h][f]=null,this):this},stopPropagation:function(a){return a.stopPropagation?a.stopPropagation():a.originalEvent?a.originalEvent._stopped=!0:a.cancelBubble=!0,e.DomEvent._skipped(a),this},disableScrollPropagation:function(a){return e.DomEvent.on(a,"mousewheel",e.DomEvent.stopPropagation)},disableClickPropagation:function(a){var b=e.DomEvent.stopPropagation;return e.DomEvent.on(a,e.Draggable.START.join(" "),b),e.DomEvent.on(a,{click:e.DomEvent._fakeStop,dblclick:b})},preventDefault:function(a){return a.preventDefault?a.preventDefault():a.returnValue=!1,this},stop:function(a){return e.DomEvent.preventDefault(a).stopPropagation(a)},getMousePosition:function(a,b){if(!b)return new e.Point(a.clientX,a.clientY);var c=b.getBoundingClientRect();return new e.Point(a.clientX-c.left-b.clientLeft,a.clientY-c.top-b.clientTop)},_wheelPxFactor:e.Browser.win&&e.Browser.chrome?2:e.Browser.gecko?a.devicePixelRatio:1,getWheelDelta:function(a){return e.Browser.edge?a.wheelDeltaY/2:a.deltaY&&0===a.deltaMode?-a.deltaY/e.DomEvent._wheelPxFactor:a.deltaY&&1===a.deltaMode?20*-a.deltaY:a.deltaY&&2===a.deltaMode?60*-a.deltaY:a.deltaX||a.deltaZ?0:a.wheelDelta?(a.wheelDeltaY||a.wheelDelta)/2:a.detail&&Math.abs(a.detail)<32765?20*-a.detail:a.detail?a.detail/-32765*60:0},_skipEvents:{},_fakeStop:function(a){e.DomEvent._skipEvents[a.type]=!0},_skipped:function(a){var b=this._skipEvents[a.type];return this._skipEvents[a.type]=!1,b},_isExternalTarget:function(a,b){var c=b.relatedTarget;if(!c)return!0;try{for(;c&&c!==a;)c=c.parentNode}catch(a){return!1}return c!==a},_filterClick:function(a,b){var c=a.timeStamp||a.originalEvent&&a.originalEvent.timeStamp,d=e.DomEvent._lastClick&&c-e.DomEvent._lastClick;return d&&d>100&&d<500||a.target._simulatedClick&&!a._simulated?void e.DomEvent.stop(a):(e.DomEvent._lastClick=c,void b(a))}},e.DomEvent.addListener=e.DomEvent.on,e.DomEvent.removeListener=e.DomEvent.off,e.Draggable=e.Evented.extend({options:{clickTolerance:3},statics:{START:e.Browser.touch?["touchstart","mousedown"]:["mousedown"],END:{mousedown:"mouseup",touchstart:"touchend",pointerdown:"touchend",MSPointerDown:"touchend"},MOVE:{mousedown:"mousemove",touchstart:"touchmove",pointerdown:"touchmove",MSPointerDown:"touchmove"}},initialize:function(a,b,c){this._element=a,this._dragStartTarget=b||a,this._preventOutline=c},enable:function(){this._enabled||(e.DomEvent.on(this._dragStartTarget,e.Draggable.START.join(" "),this._onDown,this),this._enabled=!0)},disable:function(){this._enabled&&(e.DomEvent.off(this._dragStartTarget,e.Draggable.START.join(" "),this._onDown,this),this._enabled=!1,this._moved=!1)},_onDown:function(a){if(!a._simulated&&this._enabled&&(this._moved=!1,!e.DomUtil.hasClass(this._element,"leaflet-zoom-anim")&&!(e.Draggable._dragging||a.shiftKey||1!==a.which&&1!==a.button&&!a.touches)&&this._enabled&&(e.Draggable._dragging=!0,this._preventOutline&&e.DomUtil.preventOutline(this._element),e.DomUtil.disableImageDrag(),e.DomUtil.disableTextSelection(),!this._moving))){this.fire("down");var c=a.touches?a.touches[0]:a;this._startPoint=new e.Point(c.clientX,c.clientY),e.DomEvent.on(b,e.Draggable.MOVE[a.type],this._onMove,this).on(b,e.Draggable.END[a.type],this._onUp,this)}},_onMove:function(c){if(!c._simulated&&this._enabled){if(c.touches&&c.touches.length>1)return void(this._moved=!0);var d=c.touches&&1===c.touches.length?c.touches[0]:c,f=new e.Point(d.clientX,d.clientY),g=f.subtract(this._startPoint);(g.x||g.y)&&(Math.abs(g.x)+Math.abs(g.y)<this.options.clickTolerance||(e.DomEvent.preventDefault(c),this._moved||(this.fire("dragstart"),this._moved=!0,this._startPos=e.DomUtil.getPosition(this._element).subtract(g),e.DomUtil.addClass(b.body,"leaflet-dragging"),this._lastTarget=c.target||c.srcElement,a.SVGElementInstance&&this._lastTarget instanceof SVGElementInstance&&(this._lastTarget=this._lastTarget.correspondingUseElement),e.DomUtil.addClass(this._lastTarget,"leaflet-drag-target")),this._newPos=this._startPos.add(g),this._moving=!0,e.Util.cancelAnimFrame(this._animRequest),this._lastEvent=c,this._animRequest=e.Util.requestAnimFrame(this._updatePosition,this,!0)))}},_updatePosition:function(){var a={originalEvent:this._lastEvent};this.fire("predrag",a),e.DomUtil.setPosition(this._element,this._newPos),this.fire("drag",a)},_onUp:function(a){if(!a._simulated&&this._enabled){e.DomUtil.removeClass(b.body,"leaflet-dragging"),this._lastTarget&&(e.DomUtil.removeClass(this._lastTarget,"leaflet-drag-target"),this._lastTarget=null);for(var c in e.Draggable.MOVE)e.DomEvent.off(b,e.Draggable.MOVE[c],this._onMove,this).off(b,e.Draggable.END[c],this._onUp,this);e.DomUtil.enableImageDrag(),e.DomUtil.enableTextSelection(),this._moved&&this._moving&&(e.Util.cancelAnimFrame(this._animRequest),this.fire("dragend",{distance:this._newPos.distanceTo(this._startPos)})),this._moving=!1,e.Draggable._dragging=!1}}}),e.Handler=e.Class.extend({initialize:function(a){this._map=a},enable:function(){return this._enabled?this:(this._enabled=!0,this.addHooks(),this)},disable:function(){return this._enabled?(this._enabled=!1,this.removeHooks(),this):this},enabled:function(){return!!this._enabled}}),e.Map.mergeOptions({dragging:!0,inertia:!e.Browser.android23,inertiaDeceleration:3400,inertiaMaxSpeed:1/0,easeLinearity:.2,worldCopyJump:!1,maxBoundsViscosity:0}),e.Map.Drag=e.Handler.extend({addHooks:function(){if(!this._draggable){var a=this._map;this._draggable=new e.Draggable(a._mapPane,a._container),this._draggable.on({down:this._onDown,dragstart:this._onDragStart,drag:this._onDrag,dragend:this._onDragEnd},this),this._draggable.on("predrag",this._onPreDragLimit,this),a.options.worldCopyJump&&(this._draggable.on("predrag",this._onPreDragWrap,this),a.on("zoomend",this._onZoomEnd,this),a.whenReady(this._onZoomEnd,this))}e.DomUtil.addClass(this._map._container,"leaflet-grab leaflet-touch-drag"),this._draggable.enable(),this._positions=[],this._times=[]},removeHooks:function(){e.DomUtil.removeClass(this._map._container,"leaflet-grab"),e.DomUtil.removeClass(this._map._container,"leaflet-touch-drag"),this._draggable.disable()},moved:function(){return this._draggable&&this._draggable._moved},moving:function(){return this._draggable&&this._draggable._moving},_onDown:function(){this._map._stop()},_onDragStart:function(){var a=this._map;if(this._map.options.maxBounds&&this._map.options.maxBoundsViscosity){var b=e.latLngBounds(this._map.options.maxBounds);this._offsetLimit=e.bounds(this._map.latLngToContainerPoint(b.getNorthWest()).multiplyBy(-1),this._map.latLngToContainerPoint(b.getSouthEast()).multiplyBy(-1).add(this._map.getSize())),this._viscosity=Math.min(1,Math.max(0,this._map.options.maxBoundsViscosity))}else this._offsetLimit=null;a.fire("movestart").fire("dragstart"),a.options.inertia&&(this._positions=[],this._times=[])},_onDrag:function(a){if(this._map.options.inertia){var b=this._lastTime=+new Date,c=this._lastPos=this._draggable._absPos||this._draggable._newPos;this._positions.push(c),this._times.push(b),b-this._times[0]>50&&(this._positions.shift(),this._times.shift())}this._map.fire("move",a).fire("drag",a)},_onZoomEnd:function(){var a=this._map.getSize().divideBy(2),b=this._map.latLngToLayerPoint([0,0]);this._initialWorldOffset=b.subtract(a).x,this._worldWidth=this._map.getPixelWorldBounds().getSize().x},_viscousLimit:function(a,b){return a-(a-b)*this._viscosity},_onPreDragLimit:function(){if(this._viscosity&&this._offsetLimit){var a=this._draggable._newPos.subtract(this._draggable._startPos),b=this._offsetLimit;a.x<b.min.x&&(a.x=this._viscousLimit(a.x,b.min.x)),a.y<b.min.y&&(a.y=this._viscousLimit(a.y,b.min.y)),a.x>b.max.x&&(a.x=this._viscousLimit(a.x,b.max.x)),a.y>b.max.y&&(a.y=this._viscousLimit(a.y,b.max.y)),this._draggable._newPos=this._draggable._startPos.add(a)}},_onPreDragWrap:function(){var a=this._worldWidth,b=Math.round(a/2),c=this._initialWorldOffset,d=this._draggable._newPos.x,e=(d-b+c)%a+b-c,f=(d+b+c)%a-b-c,g=Math.abs(e+c)<Math.abs(f+c)?e:f;this._draggable._absPos=this._draggable._newPos.clone(),this._draggable._newPos.x=g},_onDragEnd:function(a){var b=this._map,c=b.options,d=!c.inertia||this._times.length<2;if(b.fire("dragend",a),d)b.fire("moveend");else{var f=this._lastPos.subtract(this._positions[0]),g=(this._lastTime-this._times[0])/1e3,h=c.easeLinearity,i=f.multiplyBy(h/g),j=i.distanceTo([0,0]),k=Math.min(c.inertiaMaxSpeed,j),l=i.multiplyBy(k/j),m=k/(c.inertiaDeceleration*h),n=l.multiplyBy(-m/2).round();n.x||n.y?(n=b._limitOffset(n,b.options.maxBounds),e.Util.requestAnimFrame(function(){b.panBy(n,{duration:m,easeLinearity:h,noMoveStart:!0,animate:!0})})):b.fire("moveend")}}}),e.Map.addInitHook("addHandler","dragging",e.Map.Drag),e.Map.mergeOptions({doubleClickZoom:!0}),e.Map.DoubleClickZoom=e.Handler.extend({addHooks:function(){this._map.on("dblclick",this._onDoubleClick,this)},removeHooks:function(){this._map.off("dblclick",this._onDoubleClick,this)},_onDoubleClick:function(a){var b=this._map,c=b.getZoom(),d=b.options.zoomDelta,e=a.originalEvent.shiftKey?c-d:c+d;"center"===b.options.doubleClickZoom?b.setZoom(e):b.setZoomAround(a.containerPoint,e)}}),e.Map.addInitHook("addHandler","doubleClickZoom",e.Map.DoubleClickZoom),e.Map.mergeOptions({scrollWheelZoom:!0,wheelDebounceTime:40,wheelPxPerZoomLevel:60}),e.Map.ScrollWheelZoom=e.Handler.extend({addHooks:function(){e.DomEvent.on(this._map._container,"mousewheel",this._onWheelScroll,this),this._delta=0},removeHooks:function(){e.DomEvent.off(this._map._container,"mousewheel",this._onWheelScroll,this)},_onWheelScroll:function(a){var b=e.DomEvent.getWheelDelta(a),c=this._map.options.wheelDebounceTime;this._delta+=b,this._lastMousePos=this._map.mouseEventToContainerPoint(a),this._startTime||(this._startTime=+new Date);var d=Math.max(c-(+new Date-this._startTime),0);clearTimeout(this._timer),this._timer=setTimeout(e.bind(this._performZoom,this),d),e.DomEvent.stop(a)},_performZoom:function(){var a=this._map,b=a.getZoom(),c=this._map.options.zoomSnap||0;a._stop();var d=this._delta/(4*this._map.options.wheelPxPerZoomLevel),e=4*Math.log(2/(1+Math.exp(-Math.abs(d))))/Math.LN2,f=c?Math.ceil(e/c)*c:e,g=a._limitZoom(b+(this._delta>0?f:-f))-b;this._delta=0,this._startTime=null,g&&("center"===a.options.scrollWheelZoom?a.setZoom(b+g):a.setZoomAround(this._lastMousePos,b+g))}}),e.Map.addInitHook("addHandler","scrollWheelZoom",e.Map.ScrollWheelZoom),e.extend(e.DomEvent,{_touchstart:e.Browser.msPointer?"MSPointerDown":e.Browser.pointer?"pointerdown":"touchstart",_touchend:e.Browser.msPointer?"MSPointerUp":e.Browser.pointer?"pointerup":"touchend",addDoubleTapListener:function(a,b,c){function d(a){var b;if(b=e.Browser.pointer?e.DomEvent._pointersCount:a.touches.length,!(b>1)){var c=Date.now(),d=c-(g||c);h=a.touches?a.touches[0]:a,i=d>0&&d<=j,g=c}}function f(){if(i&&!h.cancelBubble){if(e.Browser.pointer){var a,c,d={};for(c in h)a=h[c],d[c]=a&&a.bind?a.bind(h):a;h=d}h.type="dblclick",b(h),g=null}}var g,h,i=!1,j=250,k="_leaflet_",l=this._touchstart,m=this._touchend;return a[k+l+c]=d,a[k+m+c]=f,a[k+"dblclick"+c]=b,a.addEventListener(l,d,!1),a.addEventListener(m,f,!1),e.Browser.edge||a.addEventListener("dblclick",b,!1),this},removeDoubleTapListener:function(a,b){var c="_leaflet_",d=a[c+this._touchstart+b],f=a[c+this._touchend+b],g=a[c+"dblclick"+b];return a.removeEventListener(this._touchstart,d,!1),a.removeEventListener(this._touchend,f,!1),e.Browser.edge||a.removeEventListener("dblclick",g,!1),this}}),e.extend(e.DomEvent,{POINTER_DOWN:e.Browser.msPointer?"MSPointerDown":"pointerdown",POINTER_MOVE:e.Browser.msPointer?"MSPointerMove":"pointermove",POINTER_UP:e.Browser.msPointer?"MSPointerUp":"pointerup",POINTER_CANCEL:e.Browser.msPointer?"MSPointerCancel":"pointercancel",TAG_WHITE_LIST:["INPUT","SELECT","OPTION"],_pointers:{},_pointersCount:0,addPointerListener:function(a,b,c,d){return"touchstart"===b?this._addPointerStart(a,c,d):"touchmove"===b?this._addPointerMove(a,c,d):"touchend"===b&&this._addPointerEnd(a,c,d),this},removePointerListener:function(a,b,c){var d=a["_leaflet_"+b+c];return"touchstart"===b?a.removeEventListener(this.POINTER_DOWN,d,!1):"touchmove"===b?a.removeEventListener(this.POINTER_MOVE,d,!1):"touchend"===b&&(a.removeEventListener(this.POINTER_UP,d,!1),a.removeEventListener(this.POINTER_CANCEL,d,!1)),this},_addPointerStart:function(a,c,d){var f=e.bind(function(a){if("mouse"!==a.pointerType&&a.pointerType!==a.MSPOINTER_TYPE_MOUSE){if(!(this.TAG_WHITE_LIST.indexOf(a.target.tagName)<0))return;e.DomEvent.preventDefault(a)}this._handlePointer(a,c)},this);if(a["_leaflet_touchstart"+d]=f,a.addEventListener(this.POINTER_DOWN,f,!1),!this._pointerDocListener){var g=e.bind(this._globalPointerUp,this);b.documentElement.addEventListener(this.POINTER_DOWN,e.bind(this._globalPointerDown,this),!0),b.documentElement.addEventListener(this.POINTER_MOVE,e.bind(this._globalPointerMove,this),!0),b.documentElement.addEventListener(this.POINTER_UP,g,!0),b.documentElement.addEventListener(this.POINTER_CANCEL,g,!0),this._pointerDocListener=!0}},_globalPointerDown:function(a){this._pointers[a.pointerId]=a,this._pointersCount++},_globalPointerMove:function(a){this._pointers[a.pointerId]&&(this._pointers[a.pointerId]=a)},_globalPointerUp:function(a){delete this._pointers[a.pointerId],this._pointersCount--},_handlePointer:function(a,b){a.touches=[];for(var c in this._pointers)a.touches.push(this._pointers[c]);a.changedTouches=[a],b(a)},_addPointerMove:function(a,b,c){var d=e.bind(function(a){(a.pointerType!==a.MSPOINTER_TYPE_MOUSE&&"mouse"!==a.pointerType||0!==a.buttons)&&this._handlePointer(a,b)},this);a["_leaflet_touchmove"+c]=d,a.addEventListener(this.POINTER_MOVE,d,!1)},_addPointerEnd:function(a,b,c){var d=e.bind(function(a){this._handlePointer(a,b)},this);a["_leaflet_touchend"+c]=d,a.addEventListener(this.POINTER_UP,d,!1),a.addEventListener(this.POINTER_CANCEL,d,!1)}}),e.Map.mergeOptions({touchZoom:e.Browser.touch&&!e.Browser.android23,bounceAtZoomLimits:!0}),e.Map.TouchZoom=e.Handler.extend({addHooks:function(){e.DomUtil.addClass(this._map._container,"leaflet-touch-zoom"),e.DomEvent.on(this._map._container,"touchstart",this._onTouchStart,this)},removeHooks:function(){e.DomUtil.removeClass(this._map._container,"leaflet-touch-zoom"),e.DomEvent.off(this._map._container,"touchstart",this._onTouchStart,this)},_onTouchStart:function(a){var c=this._map;if(a.touches&&2===a.touches.length&&!c._animatingZoom&&!this._zooming){var d=c.mouseEventToContainerPoint(a.touches[0]),f=c.mouseEventToContainerPoint(a.touches[1]);this._centerPoint=c.getSize()._divideBy(2),this._startLatLng=c.containerPointToLatLng(this._centerPoint),"center"!==c.options.touchZoom&&(this._pinchStartLatLng=c.containerPointToLatLng(d.add(f)._divideBy(2))),this._startDist=d.distanceTo(f),this._startZoom=c.getZoom(),this._moved=!1,this._zooming=!0,c._stop(),e.DomEvent.on(b,"touchmove",this._onTouchMove,this).on(b,"touchend",this._onTouchEnd,this),e.DomEvent.preventDefault(a)}},_onTouchMove:function(a){if(a.touches&&2===a.touches.length&&this._zooming){var b=this._map,c=b.mouseEventToContainerPoint(a.touches[0]),d=b.mouseEventToContainerPoint(a.touches[1]),f=c.distanceTo(d)/this._startDist;if(this._zoom=b.getScaleZoom(f,this._startZoom),!b.options.bounceAtZoomLimits&&(this._zoom<b.getMinZoom()&&f<1||this._zoom>b.getMaxZoom()&&f>1)&&(this._zoom=b._limitZoom(this._zoom)),"center"===b.options.touchZoom){if(this._center=this._startLatLng,1===f)return}else{var g=c._add(d)._divideBy(2)._subtract(this._centerPoint);if(1===f&&0===g.x&&0===g.y)return;this._center=b.unproject(b.project(this._pinchStartLatLng,this._zoom).subtract(g),this._zoom)}this._moved||(b._moveStart(!0),this._moved=!0),e.Util.cancelAnimFrame(this._animRequest);var h=e.bind(b._move,b,this._center,this._zoom,{pinch:!0,round:!1});this._animRequest=e.Util.requestAnimFrame(h,this,!0),e.DomEvent.preventDefault(a)}},_onTouchEnd:function(){return this._moved&&this._zooming?(this._zooming=!1,e.Util.cancelAnimFrame(this._animRequest),e.DomEvent.off(b,"touchmove",this._onTouchMove).off(b,"touchend",this._onTouchEnd),void(this._map.options.zoomAnimation?this._map._animateZoom(this._center,this._map._limitZoom(this._zoom),!0,this._map.options.zoomSnap):this._map._resetView(this._center,this._map._limitZoom(this._zoom)))):void(this._zooming=!1)}}),e.Map.addInitHook("addHandler","touchZoom",e.Map.TouchZoom),e.Map.mergeOptions({tap:!0,tapTolerance:15}),e.Map.Tap=e.Handler.extend({addHooks:function(){e.DomEvent.on(this._map._container,"touchstart",this._onDown,this)},removeHooks:function(){e.DomEvent.off(this._map._container,"touchstart",this._onDown,this)},_onDown:function(a){if(a.touches){if(e.DomEvent.preventDefault(a),this._fireClick=!0,a.touches.length>1)return this._fireClick=!1,void clearTimeout(this._holdTimeout);var c=a.touches[0],d=c.target;this._startPos=this._newPos=new e.Point(c.clientX,c.clientY),d.tagName&&"a"===d.tagName.toLowerCase()&&e.DomUtil.addClass(d,"leaflet-active"),this._holdTimeout=setTimeout(e.bind(function(){this._isTapValid()&&(this._fireClick=!1,this._onUp(),this._simulateEvent("contextmenu",c))},this),1e3),this._simulateEvent("mousedown",c),e.DomEvent.on(b,{touchmove:this._onMove,touchend:this._onUp},this)}},_onUp:function(a){if(clearTimeout(this._holdTimeout),e.DomEvent.off(b,{touchmove:this._onMove,touchend:this._onUp},this),this._fireClick&&a&&a.changedTouches){var c=a.changedTouches[0],d=c.target;d&&d.tagName&&"a"===d.tagName.toLowerCase()&&e.DomUtil.removeClass(d,"leaflet-active"),this._simulateEvent("mouseup",c),this._isTapValid()&&this._simulateEvent("click",c)}},_isTapValid:function(){return this._newPos.distanceTo(this._startPos)<=this._map.options.tapTolerance},_onMove:function(a){var b=a.touches[0];this._newPos=new e.Point(b.clientX,b.clientY),this._simulateEvent("mousemove",b)},_simulateEvent:function(c,d){var e=b.createEvent("MouseEvents");e._simulated=!0,d.target._simulatedClick=!0,e.initMouseEvent(c,!0,!0,a,1,d.screenX,d.screenY,d.clientX,d.clientY,!1,!1,!1,!1,0,null),d.target.dispatchEvent(e)}}),e.Browser.touch&&!e.Browser.pointer&&e.Map.addInitHook("addHandler","tap",e.Map.Tap),e.Map.mergeOptions({boxZoom:!0}),e.Map.BoxZoom=e.Handler.extend({initialize:function(a){this._map=a,this._container=a._container,this._pane=a._panes.overlayPane},addHooks:function(){e.DomEvent.on(this._container,"mousedown",this._onMouseDown,this)},removeHooks:function(){e.DomEvent.off(this._container,"mousedown",this._onMouseDown,this)},moved:function(){return this._moved},_resetState:function(){this._moved=!1},_onMouseDown:function(a){return!(!a.shiftKey||1!==a.which&&1!==a.button)&&(this._resetState(),e.DomUtil.disableTextSelection(),e.DomUtil.disableImageDrag(),this._startPoint=this._map.mouseEventToContainerPoint(a),void e.DomEvent.on(b,{contextmenu:e.DomEvent.stop,mousemove:this._onMouseMove,mouseup:this._onMouseUp,keydown:this._onKeyDown},this))},_onMouseMove:function(a){this._moved||(this._moved=!0,this._box=e.DomUtil.create("div","leaflet-zoom-box",this._container),e.DomUtil.addClass(this._container,"leaflet-crosshair"),this._map.fire("boxzoomstart")),this._point=this._map.mouseEventToContainerPoint(a);var b=new e.Bounds(this._point,this._startPoint),c=b.getSize();e.DomUtil.setPosition(this._box,b.min),this._box.style.width=c.x+"px",this._box.style.height=c.y+"px"},_finish:function(){this._moved&&(e.DomUtil.remove(this._box),e.DomUtil.removeClass(this._container,"leaflet-crosshair")),e.DomUtil.enableTextSelection(),e.DomUtil.enableImageDrag(),e.DomEvent.off(b,{contextmenu:e.DomEvent.stop,mousemove:this._onMouseMove,mouseup:this._onMouseUp,keydown:this._onKeyDown},this)},_onMouseUp:function(a){if((1===a.which||1===a.button)&&(this._finish(),this._moved)){setTimeout(e.bind(this._resetState,this),0);var b=new e.LatLngBounds(this._map.containerPointToLatLng(this._startPoint),this._map.containerPointToLatLng(this._point));this._map.fitBounds(b).fire("boxzoomend",{boxZoomBounds:b})}},_onKeyDown:function(a){27===a.keyCode&&this._finish()}}),e.Map.addInitHook("addHandler","boxZoom",e.Map.BoxZoom),e.Map.mergeOptions({keyboard:!0,keyboardPanDelta:80}),e.Map.Keyboard=e.Handler.extend({keyCodes:{left:[37],right:[39],down:[40],up:[38],zoomIn:[187,107,61,171],zoomOut:[189,109,54,173]},initialize:function(a){this._map=a,this._setPanDelta(a.options.keyboardPanDelta),this._setZoomDelta(a.options.zoomDelta)},addHooks:function(){var a=this._map._container;a.tabIndex<=0&&(a.tabIndex="0"),e.DomEvent.on(a,{focus:this._onFocus,blur:this._onBlur,mousedown:this._onMouseDown},this),this._map.on({focus:this._addHooks,blur:this._removeHooks},this)},removeHooks:function(){this._removeHooks(),e.DomEvent.off(this._map._container,{focus:this._onFocus,blur:this._onBlur,mousedown:this._onMouseDown},this),this._map.off({focus:this._addHooks,blur:this._removeHooks},this)},_onMouseDown:function(){if(!this._focused){var c=b.body,d=b.documentElement,e=c.scrollTop||d.scrollTop,f=c.scrollLeft||d.scrollLeft;this._map._container.focus(),a.scrollTo(f,e)}},_onFocus:function(){this._focused=!0,this._map.fire("focus")},_onBlur:function(){this._focused=!1,this._map.fire("blur")},_setPanDelta:function(a){var b,c,d=this._panKeys={},e=this.keyCodes;for(b=0,c=e.left.length;b<c;b++)d[e.left[b]]=[-1*a,0];for(b=0,c=e.right.length;b<c;b++)d[e.right[b]]=[a,0];for(b=0,c=e.down.length;b<c;b++)d[e.down[b]]=[0,a];for(b=0,c=e.up.length;b<c;b++)d[e.up[b]]=[0,-1*a]},_setZoomDelta:function(a){var b,c,d=this._zoomKeys={},e=this.keyCodes;for(b=0,c=e.zoomIn.length;b<c;b++)d[e.zoomIn[b]]=a;for(b=0,c=e.zoomOut.length;b<c;b++)d[e.zoomOut[b]]=-a},_addHooks:function(){e.DomEvent.on(b,"keydown",this._onKeyDown,this)},_removeHooks:function(){e.DomEvent.off(b,"keydown",this._onKeyDown,this)},_onKeyDown:function(a){if(!(a.altKey||a.ctrlKey||a.metaKey)){var b,c=a.keyCode,d=this._map;if(c in this._panKeys){if(d._panAnim&&d._panAnim._inProgress)return;b=this._panKeys[c],a.shiftKey&&(b=e.point(b).multiplyBy(3)),d.panBy(b),d.options.maxBounds&&d.panInsideBounds(d.options.maxBounds)}else if(c in this._zoomKeys)d.setZoom(d.getZoom()+(a.shiftKey?3:1)*this._zoomKeys[c]);else{if(27!==c)return;d.closePopup()}e.DomEvent.stop(a)}}}),e.Map.addInitHook("addHandler","keyboard",e.Map.Keyboard),e.Handler.MarkerDrag=e.Handler.extend({initialize:function(a){this._marker=a},addHooks:function(){var a=this._marker._icon;this._draggable||(this._draggable=new e.Draggable(a,a,!0)),this._draggable.on({dragstart:this._onDragStart,drag:this._onDrag,dragend:this._onDragEnd},this).enable(),e.DomUtil.addClass(a,"leaflet-marker-draggable")},removeHooks:function(){this._draggable.off({dragstart:this._onDragStart,drag:this._onDrag,dragend:this._onDragEnd},this).disable(),this._marker._icon&&e.DomUtil.removeClass(this._marker._icon,"leaflet-marker-draggable")},moved:function(){return this._draggable&&this._draggable._moved},_onDragStart:function(){this._oldLatLng=this._marker.getLatLng(),this._marker.closePopup().fire("movestart").fire("dragstart")},_onDrag:function(a){var b=this._marker,c=b._shadow,d=e.DomUtil.getPosition(b._icon),f=b._map.layerPointToLatLng(d);c&&e.DomUtil.setPosition(c,d),b._latlng=f,a.latlng=f,a.oldLatLng=this._oldLatLng,b.fire("move",a).fire("drag",a)},_onDragEnd:function(a){delete this._oldLatLng,this._marker.fire("moveend").fire("dragend",a)}}),e.Control=e.Class.extend({options:{position:"topright"},initialize:function(a){e.setOptions(this,a)},getPosition:function(){return this.options.position},setPosition:function(a){var b=this._map;return b&&b.removeControl(this),this.options.position=a,b&&b.addControl(this),this},getContainer:function(){return this._container},addTo:function(a){this.remove(),this._map=a;var b=this._container=this.onAdd(a),c=this.getPosition(),d=a._controlCorners[c];return e.DomUtil.addClass(b,"leaflet-control"),c.indexOf("bottom")!==-1?d.insertBefore(b,d.firstChild):d.appendChild(b),this},remove:function(){return this._map?(e.DomUtil.remove(this._container),this.onRemove&&this.onRemove(this._map),this._map=null,this):this},_refocusOnMap:function(a){this._map&&a&&a.screenX>0&&a.screenY>0&&this._map.getContainer().focus()}}),e.control=function(a){return new e.Control(a)},e.Map.include({addControl:function(a){return a.addTo(this),this},removeControl:function(a){return a.remove(),this},_initControlPos:function(){function a(a,f){var g=c+a+" "+c+f;b[a+f]=e.DomUtil.create("div",g,d)}var b=this._controlCorners={},c="leaflet-",d=this._controlContainer=e.DomUtil.create("div",c+"control-container",this._container);a("top","left"),a("top","right"),a("bottom","left"),a("bottom","right")},_clearControlPos:function(){e.DomUtil.remove(this._controlContainer)}}),e.Control.Zoom=e.Control.extend({options:{position:"topleft",zoomInText:"+",zoomInTitle:"Zoom in",zoomOutText:"-",zoomOutTitle:"Zoom out"},onAdd:function(a){var b="leaflet-control-zoom",c=e.DomUtil.create("div",b+" leaflet-bar"),d=this.options;return this._zoomInButton=this._createButton(d.zoomInText,d.zoomInTitle,b+"-in",c,this._zoomIn),this._zoomOutButton=this._createButton(d.zoomOutText,d.zoomOutTitle,b+"-out",c,this._zoomOut),this._updateDisabled(),a.on("zoomend zoomlevelschange",this._updateDisabled,this),c},onRemove:function(a){a.off("zoomend zoomlevelschange",this._updateDisabled,this)},disable:function(){return this._disabled=!0,this._updateDisabled(),this},enable:function(){return this._disabled=!1,this._updateDisabled(),this},_zoomIn:function(a){!this._disabled&&this._map._zoom<this._map.getMaxZoom()&&this._map.zoomIn(this._map.options.zoomDelta*(a.shiftKey?3:1))},_zoomOut:function(a){!this._disabled&&this._map._zoom>this._map.getMinZoom()&&this._map.zoomOut(this._map.options.zoomDelta*(a.shiftKey?3:1))},_createButton:function(a,b,c,d,f){var g=e.DomUtil.create("a",c,d);return g.innerHTML=a,g.href="#",g.title=b,e.DomEvent.on(g,"mousedown dblclick",e.DomEvent.stopPropagation).on(g,"click",e.DomEvent.stop).on(g,"click",f,this).on(g,"click",this._refocusOnMap,this),g},_updateDisabled:function(){var a=this._map,b="leaflet-disabled";e.DomUtil.removeClass(this._zoomInButton,b),e.DomUtil.removeClass(this._zoomOutButton,b),(this._disabled||a._zoom===a.getMinZoom())&&e.DomUtil.addClass(this._zoomOutButton,b),(this._disabled||a._zoom===a.getMaxZoom())&&e.DomUtil.addClass(this._zoomInButton,b)}}),e.Map.mergeOptions({zoomControl:!0}),e.Map.addInitHook(function(){this.options.zoomControl&&(this.zoomControl=new e.Control.Zoom,this.addControl(this.zoomControl))}),e.control.zoom=function(a){return new e.Control.Zoom(a)},e.Control.Attribution=e.Control.extend({options:{position:"bottomright",prefix:'<a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>'},initialize:function(a){e.setOptions(this,a),this._attributions={}},onAdd:function(a){a.attributionControl=this,this._container=e.DomUtil.create("div","leaflet-control-attribution"),e.DomEvent&&e.DomEvent.disableClickPropagation(this._container);for(var b in a._layers)a._layers[b].getAttribution&&this.addAttribution(a._layers[b].getAttribution());
-return this._update(),this._container},setPrefix:function(a){return this.options.prefix=a,this._update(),this},addAttribution:function(a){return a?(this._attributions[a]||(this._attributions[a]=0),this._attributions[a]++,this._update(),this):this},removeAttribution:function(a){return a?(this._attributions[a]&&(this._attributions[a]--,this._update()),this):this},_update:function(){if(this._map){var a=[];for(var b in this._attributions)this._attributions[b]&&a.push(b);var c=[];this.options.prefix&&c.push(this.options.prefix),a.length&&c.push(a.join(", ")),this._container.innerHTML=c.join(" | ")}}}),e.Map.mergeOptions({attributionControl:!0}),e.Map.addInitHook(function(){this.options.attributionControl&&(new e.Control.Attribution).addTo(this)}),e.control.attribution=function(a){return new e.Control.Attribution(a)},e.Control.Scale=e.Control.extend({options:{position:"bottomleft",maxWidth:100,metric:!0,imperial:!0},onAdd:function(a){var b="leaflet-control-scale",c=e.DomUtil.create("div",b),d=this.options;return this._addScales(d,b+"-line",c),a.on(d.updateWhenIdle?"moveend":"move",this._update,this),a.whenReady(this._update,this),c},onRemove:function(a){a.off(this.options.updateWhenIdle?"moveend":"move",this._update,this)},_addScales:function(a,b,c){a.metric&&(this._mScale=e.DomUtil.create("div",b,c)),a.imperial&&(this._iScale=e.DomUtil.create("div",b,c))},_update:function(){var a=this._map,b=a.getSize().y/2,c=a.distance(a.containerPointToLatLng([0,b]),a.containerPointToLatLng([this.options.maxWidth,b]));this._updateScales(c)},_updateScales:function(a){this.options.metric&&a&&this._updateMetric(a),this.options.imperial&&a&&this._updateImperial(a)},_updateMetric:function(a){var b=this._getRoundNum(a),c=b<1e3?b+" m":b/1e3+" km";this._updateScale(this._mScale,c,b/a)},_updateImperial:function(a){var b,c,d,e=3.2808399*a;e>5280?(b=e/5280,c=this._getRoundNum(b),this._updateScale(this._iScale,c+" mi",c/b)):(d=this._getRoundNum(e),this._updateScale(this._iScale,d+" ft",d/e))},_updateScale:function(a,b,c){a.style.width=Math.round(this.options.maxWidth*c)+"px",a.innerHTML=b},_getRoundNum:function(a){var b=Math.pow(10,(Math.floor(a)+"").length-1),c=a/b;return c=c>=10?10:c>=5?5:c>=3?3:c>=2?2:1,b*c}}),e.control.scale=function(a){return new e.Control.Scale(a)},e.Control.Layers=e.Control.extend({options:{collapsed:!0,position:"topright",autoZIndex:!0,hideSingleBase:!1},initialize:function(a,b,c){e.setOptions(this,c),this._layers=[],this._lastZIndex=0,this._handlingClick=!1;for(var d in a)this._addLayer(a[d],d);for(d in b)this._addLayer(b[d],d,!0)},onAdd:function(a){return this._initLayout(),this._update(),this._map=a,a.on("zoomend",this._checkDisabledLayers,this),this._container},onRemove:function(){this._map.off("zoomend",this._checkDisabledLayers,this);for(var a=0;a<this._layers.length;a++)this._layers[a].layer.off("add remove",this._onLayerChange,this)},addBaseLayer:function(a,b){return this._addLayer(a,b),this._map?this._update():this},addOverlay:function(a,b){return this._addLayer(a,b,!0),this._map?this._update():this},removeLayer:function(a){a.off("add remove",this._onLayerChange,this);var b=this._getLayer(e.stamp(a));return b&&this._layers.splice(this._layers.indexOf(b),1),this._map?this._update():this},expand:function(){e.DomUtil.addClass(this._container,"leaflet-control-layers-expanded"),this._form.style.height=null;var a=this._map.getSize().y-(this._container.offsetTop+50);return a<this._form.clientHeight?(e.DomUtil.addClass(this._form,"leaflet-control-layers-scrollbar"),this._form.style.height=a+"px"):e.DomUtil.removeClass(this._form,"leaflet-control-layers-scrollbar"),this._checkDisabledLayers(),this},collapse:function(){return e.DomUtil.removeClass(this._container,"leaflet-control-layers-expanded"),this},_initLayout:function(){var a="leaflet-control-layers",b=this._container=e.DomUtil.create("div",a);b.setAttribute("aria-haspopup",!0),e.DomEvent.disableClickPropagation(b),e.Browser.touch||e.DomEvent.disableScrollPropagation(b);var c=this._form=e.DomUtil.create("form",a+"-list");if(this.options.collapsed){e.Browser.android||e.DomEvent.on(b,{mouseenter:this.expand,mouseleave:this.collapse},this);var d=this._layersLink=e.DomUtil.create("a",a+"-toggle",b);d.href="#",d.title="Layers",e.Browser.touch?e.DomEvent.on(d,"click",e.DomEvent.stop).on(d,"click",this.expand,this):e.DomEvent.on(d,"focus",this.expand,this),e.DomEvent.on(c,"click",function(){setTimeout(e.bind(this._onInputClick,this),0)},this),this._map.on("click",this.collapse,this)}else this.expand();this._baseLayersList=e.DomUtil.create("div",a+"-base",c),this._separator=e.DomUtil.create("div",a+"-separator",c),this._overlaysList=e.DomUtil.create("div",a+"-overlays",c),b.appendChild(c)},_getLayer:function(a){for(var b=0;b<this._layers.length;b++)if(this._layers[b]&&e.stamp(this._layers[b].layer)===a)return this._layers[b]},_addLayer:function(a,b,c){a.on("add remove",this._onLayerChange,this),this._layers.push({layer:a,name:b,overlay:c}),this.options.autoZIndex&&a.setZIndex&&(this._lastZIndex++,a.setZIndex(this._lastZIndex))},_update:function(){if(!this._container)return this;e.DomUtil.empty(this._baseLayersList),e.DomUtil.empty(this._overlaysList);var a,b,c,d,f=0;for(c=0;c<this._layers.length;c++)d=this._layers[c],this._addItem(d),b=b||d.overlay,a=a||!d.overlay,f+=d.overlay?0:1;return this.options.hideSingleBase&&(a=a&&f>1,this._baseLayersList.style.display=a?"":"none"),this._separator.style.display=b&&a?"":"none",this},_onLayerChange:function(a){this._handlingClick||this._update();var b=this._getLayer(e.stamp(a.target)),c=b.overlay?"add"===a.type?"overlayadd":"overlayremove":"add"===a.type?"baselayerchange":null;c&&this._map.fire(c,b)},_createRadioElement:function(a,c){var d='<input type="radio" class="leaflet-control-layers-selector" name="'+a+'"'+(c?' checked="checked"':"")+"/>",e=b.createElement("div");return e.innerHTML=d,e.firstChild},_addItem:function(a){var c,d=b.createElement("label"),f=this._map.hasLayer(a.layer);a.overlay?(c=b.createElement("input"),c.type="checkbox",c.className="leaflet-control-layers-selector",c.defaultChecked=f):c=this._createRadioElement("leaflet-base-layers",f),c.layerId=e.stamp(a.layer),e.DomEvent.on(c,"click",this._onInputClick,this);var g=b.createElement("span");g.innerHTML=" "+a.name;var h=b.createElement("div");d.appendChild(h),h.appendChild(c),h.appendChild(g);var i=a.overlay?this._overlaysList:this._baseLayersList;return i.appendChild(d),this._checkDisabledLayers(),d},_onInputClick:function(){var a,b,c,d=this._form.getElementsByTagName("input"),e=[],f=[];this._handlingClick=!0;for(var g=d.length-1;g>=0;g--)a=d[g],b=this._getLayer(a.layerId).layer,c=this._map.hasLayer(b),a.checked&&!c?e.push(b):!a.checked&&c&&f.push(b);for(g=0;g<f.length;g++)this._map.removeLayer(f[g]);for(g=0;g<e.length;g++)this._map.addLayer(e[g]);this._handlingClick=!1,this._refocusOnMap()},_checkDisabledLayers:function(){for(var a,b,d=this._form.getElementsByTagName("input"),e=this._map.getZoom(),f=d.length-1;f>=0;f--)a=d[f],b=this._getLayer(a.layerId).layer,a.disabled=b.options.minZoom!==c&&e<b.options.minZoom||b.options.maxZoom!==c&&e>b.options.maxZoom},_expand:function(){return this.expand()},_collapse:function(){return this.collapse()}}),e.control.layers=function(a,b,c){return new e.Control.Layers(a,b,c)},e.PosAnimation=e.Evented.extend({run:function(a,b,c,d){this.stop(),this._el=a,this._inProgress=!0,this._duration=c||.25,this._easeOutPower=1/Math.max(d||.5,.2),this._startPos=e.DomUtil.getPosition(a),this._offset=b.subtract(this._startPos),this._startTime=+new Date,this.fire("start"),this._animate()},stop:function(){this._inProgress&&(this._step(!0),this._complete())},_animate:function(){this._animId=e.Util.requestAnimFrame(this._animate,this),this._step()},_step:function(a){var b=+new Date-this._startTime,c=1e3*this._duration;b<c?this._runFrame(this._easeOut(b/c),a):(this._runFrame(1),this._complete())},_runFrame:function(a,b){var c=this._startPos.add(this._offset.multiplyBy(a));b&&c._round(),e.DomUtil.setPosition(this._el,c),this.fire("step")},_complete:function(){e.Util.cancelAnimFrame(this._animId),this._inProgress=!1,this.fire("end")},_easeOut:function(a){return 1-Math.pow(1-a,this._easeOutPower)}}),e.Map.include({setView:function(a,b,d){if(b=b===c?this._zoom:this._limitZoom(b),a=this._limitCenter(e.latLng(a),b,this.options.maxBounds),d=d||{},this._stop(),this._loaded&&!d.reset&&d!==!0){d.animate!==c&&(d.zoom=e.extend({animate:d.animate},d.zoom),d.pan=e.extend({animate:d.animate,duration:d.duration},d.pan));var f=this._zoom!==b?this._tryAnimatedZoom&&this._tryAnimatedZoom(a,b,d.zoom):this._tryAnimatedPan(a,d.pan);if(f)return clearTimeout(this._sizeTimer),this}return this._resetView(a,b),this},panBy:function(a,b){if(a=e.point(a).round(),b=b||{},!a.x&&!a.y)return this.fire("moveend");if(b.animate!==!0&&!this.getSize().contains(a))return this._resetView(this.unproject(this.project(this.getCenter()).add(a)),this.getZoom()),this;if(this._panAnim||(this._panAnim=new e.PosAnimation,this._panAnim.on({step:this._onPanTransitionStep,end:this._onPanTransitionEnd},this)),b.noMoveStart||this.fire("movestart"),b.animate!==!1){e.DomUtil.addClass(this._mapPane,"leaflet-pan-anim");var c=this._getMapPanePos().subtract(a).round();this._panAnim.run(this._mapPane,c,b.duration||.25,b.easeLinearity)}else this._rawPanBy(a),this.fire("move").fire("moveend");return this},_onPanTransitionStep:function(){this.fire("move")},_onPanTransitionEnd:function(){e.DomUtil.removeClass(this._mapPane,"leaflet-pan-anim"),this.fire("moveend")},_tryAnimatedPan:function(a,b){var c=this._getCenterOffset(a)._floor();return!((b&&b.animate)!==!0&&!this.getSize().contains(c))&&(this.panBy(c,b),!0)}}),e.Map.mergeOptions({zoomAnimation:!0,zoomAnimationThreshold:4});var i=e.DomUtil.TRANSITION&&e.Browser.any3d&&!e.Browser.mobileOpera;i&&e.Map.addInitHook(function(){this._zoomAnimated=this.options.zoomAnimation,this._zoomAnimated&&(this._createAnimProxy(),e.DomEvent.on(this._proxy,e.DomUtil.TRANSITION_END,this._catchTransitionEnd,this))}),e.Map.include(i?{_createAnimProxy:function(){var a=this._proxy=e.DomUtil.create("div","leaflet-proxy leaflet-zoom-animated");this._panes.mapPane.appendChild(a),this.on("zoomanim",function(b){var c=e.DomUtil.TRANSFORM,d=a.style[c];e.DomUtil.setTransform(a,this.project(b.center,b.zoom),this.getZoomScale(b.zoom,1)),d===a.style[c]&&this._animatingZoom&&this._onZoomTransitionEnd()},this),this.on("load moveend",function(){var b=this.getCenter(),c=this.getZoom();e.DomUtil.setTransform(a,this.project(b,c),this.getZoomScale(c,1))},this)},_catchTransitionEnd:function(a){this._animatingZoom&&a.propertyName.indexOf("transform")>=0&&this._onZoomTransitionEnd()},_nothingToAnimate:function(){return!this._container.getElementsByClassName("leaflet-zoom-animated").length},_tryAnimatedZoom:function(a,b,c){if(this._animatingZoom)return!0;if(c=c||{},!this._zoomAnimated||c.animate===!1||this._nothingToAnimate()||Math.abs(b-this._zoom)>this.options.zoomAnimationThreshold)return!1;var d=this.getZoomScale(b),f=this._getCenterOffset(a)._divideBy(1-1/d);return!(c.animate!==!0&&!this.getSize().contains(f))&&(e.Util.requestAnimFrame(function(){this._moveStart(!0)._animateZoom(a,b,!0)},this),!0)},_animateZoom:function(a,b,c,d){c&&(this._animatingZoom=!0,this._animateToCenter=a,this._animateToZoom=b,e.DomUtil.addClass(this._mapPane,"leaflet-zoom-anim")),this.fire("zoomanim",{center:a,zoom:b,noUpdate:d}),setTimeout(e.bind(this._onZoomTransitionEnd,this),250)},_onZoomTransitionEnd:function(){this._animatingZoom&&(e.DomUtil.removeClass(this._mapPane,"leaflet-zoom-anim"),this._animatingZoom=!1,this._move(this._animateToCenter,this._animateToZoom),e.Util.requestAnimFrame(function(){this._moveEnd(!0)},this))}}:{}),e.Map.include({flyTo:function(a,b,d){function f(a){var b=a?-1:1,c=a?s:r,d=s*s-r*r+b*v*v*t*t,e=2*c*v*t,f=d/e,g=Math.sqrt(f*f+1)-f,h=g<1e-9?-18:Math.log(g);return h}function g(a){return(Math.exp(a)-Math.exp(-a))/2}function h(a){return(Math.exp(a)+Math.exp(-a))/2}function i(a){return g(a)/h(a)}function j(a){return r*(h(w)/h(w+u*a))}function k(a){return r*(h(w)*i(w+u*a)-g(w))/v}function l(a){return 1-Math.pow(1-a,1.5)}function m(){var c=(Date.now()-x)/z,d=l(c)*y;c<=1?(this._flyToFrame=e.Util.requestAnimFrame(m,this),this._move(this.unproject(n.add(o.subtract(n).multiplyBy(k(d)/t)),q),this.getScaleZoom(r/j(d),q),{flyTo:!0})):this._move(a,b)._moveEnd(!0)}if(d=d||{},d.animate===!1||!e.Browser.any3d)return this.setView(a,b,d);this._stop();var n=this.project(this.getCenter()),o=this.project(a),p=this.getSize(),q=this._zoom;a=e.latLng(a),b=b===c?q:b;var r=Math.max(p.x,p.y),s=r*this.getZoomScale(q,b),t=o.distanceTo(n)||1,u=1.42,v=u*u,w=f(0),x=Date.now(),y=(f(1)-w)/u,z=d.duration?1e3*d.duration:1e3*y*.8;return this._moveStart(!0),m.call(this),this},flyToBounds:function(a,b){var c=this._getBoundsCenterZoom(a,b);return this.flyTo(c.center,c.zoom,b)}}),e.Map.include({_defaultLocateOptions:{timeout:1e4,watch:!1},locate:function(a){if(a=this._locateOptions=e.extend({},this._defaultLocateOptions,a),!("geolocation"in navigator))return this._handleGeolocationError({code:0,message:"Geolocation not supported."}),this;var b=e.bind(this._handleGeolocationResponse,this),c=e.bind(this._handleGeolocationError,this);return a.watch?this._locationWatchId=navigator.geolocation.watchPosition(b,c,a):navigator.geolocation.getCurrentPosition(b,c,a),this},stopLocate:function(){return navigator.geolocation&&navigator.geolocation.clearWatch&&navigator.geolocation.clearWatch(this._locationWatchId),this._locateOptions&&(this._locateOptions.setView=!1),this},_handleGeolocationError:function(a){var b=a.code,c=a.message||(1===b?"permission denied":2===b?"position unavailable":"timeout");this._locateOptions.setView&&!this._loaded&&this.fitWorld(),this.fire("locationerror",{code:b,message:"Geolocation error: "+c+"."})},_handleGeolocationResponse:function(a){var b=a.coords.latitude,c=a.coords.longitude,d=new e.LatLng(b,c),f=d.toBounds(a.coords.accuracy),g=this._locateOptions;if(g.setView){var h=this.getBoundsZoom(f);this.setView(d,g.maxZoom?Math.min(h,g.maxZoom):h)}var i={latlng:d,bounds:f,timestamp:a.timestamp};for(var j in a.coords)"number"==typeof a.coords[j]&&(i[j]=a.coords[j]);this.fire("locationfound",i)}})}(window,document),function(a,b,c){"use strict";L.Toolbar=L.Class.extend({statics:{baseClass:"leaflet-toolbar"},includes:L.Mixin.Events,options:{className:"",filter:function(){return!0},actions:[]},initialize:function(a){L.setOptions(this,a),this._toolbar_type=this.constructor._toolbar_class_id},addTo:function(a){return this._arguments=[].slice.call(arguments),a.addLayer(this),this},onAdd:function(a){var b=a._toolbars[this._toolbar_type];0===this._calculateDepth()&&(b&&a.removeLayer(b),a._toolbars[this._toolbar_type]=this)},onRemove:function(a){0===this._calculateDepth()&&delete a._toolbars[this._toolbar_type]},appendToContainer:function(a){var b,c,d,e,f,g,h=this.constructor.baseClass+"-"+this._calculateDepth(),i=h+" "+this.options.className;for(this._container=a,this._ul=L.DomUtil.create("ul",i,a),this._disabledEvents=["click","mousemove","dblclick"],e=0,g=this._disabledEvents.length;e<g;e++)L.DomEvent.on(this._ul,this._disabledEvents[e],L.DomEvent.stopPropagation);for(d=0,f=this.options.actions.length;d<f;d++)b=this._getActionConstructor(this.options.actions[d]),c=new b,c._createIcon(this,this._ul,this._arguments)},_getActionConstructor:function(a){var b=this._arguments,c=this;return a.extend({initialize:function(){a.prototype.initialize.apply(this,b)},enable:function(){c._active&&c._active.disable(),c._active=this,a.prototype.enable.call(this)}})},_hide:function(){this._ul.style.display="none"},_show:function(){this._ul.style.display="block"},_calculateDepth:function(){for(var a=0,b=this.parentToolbar;b;)a+=1,b=b.parentToolbar;return a}}),L.toolbar={};var d=0;L.Toolbar.extend=function(a){var b=L.extend({},a.statics,{_toolbar_class_id:d});return d+=1,L.extend(a,{statics:b}),L.Class.extend.call(this,a)},L.Map.addInitHook(function(){this._toolbars={}}),L.ToolbarAction=L.Handler.extend({statics:{baseClass:"leaflet-toolbar-icon"},options:{toolbarIcon:{html:"",className:"",tooltip:""},subToolbar:new L.Toolbar},initialize:function(a){var b=L.ToolbarAction.prototype.options.toolbarIcon;L.setOptions(this,a),this.options.toolbarIcon=L.extend({},b,this.options.toolbarIcon)},enable:function(){this._enabled||(this._enabled=!0,this.addHooks&&this.addHooks())},disable:function(){this._enabled&&(this._enabled=!1,this.removeHooks&&this.removeHooks())},_createIcon:function(a,b,c){var d=this.options.toolbarIcon;this.toolbar=a,this._icon=L.DomUtil.create("li","",b),this._link=L.DomUtil.create("a","",this._icon),this._link.innerHTML=d.html,this._link.setAttribute("href","#"),this._link.setAttribute("title",d.tooltip),L.DomUtil.addClass(this._link,this.constructor.baseClass),d.className&&L.DomUtil.addClass(this._link,d.className),L.DomEvent.on(this._link,"click",this.enable,this),this._addSubToolbar(a,this._icon,c)},_addSubToolbar:function(a,b,c){var d=this.options.subToolbar,e=this.addHooks,f=this.removeHooks;d.parentToolbar=a,d.options.actions.length>0&&(c=[].slice.call(c),c.push(this),d.addTo.apply(d,c),d.appendToContainer(b),this.addHooks=function(a){"function"==typeof e&&e.call(this,a),d._show()},this.removeHooks=function(a){"function"==typeof f&&f.call(this,a),d._hide()})}}),L.toolbarAction=function(a){return new L.ToolbarAction(a)},L.ToolbarAction.extendOptions=function(a){return this.extend({options:a})},L.Toolbar.Control=L.Toolbar.extend({statics:{baseClass:"leaflet-control-toolbar "+L.Toolbar.baseClass},initialize:function(a){L.Toolbar.prototype.initialize.call(this,a),this._control=new L.Control.Toolbar(this.options)},onAdd:function(a){this._control.addTo(a),L.Toolbar.prototype.onAdd.call(this,a),this.appendToContainer(this._control.getContainer())},onRemove:function(a){L.Toolbar.prototype.onRemove.call(this,a),this._control.removeFrom(a)}}),L.Control.Toolbar=L.Control.extend({onAdd:function(){return L.DomUtil.create("div","")}}),L.toolbar.control=function(a){return new L.Toolbar.Control(a)},L.Toolbar.Popup=L.Toolbar.extend({statics:{baseClass:"leaflet-popup-toolbar "+L.Toolbar.baseClass},options:{anchor:[0,0]},initialize:function(a,b){L.Toolbar.prototype.initialize.call(this,b),this._marker=new L.Marker(a,{icon:new L.DivIcon({className:this.options.className,iconAnchor:[0,0]})})},onAdd:function(a){this._map=a,this._marker.addTo(a),L.Toolbar.prototype.onAdd.call(this,a),this.appendToContainer(this._marker._icon),this._setStyles()},onRemove:function(a){a.removeLayer(this._marker),L.Toolbar.prototype.onRemove.call(this,a),delete this._map},setLatLng:function(a){return this._marker.setLatLng(a),this},_setStyles:function(){for(var a,b,d,e=this._container,f=this._ul,g=L.point(this.options.anchor),h=f.querySelectorAll(".leaflet-toolbar-icon"),i=[],j=0,k=0,l=h.length;k<l;k++)h[k].parentNode.parentNode===f&&(i.push(parseInt(L.DomUtil.getStyle(h[k],"height"),10)),j+=Math.ceil(parseFloat(L.DomUtil.getStyle(h[k],"width"))));f.style.width=j+"px",this._tipContainer=L.DomUtil.create("div","leaflet-toolbar-tip-container",e),this._tipContainer.style.width=j+"px",this._tip=L.DomUtil.create("div","leaflet-toolbar-tip",this._tipContainer),a=Math.max.apply(c,i),b=parseInt(L.DomUtil.getStyle(this._tip,"width"),10),d=new L.Point(j/2,a+.7071*b),e.style.marginLeft=g.x-d.x+"px",e.style.marginTop=g.y-d.y+"px"}}),L.toolbar.popup=function(a){return new L.Toolbar.Popup(a)}}(window,document),L.DomUtil=L.extend(L.DomUtil,{getMatrixString:function(a){var b=L.Browser.webkit3d||L.Browser.gecko3d,c=[a[0],a[3],0,a[6],a[1],a[4],0,a[7],0,0,1,0,a[2],a[5],0,a[8]],d=b?"matrix3d("+c.join(",")+")":"";return b||console.log("Your browser must support 3D CSS transforms in order to use DistortableImageOverlay."),d},getRotateString:function(a,b){var c=L.Browser.webkit3d,d="rotate"+(c?"3d":"")+"(",e=(c?"0, 0, 1, ":"")+a+b;return d+e+")"}}),L.Map.include({_newLayerPointToLatLng:function(a,b,c){var d=L.Map.prototype._getNewTopLeftPoint.call(this,c,b).add(L.Map.prototype._getMapPanePos.call(this));return this.unproject(a.add(d),b)}}),L.MatrixUtil={adj:function(a){return[a[4]*a[8]-a[5]*a[7],a[2]*a[7]-a[1]*a[8],a[1]*a[5]-a[2]*a[4],a[5]*a[6]-a[3]*a[8],a[0]*a[8]-a[2]*a[6],a[2]*a[3]-a[0]*a[5],a[3]*a[7]-a[4]*a[6],a[1]*a[6]-a[0]*a[7],a[0]*a[4]-a[1]*a[3]]},multmm:function(a,b){var c,d=[];for(c=0;c<3;c++)for(var e=0;e<3;e++){for(var f=0,g=0;g<3;g++)f+=a[3*c+g]*b[3*g+e];d[3*c+e]=f}return d},multmv:function(a,b){return[a[0]*b[0]+a[1]*b[1]+a[2]*b[2],a[3]*b[0]+a[4]*b[1]+a[5]*b[2],a[6]*b[0]+a[7]*b[1]+a[8]*b[2]]},multsm:function(a,b){for(var c=[],d=0,e=b.length;d<e;d++)c.push(a*b[d]);return c},basisToPoints:function(a,b,c,d,e,f,g,h){var i=[a,c,e,b,d,f,1,1,1],j=L.MatrixUtil.multmv(L.MatrixUtil.adj(i),[g,h,1]);return L.MatrixUtil.multmm(i,[j[0],0,0,0,j[1],0,0,0,j[2]])},project:function(a,b,c){var d=L.MatrixUtil.multmv(a,[b,c,1]);return[d[0]/d[2],d[1]/d[2]]},general2DProjection:function(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p){var q=L.MatrixUtil.basisToPoints(a,b,e,f,i,j,m,n),r=L.MatrixUtil.basisToPoints(c,d,g,h,k,l,o,p),s=L.MatrixUtil.multmm(r,L.MatrixUtil.adj(q));return L.MatrixUtil.multsm(1/s[8],s)}},L.EditHandle=L.Marker.extend({initialize:function(a,b,c){var d,e=a._corners[b];L.setOptions(this,c),this._handled=a,this._corner=b,d={draggable:!0,zIndexOffset:10},c&&c.hasOwnProperty("draggable")&&(d.draggable=c.draggable),L.Marker.prototype.initialize.call(this,e,d)},onAdd:function(a){L.Marker.prototype.onAdd.call(this,a),this._bindListeners(),this.updateHandle()},onRemove:function(a){this._unbindListeners(),L.Marker.prototype.onRemove.call(this,a)},_onHandleDragStart:function(){this._handled.fire("editstart")},_onHandleDragEnd:function(){this._fireEdit()},_fireEdit:function(){this._handled.edited=!0,this._handled.fire("edit")},_bindListeners:function(){this.on({dragstart:this._onHandleDragStart,drag:this._onHandleDrag,dragend:this._onHandleDragEnd},this),this._handled._map.on("zoomend",this.updateHandle,this),this._handled.on("update",this.updateHandle,this)},_unbindListeners:function(){this.off({dragstart:this._onHandleDragStart,drag:this._onHandleDrag,dragend:this._onHandleDragEnd},this),this._handled._map.off("zoomend",this.updateHandle,this),this._handled.off("update",this.updateHandle,this)}}),L.LockHandle=L.EditHandle.extend({options:{TYPE:"lock",icon:new L.Icon({iconUrl:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA3ElEQVR4nM3TMU4CQRSH8d8qJ6AgFia2xksYkj0AhVa2JhRGbfEENJyA3oIjUHkFG42tHUE08QAGC8YwjG8LQsOrdnfm+/Y/7+1WdV3bpQ52ogPBJW6CfUcY4aRcaGXX1xijwjEeMvgJp7jAOd6jBKMEwwDDApYS3DYdoY+f7H6AlwyGt/SiUDDBVSFpF3AXsybBn+TO//qK4EjQEU+hjfvg+YagY9Wws2ijdWMbBdMCfk1pysZuJMy/g48C7mKOTzziEEssmhL0UornDGY9nW+rUU9yQbV3P9PW9QuPNylUonujQAAAAABJRU5ErkJggg%3D%3D",iconSize:[16,16],iconAnchor:[8,8]})},_onHandleDrag:function(){},updateHandle:function(){this.setLatLng(this._handled._corners[this._corner])}}),L.DistortHandle=L.EditHandle.extend({options:{TYPE:"distort",icon:new L.Icon({iconUrl:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABH0lEQVR4nKXTvy5EURDH8c8V/SJBr9HzBFiN/7wAzWolIoqloCBRiJ7GvoBd/0IhnsB6hO0pWE+wintOcnKzZMUkN5Mzmd/3zNyZk5XLZf+xvi6xUeyjiU984AVVDBeT+wvnZVxioBCfDN8O1nHbrYIl1IP4HjMYxBBm8RDO11gsAkZQQ4Y9LOAZ7dDGE+ZwEHJqsZ0IqISb73Bc7DOxQzyGSiopYC34s1/E0U5TTQSMBf/aA6CZaiIgC77TAyDmZCmgFfxED4CY00oB9eC3egBsp5oIOMeXfJF2fxFXMS8f70UKeJNvWAcnaGAKJfl4p+XbdxRyNoJGVnhMK/JVLv1QQTtcdBMDxbfQwDg2sSofVUf+w65C2e+poFjBn+0bdEY280EXr3wAAAAASUVORK5CYII%3D",iconSize:[16,16],iconAnchor:[8,8]})},updateHandle:function(){this.setLatLng(this._handled._corners[this._corner])},_onHandleDrag:function(){this._handled._updateCorner(this._corner,this.getLatLng()),this._handled.fire("update")}}),L.RotateHandle=L.EditHandle.extend({options:{TYPE:"rotate",icon:new L.Icon({iconUrl:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABG0lEQVR4nKXSvS5EURTF8d8V/SBBr9F7A4zGNy9AQytRKIaCgkQhehrzAmZ8hUI8wYxHmJ7CjCcYxT0nublmJlecZueerPXf69y9k0a57D9nqMfdJI7QRBtfaKCC8bw4ySVYww1G+jRsYwsPvRKsohbMT5jHKMawgOfwfYeVPGACVSQ4xDLe0AldX7GI46CpxudEwE7o/IizPvHhBC8hyU4WsBnq5QBzPBdZTwRMhfpeANDMeiIgCbVbABA1SRbQCnWmACBqWllALdS9AoD9rCcCrvAtXaSDAeYKlqTjvc4CPqQb1sU56phFSTreOen2nQbNdvD8WuV16SqX+iTohEb38WI4J6hjGrvYkI6qK/1htyH2Z9aQT/Dn8wMV5jnxJDAcbAAAAABJRU5ErkJggg%3D%3D",iconSize:[16,16],iconAnchor:[8,8]})},_onHandleDrag:function(){var a=this._handled,b=this._handled._corners[this._corner],c=this.getLatLng(),d=this._calculateAngle(b,c),e=this._calculateScalingFactor(b,c);a.editing._rotateBy(d),a.editing._scaleBy(e),a.fire("update")},updateHandle:function(){this.setLatLng(this._handled._corners[this._corner])},_calculateAngle:function(a,b){var c=this._handled._map,d=c.latLngToLayerPoint(this._handled.getCenter()),e=c.latLngToLayerPoint(a),f=c.latLngToLayerPoint(b),g=Math.atan2(d.y-e.y,d.x-e.x),h=Math.atan2(d.y-f.y,d.x-f.x);return h-g},_calculateScalingFactor:function(a,b){var c=this._handled._map,d=c.latLngToLayerPoint(this._handled.getCenter()),e=c.latLngToLayerPoint(a),f=c.latLngToLayerPoint(b),g=this._d2(d,e),h=this._d2(d,f);return Math.sqrt(h/g)},_d2:function(a,b){var c=a.x-b.x,d=a.y-b.y;return Math.pow(c,2)+Math.pow(d,2)}}),L.DistortableImageOverlay=L.ImageOverlay.extend({include:L.Mixin.Events,options:{alt:"",height:200},initialize:function(a,b){this._url=a,this._rotation=this.options.rotation,L.setOptions(this,b)},onAdd:function(a){this._map=a,this._image||this._initImage(),this._events||this._initEvents(),a._panes.overlayPane.appendChild(this._image),a.on("viewreset",this._reset,this),this.options.corners&&(this._corners=this.options.corners,a.options.zoomAnimation&&L.Browser.any3d&&a.on("zoomanim",this._animateZoom,this),this._reset()),L.DomEvent.on(this._image,"load",function(){this._initImageDimensions(),this._reset(),this._corners||a.options.zoomAnimation&&L.Browser.any3d&&a.on("zoomanim",this._animateZoom,this)},this),this.fire("add")},onRemove:function(a){this.fire("remove"),L.ImageOverlay.prototype.onRemove.call(this,a)},_initImage:function(){L.ImageOverlay.prototype._initImage.call(this),L.extend(this._image,{alt:this.options.alt})},_initImageDimensions:function(){var a=this._map,b=L.DomUtil.getStyle(this._image,"width"),c=L.DomUtil.getStyle(this._image,"height"),d=parseInt(b)/parseInt(c),e=this.options.height,f=parseInt(d*e),g=a.latLngToContainerPoint(a.getCenter()),h=new L.Point(f,e).divideBy(2);this.options.corners?this._corners=this.options.corners:this._corners=[a.containerPointToLatLng(g.subtract(h)),a.containerPointToLatLng(g.add(new L.Point(h.x,-h.y))),a.containerPointToLatLng(g.add(new L.Point(-h.x,h.y))),a.containerPointToLatLng(g.add(h))]},_initEvents:function(){this._events=["click"];for(var a=0,b=this._events.length;a<b;a++)L.DomEvent.on(this._image,this._events[a],this._fireMouseEvent,this)},_fireMouseEvent:function(a){if(this.hasEventListeners(a.type)){var b=this._map,c=b.mouseEventToContainerPoint(a),d=b.containerPointToLayerPoint(c),e=b.layerPointToLatLng(d);this.fire(a.type,{latlng:e,layerPoint:d,containerPoint:c,originalEvent:a})}},_updateCorner:function(a,b){this._corners[a]=b,this._reset()},_reset:function(){var a=this._map,b=this._image,c=L.bind(a.latLngToLayerPoint,a),d=this._calculateProjectiveTransform(c),e=c(this._corners[0]),f=L.DomUtil.getMatrixString(d),g=L.DomUtil.getTranslateString(e);b._leaflet_pos=e,b.style[L.DomUtil.TRANSFORM]=[g,f].join(" "),b.style[L.DomUtil.TRANSFORM+"-origin"]="0 0 0"},_animateZoom:function(a){var b=this._map,c=this._image,d=function(c){return b._latLngToNewLayerPoint(c,a.zoom,a.center)},e=this._calculateProjectiveTransform(d),f=d(this._corners[0]),g=L.DomUtil.getMatrixString(e),h=L.DomUtil.getTranslateString(f);c._leaflet_pos=f,L.Browser.gecko||(c.style[L.DomUtil.TRANSFORM]=[h,g].join(" "))},getCorners:function(){return this._corners},getCenter:function(a,b){var c=this._map,d=a?a:c.latLngToLayerPoint,e=b?b:c.layerPointToLatLng,f=d.call(c,this._corners[0]),g=d.call(c,this._corners[1]),h=d.call(c,this._corners[2]),i=d.call(c,this._corners[3]),j=f.add(g.subtract(f).divideBy(2)),k=i.add(h.subtract(i).divideBy(2));return e.call(c,j.add(k.subtract(j).divideBy(2)))},_calculateProjectiveTransform:function(a){var b,c=a(this._corners[0]),d=this._image.offsetWidth||500,e=this._image.offsetHeight||375,f=[];for(b=0;b<this._corners.length;b++)f.push(a(this._corners[b])._subtract(c));return L.MatrixUtil.general2DProjection(0,0,f[0].x,f[0].y,d,0,f[1].x,f[1].y,0,e,f[2].x,f[2].y,d,e,f[3].x,f[3].y)}}),L.DistortableImage=L.DistortableImage||{};var EditOverlayAction=L.ToolbarAction.extend({initialize:function(a,b,c){this._overlay=b,this._map=a,L.ToolbarAction.prototype.initialize.call(this,c)}}),ToggleTransparency=EditOverlayAction.extend({options:{toolbarIcon:{html:'<span class="fa fa-adjust"></span>',tooltip:"Toggle Image Transparency",title:"Toggle Image Transparency"}},addHooks:function(){var a=this._overlay.editing;a._toggleTransparency(),this.disable()}}),ToggleOutline=EditOverlayAction.extend({options:{toolbarIcon:{html:'<span class="fa fa-square-o"></span>',tooltip:"Toggle Image Outline",title:"Toggle Image Outline"}},addHooks:function(){var a=this._overlay.editing;a._toggleOutline(),this.disable()}}),RemoveOverlay=EditOverlayAction.extend({options:{toolbarIcon:{html:'<span class="fa fa-trash"></span>',tooltip:"Delete image",title:"Delete image"}},addHooks:function(){var a=this._map;a.removeLayer(this._overlay),this._overlay.fire("delete"),this.disable()}}),ToggleEditable=EditOverlayAction.extend({options:{toolbarIcon:{html:'<span class="fa fa-lock"></span>',tooltip:"Lock / Unlock editing",title:"Lock / Unlock editing"}},addHooks:function(){var a=this._overlay.editing;a._toggleLock(),this.disable()}}),ToggleRotateDistort=EditOverlayAction.extend({initialize:function(a,b,c){var d="rotate"===b.editing._mode?"image":"rotate-left";c=c||{},c.toolbarIcon={html:'<span class="fa fa-'+d+'"></span>',tooltip:"Rotate",title:"Rotate"},EditOverlayAction.prototype.initialize.call(this,a,b,c)},addHooks:function(){var a=this._overlay.editing;a._toggleRotateDistort(),this.disable()}});L.DistortableImage.EditToolbar=L.Toolbar.Popup.extend({options:{actions:[ToggleTransparency,RemoveOverlay,ToggleOutline,ToggleEditable,ToggleRotateDistort]},_getActionConstructor:function(a){var b=a.extend({removeHooks:function(){var a=this._map;a.removeLayer(this.toolbar)}});return L.Toolbar.prototype._getActionConstructor.call(this,b)}}),L.DistortableImage=L.DistortableImage||{},L.DistortableImage.Edit=L.Handler.extend({options:{opacity:.7,outline:"1px solid red",keymap:{68:"_toggleRotateDistort",73:"_toggleIsolate",76:"_toggleLock",79:"_toggleOutline",82:"_toggleRotateDistort",84:"_toggleTransparency"}},initialize:function(a){this._overlay=a,this._mode=this._overlay.options.mode||"distort",this._transparent=!1,this._outlined=!1},addHooks:function(){var a,b=this._overlay,c=b._map;for(this._lockHandles=new L.LayerGroup,a=0;a<4;a++)this._lockHandles.addLayer(new L.LockHandle(b,a,{draggable:!1}));for(this._distortHandles=new L.LayerGroup,a=0;a<4;a++)this._distortHandles.addLayer(new L.DistortHandle(b,a));for(this._rotateHandles=new L.LayerGroup,a=0;a<4;a++)this._rotateHandles.addLayer(new L.RotateHandle(b,a));this._handles={lock:this._lockHandles,distort:this._distortHandles,rotate:this._rotateHandles},"lock"===this._mode?c.addLayer(this._lockHandles):(this._mode="distort",c.addLayer(this._distortHandles),this._enableDragging()),L.DomEvent.on(b,"click",this._showToolbar,this),L.DomEvent.on(window,"keydown",this._onKeyDown,this),b.fire("select")},removeHooks:function(){var a=this._overlay,b=a._map;a.off("click",this._showToolbar,this),this.dragging&&this.dragging.disable(),delete this.dragging,b.removeLayer(this._handles[this._mode]),L.DomEvent.off(window,"keydown",this._onKeyDown,this),a.fire("deselect")},_rotateBy:function(a){var b,c,d,e=this._overlay,f=e._map,g=f.latLngToLayerPoint(e.getCenter());for(b=0;b<4;b++)c=f.latLngToLayerPoint(e._corners[b]).subtract(g),d=new L.Point(Math.cos(a)*c.x-Math.sin(a)*c.y,Math.sin(a)*c.x+Math.cos(a)*c.y),
-e._corners[b]=f.layerPointToLatLng(d.add(g));e._reset()},_scaleBy:function(a){var b,c,d=this._overlay,e=d._map,f=e.latLngToLayerPoint(d.getCenter());for(b=0;b<4;b++)c=e.latLngToLayerPoint(d._corners[b]).subtract(f).multiplyBy(a).add(f),d._corners[b]=e.layerPointToLatLng(c);d._reset()},_enableDragging:function(){var a=this._overlay,b=a._map;this.dragging=new L.Draggable(a._image),this.dragging.enable(),this.dragging.on("dragstart",this._hideToolbar,this),this.dragging._updatePosition=function(){var c,d,e=this._newPos.subtract(b.latLngToLayerPoint(a._corners[0]));for(this.fire("predrag"),d=0;d<4;d++)c=b.latLngToLayerPoint(a._corners[d]),a._corners[d]=b.layerPointToLatLng(c.add(e));a._reset(),a.fire("update"),this.fire("drag")}},_onKeyDown:function(a){var b=this.options.keymap,c=b[a.which];void 0!==c&&this[c].call(this)},_toggleRotateDistort:function(){var a=this._overlay._map;a.removeLayer(this._handles[this._mode]),"rotate"===this._mode?this._mode="distort":this._mode="rotate",a.addLayer(this._handles[this._mode])},_toggleTransparency:function(){var a,b=this._overlay._image;this._transparent=!this._transparent,a=this._transparent?this.options.opacity:1,L.DomUtil.setOpacity(b,a),b.setAttribute("opacity",a)},_toggleOutline:function(){var a,b,c=this._overlay._image;this._outlined=!this._outlined,a=this._outlined?this.options.opacity/2:1,b=this._outlined?this.options.outline:"none",L.DomUtil.setOpacity(c,a),c.setAttribute("opacity",a),c.style.outline=b},_toggleLock:function(){var a=this._overlay._map;a.removeLayer(this._handles[this._mode]),"lock"===this._mode?(this._mode="distort",this._enableDragging()):(this._mode="lock",this.dragging&&this.dragging.disable(),delete this.dragging),a.addLayer(this._handles[this._mode])},_hideToolbar:function(){var a=this._overlay._map;this.toolbar&&(a.removeLayer(this.toolbar),this.toolbar=!1)},_showToolbar:function(a){var b=this._overlay,c=b._map;this._hideToolbar();var d;d=a.containerPoint?a.containerPoint:a.target._dragStartTarget._leaflet_pos;var e=c.containerPointToLatLng(new L.Point(d.x,d.y-20));this.toolbar=new L.DistortableImage.EditToolbar(e).addTo(c,b),b.fire("toolbar:created")},toggleIsolate:function(){}}),L.DistortableImageOverlay.addInitHook(function(){this.editing=new L.DistortableImage.Edit(this),this.options.editable&&L.DomEvent.on(this._image,"load",this.editing.enable,this.editing),this.on("remove",function(){this.editing&&this.editing.disable()})});
-//# sourceMappingURL=ngw-media-leaflet-0.0.1.map
+/*
+ Leaflet, a JavaScript library for mobile-friendly interactive maps. http://leafletjs.com
+ (c) 2010-2013, Vladimir Agafonkin
+ (c) 2010-2011, CloudMade
+*/
+(function (window, document, undefined) {
+var oldL = window.L,
+    L = {};
+
+L.version = '0.7.7';
+
+// define Leaflet for Node module pattern loaders, including Browserify
+if (typeof module === 'object' && typeof module.exports === 'object') {
+	module.exports = L;
+
+// define Leaflet as an AMD module
+} else if (typeof define === 'function' && define.amd) {
+	define(L);
+}
+
+// define Leaflet as a global L variable, saving the original L to restore later if needed
+
+L.noConflict = function () {
+	window.L = oldL;
+	return this;
+};
+
+window.L = L;
+
+
+/*
+ * L.Util contains various utility functions used throughout Leaflet code.
+ */
+
+L.Util = {
+	extend: function (dest) { // (Object[, Object, ...]) ->
+		var sources = Array.prototype.slice.call(arguments, 1),
+		    i, j, len, src;
+
+		for (j = 0, len = sources.length; j < len; j++) {
+			src = sources[j] || {};
+			for (i in src) {
+				if (src.hasOwnProperty(i)) {
+					dest[i] = src[i];
+				}
+			}
+		}
+		return dest;
+	},
+
+	bind: function (fn, obj) { // (Function, Object) -> Function
+		var args = arguments.length > 2 ? Array.prototype.slice.call(arguments, 2) : null;
+		return function () {
+			return fn.apply(obj, args || arguments);
+		};
+	},
+
+	stamp: (function () {
+		var lastId = 0,
+		    key = '_leaflet_id';
+		return function (obj) {
+			obj[key] = obj[key] || ++lastId;
+			return obj[key];
+		};
+	}()),
+
+	invokeEach: function (obj, method, context) {
+		var i, args;
+
+		if (typeof obj === 'object') {
+			args = Array.prototype.slice.call(arguments, 3);
+
+			for (i in obj) {
+				method.apply(context, [i, obj[i]].concat(args));
+			}
+			return true;
+		}
+
+		return false;
+	},
+
+	limitExecByInterval: function (fn, time, context) {
+		var lock, execOnUnlock;
+
+		return function wrapperFn() {
+			var args = arguments;
+
+			if (lock) {
+				execOnUnlock = true;
+				return;
+			}
+
+			lock = true;
+
+			setTimeout(function () {
+				lock = false;
+
+				if (execOnUnlock) {
+					wrapperFn.apply(context, args);
+					execOnUnlock = false;
+				}
+			}, time);
+
+			fn.apply(context, args);
+		};
+	},
+
+	falseFn: function () {
+		return false;
+	},
+
+	formatNum: function (num, digits) {
+		var pow = Math.pow(10, digits || 5);
+		return Math.round(num * pow) / pow;
+	},
+
+	trim: function (str) {
+		return str.trim ? str.trim() : str.replace(/^\s+|\s+$/g, '');
+	},
+
+	splitWords: function (str) {
+		return L.Util.trim(str).split(/\s+/);
+	},
+
+	setOptions: function (obj, options) {
+		obj.options = L.extend({}, obj.options, options);
+		return obj.options;
+	},
+
+	getParamString: function (obj, existingUrl, uppercase) {
+		var params = [];
+		for (var i in obj) {
+			params.push(encodeURIComponent(uppercase ? i.toUpperCase() : i) + '=' + encodeURIComponent(obj[i]));
+		}
+		return ((!existingUrl || existingUrl.indexOf('?') === -1) ? '?' : '&') + params.join('&');
+	},
+	template: function (str, data) {
+		return str.replace(/\{ *([\w_]+) *\}/g, function (str, key) {
+			var value = data[key];
+			if (value === undefined) {
+				throw new Error('No value provided for variable ' + str);
+			} else if (typeof value === 'function') {
+				value = value(data);
+			}
+			return value;
+		});
+	},
+
+	isArray: Array.isArray || function (obj) {
+		return (Object.prototype.toString.call(obj) === '[object Array]');
+	},
+
+	emptyImageUrl: 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='
+};
+
+(function () {
+
+	// inspired by http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+
+	function getPrefixed(name) {
+		var i, fn,
+		    prefixes = ['webkit', 'moz', 'o', 'ms'];
+
+		for (i = 0; i < prefixes.length && !fn; i++) {
+			fn = window[prefixes[i] + name];
+		}
+
+		return fn;
+	}
+
+	var lastTime = 0;
+
+	function timeoutDefer(fn) {
+		var time = +new Date(),
+		    timeToCall = Math.max(0, 16 - (time - lastTime));
+
+		lastTime = time + timeToCall;
+		return window.setTimeout(fn, timeToCall);
+	}
+
+	var requestFn = window.requestAnimationFrame ||
+	        getPrefixed('RequestAnimationFrame') || timeoutDefer;
+
+	var cancelFn = window.cancelAnimationFrame ||
+	        getPrefixed('CancelAnimationFrame') ||
+	        getPrefixed('CancelRequestAnimationFrame') ||
+	        function (id) { window.clearTimeout(id); };
+
+
+	L.Util.requestAnimFrame = function (fn, context, immediate, element) {
+		fn = L.bind(fn, context);
+
+		if (immediate && requestFn === timeoutDefer) {
+			fn();
+		} else {
+			return requestFn.call(window, fn, element);
+		}
+	};
+
+	L.Util.cancelAnimFrame = function (id) {
+		if (id) {
+			cancelFn.call(window, id);
+		}
+	};
+
+}());
+
+// shortcuts for most used utility functions
+L.extend = L.Util.extend;
+L.bind = L.Util.bind;
+L.stamp = L.Util.stamp;
+L.setOptions = L.Util.setOptions;
+
+
+/*
+ * L.Class powers the OOP facilities of the library.
+ * Thanks to John Resig and Dean Edwards for inspiration!
+ */
+
+L.Class = function () {};
+
+L.Class.extend = function (props) {
+
+	// extended class with the new prototype
+	var NewClass = function () {
+
+		// call the constructor
+		if (this.initialize) {
+			this.initialize.apply(this, arguments);
+		}
+
+		// call all constructor hooks
+		if (this._initHooks) {
+			this.callInitHooks();
+		}
+	};
+
+	// instantiate class without calling constructor
+	var F = function () {};
+	F.prototype = this.prototype;
+
+	var proto = new F();
+	proto.constructor = NewClass;
+
+	NewClass.prototype = proto;
+
+	//inherit parent's statics
+	for (var i in this) {
+		if (this.hasOwnProperty(i) && i !== 'prototype') {
+			NewClass[i] = this[i];
+		}
+	}
+
+	// mix static properties into the class
+	if (props.statics) {
+		L.extend(NewClass, props.statics);
+		delete props.statics;
+	}
+
+	// mix includes into the prototype
+	if (props.includes) {
+		L.Util.extend.apply(null, [proto].concat(props.includes));
+		delete props.includes;
+	}
+
+	// merge options
+	if (props.options && proto.options) {
+		props.options = L.extend({}, proto.options, props.options);
+	}
+
+	// mix given properties into the prototype
+	L.extend(proto, props);
+
+	proto._initHooks = [];
+
+	var parent = this;
+	// jshint camelcase: false
+	NewClass.__super__ = parent.prototype;
+
+	// add method for calling all hooks
+	proto.callInitHooks = function () {
+
+		if (this._initHooksCalled) { return; }
+
+		if (parent.prototype.callInitHooks) {
+			parent.prototype.callInitHooks.call(this);
+		}
+
+		this._initHooksCalled = true;
+
+		for (var i = 0, len = proto._initHooks.length; i < len; i++) {
+			proto._initHooks[i].call(this);
+		}
+	};
+
+	return NewClass;
+};
+
+
+// method for adding properties to prototype
+L.Class.include = function (props) {
+	L.extend(this.prototype, props);
+};
+
+// merge new default options to the Class
+L.Class.mergeOptions = function (options) {
+	L.extend(this.prototype.options, options);
+};
+
+// add a constructor hook
+L.Class.addInitHook = function (fn) { // (Function) || (String, args...)
+	var args = Array.prototype.slice.call(arguments, 1);
+
+	var init = typeof fn === 'function' ? fn : function () {
+		this[fn].apply(this, args);
+	};
+
+	this.prototype._initHooks = this.prototype._initHooks || [];
+	this.prototype._initHooks.push(init);
+};
+
+
+/*
+ * L.Mixin.Events is used to add custom events functionality to Leaflet classes.
+ */
+
+var eventsKey = '_leaflet_events';
+
+L.Mixin = {};
+
+L.Mixin.Events = {
+
+	addEventListener: function (types, fn, context) { // (String, Function[, Object]) or (Object[, Object])
+
+		// types can be a map of types/handlers
+		if (L.Util.invokeEach(types, this.addEventListener, this, fn, context)) { return this; }
+
+		var events = this[eventsKey] = this[eventsKey] || {},
+		    contextId = context && context !== this && L.stamp(context),
+		    i, len, event, type, indexKey, indexLenKey, typeIndex;
+
+		// types can be a string of space-separated words
+		types = L.Util.splitWords(types);
+
+		for (i = 0, len = types.length; i < len; i++) {
+			event = {
+				action: fn,
+				context: context || this
+			};
+			type = types[i];
+
+			if (contextId) {
+				// store listeners of a particular context in a separate hash (if it has an id)
+				// gives a major performance boost when removing thousands of map layers
+
+				indexKey = type + '_idx';
+				indexLenKey = indexKey + '_len';
+
+				typeIndex = events[indexKey] = events[indexKey] || {};
+
+				if (!typeIndex[contextId]) {
+					typeIndex[contextId] = [];
+
+					// keep track of the number of keys in the index to quickly check if it's empty
+					events[indexLenKey] = (events[indexLenKey] || 0) + 1;
+				}
+
+				typeIndex[contextId].push(event);
+
+
+			} else {
+				events[type] = events[type] || [];
+				events[type].push(event);
+			}
+		}
+
+		return this;
+	},
+
+	hasEventListeners: function (type) { // (String) -> Boolean
+		var events = this[eventsKey];
+		return !!events && ((type in events && events[type].length > 0) ||
+		                    (type + '_idx' in events && events[type + '_idx_len'] > 0));
+	},
+
+	removeEventListener: function (types, fn, context) { // ([String, Function, Object]) or (Object[, Object])
+
+		if (!this[eventsKey]) {
+			return this;
+		}
+
+		if (!types) {
+			return this.clearAllEventListeners();
+		}
+
+		if (L.Util.invokeEach(types, this.removeEventListener, this, fn, context)) { return this; }
+
+		var events = this[eventsKey],
+		    contextId = context && context !== this && L.stamp(context),
+		    i, len, type, listeners, j, indexKey, indexLenKey, typeIndex, removed;
+
+		types = L.Util.splitWords(types);
+
+		for (i = 0, len = types.length; i < len; i++) {
+			type = types[i];
+			indexKey = type + '_idx';
+			indexLenKey = indexKey + '_len';
+
+			typeIndex = events[indexKey];
+
+			if (!fn) {
+				// clear all listeners for a type if function isn't specified
+				delete events[type];
+				delete events[indexKey];
+				delete events[indexLenKey];
+
+			} else {
+				listeners = contextId && typeIndex ? typeIndex[contextId] : events[type];
+
+				if (listeners) {
+					for (j = listeners.length - 1; j >= 0; j--) {
+						if ((listeners[j].action === fn) && (!context || (listeners[j].context === context))) {
+							removed = listeners.splice(j, 1);
+							// set the old action to a no-op, because it is possible
+							// that the listener is being iterated over as part of a dispatch
+							removed[0].action = L.Util.falseFn;
+						}
+					}
+
+					if (context && typeIndex && (listeners.length === 0)) {
+						delete typeIndex[contextId];
+						events[indexLenKey]--;
+					}
+				}
+			}
+		}
+
+		return this;
+	},
+
+	clearAllEventListeners: function () {
+		delete this[eventsKey];
+		return this;
+	},
+
+	fireEvent: function (type, data) { // (String[, Object])
+		if (!this.hasEventListeners(type)) {
+			return this;
+		}
+
+		var event = L.Util.extend({}, data, { type: type, target: this });
+
+		var events = this[eventsKey],
+		    listeners, i, len, typeIndex, contextId;
+
+		if (events[type]) {
+			// make sure adding/removing listeners inside other listeners won't cause infinite loop
+			listeners = events[type].slice();
+
+			for (i = 0, len = listeners.length; i < len; i++) {
+				listeners[i].action.call(listeners[i].context, event);
+			}
+		}
+
+		// fire event for the context-indexed listeners as well
+		typeIndex = events[type + '_idx'];
+
+		for (contextId in typeIndex) {
+			listeners = typeIndex[contextId].slice();
+
+			if (listeners) {
+				for (i = 0, len = listeners.length; i < len; i++) {
+					listeners[i].action.call(listeners[i].context, event);
+				}
+			}
+		}
+
+		return this;
+	},
+
+	addOneTimeEventListener: function (types, fn, context) {
+
+		if (L.Util.invokeEach(types, this.addOneTimeEventListener, this, fn, context)) { return this; }
+
+		var handler = L.bind(function () {
+			this
+			    .removeEventListener(types, fn, context)
+			    .removeEventListener(types, handler, context);
+		}, this);
+
+		return this
+		    .addEventListener(types, fn, context)
+		    .addEventListener(types, handler, context);
+	}
+};
+
+L.Mixin.Events.on = L.Mixin.Events.addEventListener;
+L.Mixin.Events.off = L.Mixin.Events.removeEventListener;
+L.Mixin.Events.once = L.Mixin.Events.addOneTimeEventListener;
+L.Mixin.Events.fire = L.Mixin.Events.fireEvent;
+
+
+/*
+ * L.Browser handles different browser and feature detections for internal Leaflet use.
+ */
+
+(function () {
+
+	var ie = 'ActiveXObject' in window,
+		ielt9 = ie && !document.addEventListener,
+
+	    // terrible browser detection to work around Safari / iOS / Android browser bugs
+	    ua = navigator.userAgent.toLowerCase(),
+	    webkit = ua.indexOf('webkit') !== -1,
+	    chrome = ua.indexOf('chrome') !== -1,
+	    phantomjs = ua.indexOf('phantom') !== -1,
+	    android = ua.indexOf('android') !== -1,
+	    android23 = ua.search('android [23]') !== -1,
+		gecko = ua.indexOf('gecko') !== -1,
+
+	    mobile = typeof orientation !== undefined + '',
+	    msPointer = !window.PointerEvent && window.MSPointerEvent,
+		pointer = (window.PointerEvent && window.navigator.pointerEnabled) ||
+				  msPointer,
+	    retina = ('devicePixelRatio' in window && window.devicePixelRatio > 1) ||
+	             ('matchMedia' in window && window.matchMedia('(min-resolution:144dpi)') &&
+	              window.matchMedia('(min-resolution:144dpi)').matches),
+
+	    doc = document.documentElement,
+	    ie3d = ie && ('transition' in doc.style),
+	    webkit3d = ('WebKitCSSMatrix' in window) && ('m11' in new window.WebKitCSSMatrix()) && !android23,
+	    gecko3d = 'MozPerspective' in doc.style,
+	    opera3d = 'OTransition' in doc.style,
+	    any3d = !window.L_DISABLE_3D && (ie3d || webkit3d || gecko3d || opera3d) && !phantomjs;
+
+	var touch = !window.L_NO_TOUCH && !phantomjs && (pointer || 'ontouchstart' in window ||
+		(window.DocumentTouch && document instanceof window.DocumentTouch));
+
+	L.Browser = {
+		ie: ie,
+		ielt9: ielt9,
+		webkit: webkit,
+		gecko: gecko && !webkit && !window.opera && !ie,
+
+		android: android,
+		android23: android23,
+
+		chrome: chrome,
+
+		ie3d: ie3d,
+		webkit3d: webkit3d,
+		gecko3d: gecko3d,
+		opera3d: opera3d,
+		any3d: any3d,
+
+		mobile: mobile,
+		mobileWebkit: mobile && webkit,
+		mobileWebkit3d: mobile && webkit3d,
+		mobileOpera: mobile && window.opera,
+
+		touch: touch,
+		msPointer: msPointer,
+		pointer: pointer,
+
+		retina: retina
+	};
+
+}());
+
+
+/*
+ * L.Point represents a point with x and y coordinates.
+ */
+
+L.Point = function (/*Number*/ x, /*Number*/ y, /*Boolean*/ round) {
+	this.x = (round ? Math.round(x) : x);
+	this.y = (round ? Math.round(y) : y);
+};
+
+L.Point.prototype = {
+
+	clone: function () {
+		return new L.Point(this.x, this.y);
+	},
+
+	// non-destructive, returns a new point
+	add: function (point) {
+		return this.clone()._add(L.point(point));
+	},
+
+	// destructive, used directly for performance in situations where it's safe to modify existing point
+	_add: function (point) {
+		this.x += point.x;
+		this.y += point.y;
+		return this;
+	},
+
+	subtract: function (point) {
+		return this.clone()._subtract(L.point(point));
+	},
+
+	_subtract: function (point) {
+		this.x -= point.x;
+		this.y -= point.y;
+		return this;
+	},
+
+	divideBy: function (num) {
+		return this.clone()._divideBy(num);
+	},
+
+	_divideBy: function (num) {
+		this.x /= num;
+		this.y /= num;
+		return this;
+	},
+
+	multiplyBy: function (num) {
+		return this.clone()._multiplyBy(num);
+	},
+
+	_multiplyBy: function (num) {
+		this.x *= num;
+		this.y *= num;
+		return this;
+	},
+
+	round: function () {
+		return this.clone()._round();
+	},
+
+	_round: function () {
+		this.x = Math.round(this.x);
+		this.y = Math.round(this.y);
+		return this;
+	},
+
+	floor: function () {
+		return this.clone()._floor();
+	},
+
+	_floor: function () {
+		this.x = Math.floor(this.x);
+		this.y = Math.floor(this.y);
+		return this;
+	},
+
+	distanceTo: function (point) {
+		point = L.point(point);
+
+		var x = point.x - this.x,
+		    y = point.y - this.y;
+
+		return Math.sqrt(x * x + y * y);
+	},
+
+	equals: function (point) {
+		point = L.point(point);
+
+		return point.x === this.x &&
+		       point.y === this.y;
+	},
+
+	contains: function (point) {
+		point = L.point(point);
+
+		return Math.abs(point.x) <= Math.abs(this.x) &&
+		       Math.abs(point.y) <= Math.abs(this.y);
+	},
+
+	toString: function () {
+		return 'Point(' +
+		        L.Util.formatNum(this.x) + ', ' +
+		        L.Util.formatNum(this.y) + ')';
+	}
+};
+
+L.point = function (x, y, round) {
+	if (x instanceof L.Point) {
+		return x;
+	}
+	if (L.Util.isArray(x)) {
+		return new L.Point(x[0], x[1]);
+	}
+	if (x === undefined || x === null) {
+		return x;
+	}
+	return new L.Point(x, y, round);
+};
+
+
+/*
+ * L.Bounds represents a rectangular area on the screen in pixel coordinates.
+ */
+
+L.Bounds = function (a, b) { //(Point, Point) or Point[]
+	if (!a) { return; }
+
+	var points = b ? [a, b] : a;
+
+	for (var i = 0, len = points.length; i < len; i++) {
+		this.extend(points[i]);
+	}
+};
+
+L.Bounds.prototype = {
+	// extend the bounds to contain the given point
+	extend: function (point) { // (Point)
+		point = L.point(point);
+
+		if (!this.min && !this.max) {
+			this.min = point.clone();
+			this.max = point.clone();
+		} else {
+			this.min.x = Math.min(point.x, this.min.x);
+			this.max.x = Math.max(point.x, this.max.x);
+			this.min.y = Math.min(point.y, this.min.y);
+			this.max.y = Math.max(point.y, this.max.y);
+		}
+		return this;
+	},
+
+	getCenter: function (round) { // (Boolean) -> Point
+		return new L.Point(
+		        (this.min.x + this.max.x) / 2,
+		        (this.min.y + this.max.y) / 2, round);
+	},
+
+	getBottomLeft: function () { // -> Point
+		return new L.Point(this.min.x, this.max.y);
+	},
+
+	getTopRight: function () { // -> Point
+		return new L.Point(this.max.x, this.min.y);
+	},
+
+	getSize: function () {
+		return this.max.subtract(this.min);
+	},
+
+	contains: function (obj) { // (Bounds) or (Point) -> Boolean
+		var min, max;
+
+		if (typeof obj[0] === 'number' || obj instanceof L.Point) {
+			obj = L.point(obj);
+		} else {
+			obj = L.bounds(obj);
+		}
+
+		if (obj instanceof L.Bounds) {
+			min = obj.min;
+			max = obj.max;
+		} else {
+			min = max = obj;
+		}
+
+		return (min.x >= this.min.x) &&
+		       (max.x <= this.max.x) &&
+		       (min.y >= this.min.y) &&
+		       (max.y <= this.max.y);
+	},
+
+	intersects: function (bounds) { // (Bounds) -> Boolean
+		bounds = L.bounds(bounds);
+
+		var min = this.min,
+		    max = this.max,
+		    min2 = bounds.min,
+		    max2 = bounds.max,
+		    xIntersects = (max2.x >= min.x) && (min2.x <= max.x),
+		    yIntersects = (max2.y >= min.y) && (min2.y <= max.y);
+
+		return xIntersects && yIntersects;
+	},
+
+	isValid: function () {
+		return !!(this.min && this.max);
+	}
+};
+
+L.bounds = function (a, b) { // (Bounds) or (Point, Point) or (Point[])
+	if (!a || a instanceof L.Bounds) {
+		return a;
+	}
+	return new L.Bounds(a, b);
+};
+
+
+/*
+ * L.Transformation is an utility class to perform simple point transformations through a 2d-matrix.
+ */
+
+L.Transformation = function (a, b, c, d) {
+	this._a = a;
+	this._b = b;
+	this._c = c;
+	this._d = d;
+};
+
+L.Transformation.prototype = {
+	transform: function (point, scale) { // (Point, Number) -> Point
+		return this._transform(point.clone(), scale);
+	},
+
+	// destructive transform (faster)
+	_transform: function (point, scale) {
+		scale = scale || 1;
+		point.x = scale * (this._a * point.x + this._b);
+		point.y = scale * (this._c * point.y + this._d);
+		return point;
+	},
+
+	untransform: function (point, scale) {
+		scale = scale || 1;
+		return new L.Point(
+		        (point.x / scale - this._b) / this._a,
+		        (point.y / scale - this._d) / this._c);
+	}
+};
+
+
+/*
+ * L.DomUtil contains various utility functions for working with DOM.
+ */
+
+L.DomUtil = {
+	get: function (id) {
+		return (typeof id === 'string' ? document.getElementById(id) : id);
+	},
+
+	getStyle: function (el, style) {
+
+		var value = el.style[style];
+
+		if (!value && el.currentStyle) {
+			value = el.currentStyle[style];
+		}
+
+		if ((!value || value === 'auto') && document.defaultView) {
+			var css = document.defaultView.getComputedStyle(el, null);
+			value = css ? css[style] : null;
+		}
+
+		return value === 'auto' ? null : value;
+	},
+
+	getViewportOffset: function (element) {
+
+		var top = 0,
+		    left = 0,
+		    el = element,
+		    docBody = document.body,
+		    docEl = document.documentElement,
+		    pos;
+
+		do {
+			top  += el.offsetTop  || 0;
+			left += el.offsetLeft || 0;
+
+			//add borders
+			top += parseInt(L.DomUtil.getStyle(el, 'borderTopWidth'), 10) || 0;
+			left += parseInt(L.DomUtil.getStyle(el, 'borderLeftWidth'), 10) || 0;
+
+			pos = L.DomUtil.getStyle(el, 'position');
+
+			if (el.offsetParent === docBody && pos === 'absolute') { break; }
+
+			if (pos === 'fixed') {
+				top  += docBody.scrollTop  || docEl.scrollTop  || 0;
+				left += docBody.scrollLeft || docEl.scrollLeft || 0;
+				break;
+			}
+
+			if (pos === 'relative' && !el.offsetLeft) {
+				var width = L.DomUtil.getStyle(el, 'width'),
+				    maxWidth = L.DomUtil.getStyle(el, 'max-width'),
+				    r = el.getBoundingClientRect();
+
+				if (width !== 'none' || maxWidth !== 'none') {
+					left += r.left + el.clientLeft;
+				}
+
+				//calculate full y offset since we're breaking out of the loop
+				top += r.top + (docBody.scrollTop  || docEl.scrollTop  || 0);
+
+				break;
+			}
+
+			el = el.offsetParent;
+
+		} while (el);
+
+		el = element;
+
+		do {
+			if (el === docBody) { break; }
+
+			top  -= el.scrollTop  || 0;
+			left -= el.scrollLeft || 0;
+
+			el = el.parentNode;
+		} while (el);
+
+		return new L.Point(left, top);
+	},
+
+	documentIsLtr: function () {
+		if (!L.DomUtil._docIsLtrCached) {
+			L.DomUtil._docIsLtrCached = true;
+			L.DomUtil._docIsLtr = L.DomUtil.getStyle(document.body, 'direction') === 'ltr';
+		}
+		return L.DomUtil._docIsLtr;
+	},
+
+	create: function (tagName, className, container) {
+
+		var el = document.createElement(tagName);
+		el.className = className;
+
+		if (container) {
+			container.appendChild(el);
+		}
+
+		return el;
+	},
+
+	hasClass: function (el, name) {
+		if (el.classList !== undefined) {
+			return el.classList.contains(name);
+		}
+		var className = L.DomUtil._getClass(el);
+		return className.length > 0 && new RegExp('(^|\\s)' + name + '(\\s|$)').test(className);
+	},
+
+	addClass: function (el, name) {
+		if (el.classList !== undefined) {
+			var classes = L.Util.splitWords(name);
+			for (var i = 0, len = classes.length; i < len; i++) {
+				el.classList.add(classes[i]);
+			}
+		} else if (!L.DomUtil.hasClass(el, name)) {
+			var className = L.DomUtil._getClass(el);
+			L.DomUtil._setClass(el, (className ? className + ' ' : '') + name);
+		}
+	},
+
+	removeClass: function (el, name) {
+		if (el.classList !== undefined) {
+			el.classList.remove(name);
+		} else {
+			L.DomUtil._setClass(el, L.Util.trim((' ' + L.DomUtil._getClass(el) + ' ').replace(' ' + name + ' ', ' ')));
+		}
+	},
+
+	_setClass: function (el, name) {
+		if (el.className.baseVal === undefined) {
+			el.className = name;
+		} else {
+			// in case of SVG element
+			el.className.baseVal = name;
+		}
+	},
+
+	_getClass: function (el) {
+		return el.className.baseVal === undefined ? el.className : el.className.baseVal;
+	},
+
+	setOpacity: function (el, value) {
+
+		if ('opacity' in el.style) {
+			el.style.opacity = value;
+
+		} else if ('filter' in el.style) {
+
+			var filter = false,
+			    filterName = 'DXImageTransform.Microsoft.Alpha';
+
+			// filters collection throws an error if we try to retrieve a filter that doesn't exist
+			try {
+				filter = el.filters.item(filterName);
+			} catch (e) {
+				// don't set opacity to 1 if we haven't already set an opacity,
+				// it isn't needed and breaks transparent pngs.
+				if (value === 1) { return; }
+			}
+
+			value = Math.round(value * 100);
+
+			if (filter) {
+				filter.Enabled = (value !== 100);
+				filter.Opacity = value;
+			} else {
+				el.style.filter += ' progid:' + filterName + '(opacity=' + value + ')';
+			}
+		}
+	},
+
+	testProp: function (props) {
+
+		var style = document.documentElement.style;
+
+		for (var i = 0; i < props.length; i++) {
+			if (props[i] in style) {
+				return props[i];
+			}
+		}
+		return false;
+	},
+
+	getTranslateString: function (point) {
+		// on WebKit browsers (Chrome/Safari/iOS Safari/Android) using translate3d instead of translate
+		// makes animation smoother as it ensures HW accel is used. Firefox 13 doesn't care
+		// (same speed either way), Opera 12 doesn't support translate3d
+
+		var is3d = L.Browser.webkit3d,
+		    open = 'translate' + (is3d ? '3d' : '') + '(',
+		    close = (is3d ? ',0' : '') + ')';
+
+		return open + point.x + 'px,' + point.y + 'px' + close;
+	},
+
+	getScaleString: function (scale, origin) {
+
+		var preTranslateStr = L.DomUtil.getTranslateString(origin.add(origin.multiplyBy(-1 * scale))),
+		    scaleStr = ' scale(' + scale + ') ';
+
+		return preTranslateStr + scaleStr;
+	},
+
+	setPosition: function (el, point, disable3D) { // (HTMLElement, Point[, Boolean])
+
+		// jshint camelcase: false
+		el._leaflet_pos = point;
+
+		if (!disable3D && L.Browser.any3d) {
+			el.style[L.DomUtil.TRANSFORM] =  L.DomUtil.getTranslateString(point);
+		} else {
+			el.style.left = point.x + 'px';
+			el.style.top = point.y + 'px';
+		}
+	},
+
+	getPosition: function (el) {
+		// this method is only used for elements previously positioned using setPosition,
+		// so it's safe to cache the position for performance
+
+		// jshint camelcase: false
+		return el._leaflet_pos;
+	}
+};
+
+
+// prefix style property names
+
+L.DomUtil.TRANSFORM = L.DomUtil.testProp(
+        ['transform', 'WebkitTransform', 'OTransform', 'MozTransform', 'msTransform']);
+
+// webkitTransition comes first because some browser versions that drop vendor prefix don't do
+// the same for the transitionend event, in particular the Android 4.1 stock browser
+
+L.DomUtil.TRANSITION = L.DomUtil.testProp(
+        ['webkitTransition', 'transition', 'OTransition', 'MozTransition', 'msTransition']);
+
+L.DomUtil.TRANSITION_END =
+        L.DomUtil.TRANSITION === 'webkitTransition' || L.DomUtil.TRANSITION === 'OTransition' ?
+        L.DomUtil.TRANSITION + 'End' : 'transitionend';
+
+(function () {
+    if ('onselectstart' in document) {
+        L.extend(L.DomUtil, {
+            disableTextSelection: function () {
+                L.DomEvent.on(window, 'selectstart', L.DomEvent.preventDefault);
+            },
+
+            enableTextSelection: function () {
+                L.DomEvent.off(window, 'selectstart', L.DomEvent.preventDefault);
+            }
+        });
+    } else {
+        var userSelectProperty = L.DomUtil.testProp(
+            ['userSelect', 'WebkitUserSelect', 'OUserSelect', 'MozUserSelect', 'msUserSelect']);
+
+        L.extend(L.DomUtil, {
+            disableTextSelection: function () {
+                if (userSelectProperty) {
+                    var style = document.documentElement.style;
+                    this._userSelect = style[userSelectProperty];
+                    style[userSelectProperty] = 'none';
+                }
+            },
+
+            enableTextSelection: function () {
+                if (userSelectProperty) {
+                    document.documentElement.style[userSelectProperty] = this._userSelect;
+                    delete this._userSelect;
+                }
+            }
+        });
+    }
+
+	L.extend(L.DomUtil, {
+		disableImageDrag: function () {
+			L.DomEvent.on(window, 'dragstart', L.DomEvent.preventDefault);
+		},
+
+		enableImageDrag: function () {
+			L.DomEvent.off(window, 'dragstart', L.DomEvent.preventDefault);
+		}
+	});
+})();
+
+
+/*
+ * L.LatLng represents a geographical point with latitude and longitude coordinates.
+ */
+
+L.LatLng = function (lat, lng, alt) { // (Number, Number, Number)
+	lat = parseFloat(lat);
+	lng = parseFloat(lng);
+
+	if (isNaN(lat) || isNaN(lng)) {
+		throw new Error('Invalid LatLng object: (' + lat + ', ' + lng + ')');
+	}
+
+	this.lat = lat;
+	this.lng = lng;
+
+	if (alt !== undefined) {
+		this.alt = parseFloat(alt);
+	}
+};
+
+L.extend(L.LatLng, {
+	DEG_TO_RAD: Math.PI / 180,
+	RAD_TO_DEG: 180 / Math.PI,
+	MAX_MARGIN: 1.0E-9 // max margin of error for the "equals" check
+});
+
+L.LatLng.prototype = {
+	equals: function (obj) { // (LatLng) -> Boolean
+		if (!obj) { return false; }
+
+		obj = L.latLng(obj);
+
+		var margin = Math.max(
+		        Math.abs(this.lat - obj.lat),
+		        Math.abs(this.lng - obj.lng));
+
+		return margin <= L.LatLng.MAX_MARGIN;
+	},
+
+	toString: function (precision) { // (Number) -> String
+		return 'LatLng(' +
+		        L.Util.formatNum(this.lat, precision) + ', ' +
+		        L.Util.formatNum(this.lng, precision) + ')';
+	},
+
+	// Haversine distance formula, see http://en.wikipedia.org/wiki/Haversine_formula
+	// TODO move to projection code, LatLng shouldn't know about Earth
+	distanceTo: function (other) { // (LatLng) -> Number
+		other = L.latLng(other);
+
+		var R = 6378137, // earth radius in meters
+		    d2r = L.LatLng.DEG_TO_RAD,
+		    dLat = (other.lat - this.lat) * d2r,
+		    dLon = (other.lng - this.lng) * d2r,
+		    lat1 = this.lat * d2r,
+		    lat2 = other.lat * d2r,
+		    sin1 = Math.sin(dLat / 2),
+		    sin2 = Math.sin(dLon / 2);
+
+		var a = sin1 * sin1 + sin2 * sin2 * Math.cos(lat1) * Math.cos(lat2);
+
+		return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	},
+
+	wrap: function (a, b) { // (Number, Number) -> LatLng
+		var lng = this.lng;
+
+		a = a || -180;
+		b = b ||  180;
+
+		lng = (lng + b) % (b - a) + (lng < a || lng === b ? b : a);
+
+		return new L.LatLng(this.lat, lng);
+	}
+};
+
+L.latLng = function (a, b) { // (LatLng) or ([Number, Number]) or (Number, Number)
+	if (a instanceof L.LatLng) {
+		return a;
+	}
+	if (L.Util.isArray(a)) {
+		if (typeof a[0] === 'number' || typeof a[0] === 'string') {
+			return new L.LatLng(a[0], a[1], a[2]);
+		} else {
+			return null;
+		}
+	}
+	if (a === undefined || a === null) {
+		return a;
+	}
+	if (typeof a === 'object' && 'lat' in a) {
+		return new L.LatLng(a.lat, 'lng' in a ? a.lng : a.lon);
+	}
+	if (b === undefined) {
+		return null;
+	}
+	return new L.LatLng(a, b);
+};
+
+
+
+/*
+ * L.LatLngBounds represents a rectangular area on the map in geographical coordinates.
+ */
+
+L.LatLngBounds = function (southWest, northEast) { // (LatLng, LatLng) or (LatLng[])
+	if (!southWest) { return; }
+
+	var latlngs = northEast ? [southWest, northEast] : southWest;
+
+	for (var i = 0, len = latlngs.length; i < len; i++) {
+		this.extend(latlngs[i]);
+	}
+};
+
+L.LatLngBounds.prototype = {
+	// extend the bounds to contain the given point or bounds
+	extend: function (obj) { // (LatLng) or (LatLngBounds)
+		if (!obj) { return this; }
+
+		var latLng = L.latLng(obj);
+		if (latLng !== null) {
+			obj = latLng;
+		} else {
+			obj = L.latLngBounds(obj);
+		}
+
+		if (obj instanceof L.LatLng) {
+			if (!this._southWest && !this._northEast) {
+				this._southWest = new L.LatLng(obj.lat, obj.lng);
+				this._northEast = new L.LatLng(obj.lat, obj.lng);
+			} else {
+				this._southWest.lat = Math.min(obj.lat, this._southWest.lat);
+				this._southWest.lng = Math.min(obj.lng, this._southWest.lng);
+
+				this._northEast.lat = Math.max(obj.lat, this._northEast.lat);
+				this._northEast.lng = Math.max(obj.lng, this._northEast.lng);
+			}
+		} else if (obj instanceof L.LatLngBounds) {
+			this.extend(obj._southWest);
+			this.extend(obj._northEast);
+		}
+		return this;
+	},
+
+	// extend the bounds by a percentage
+	pad: function (bufferRatio) { // (Number) -> LatLngBounds
+		var sw = this._southWest,
+		    ne = this._northEast,
+		    heightBuffer = Math.abs(sw.lat - ne.lat) * bufferRatio,
+		    widthBuffer = Math.abs(sw.lng - ne.lng) * bufferRatio;
+
+		return new L.LatLngBounds(
+		        new L.LatLng(sw.lat - heightBuffer, sw.lng - widthBuffer),
+		        new L.LatLng(ne.lat + heightBuffer, ne.lng + widthBuffer));
+	},
+
+	getCenter: function () { // -> LatLng
+		return new L.LatLng(
+		        (this._southWest.lat + this._northEast.lat) / 2,
+		        (this._southWest.lng + this._northEast.lng) / 2);
+	},
+
+	getSouthWest: function () {
+		return this._southWest;
+	},
+
+	getNorthEast: function () {
+		return this._northEast;
+	},
+
+	getNorthWest: function () {
+		return new L.LatLng(this.getNorth(), this.getWest());
+	},
+
+	getSouthEast: function () {
+		return new L.LatLng(this.getSouth(), this.getEast());
+	},
+
+	getWest: function () {
+		return this._southWest.lng;
+	},
+
+	getSouth: function () {
+		return this._southWest.lat;
+	},
+
+	getEast: function () {
+		return this._northEast.lng;
+	},
+
+	getNorth: function () {
+		return this._northEast.lat;
+	},
+
+	contains: function (obj) { // (LatLngBounds) or (LatLng) -> Boolean
+		if (typeof obj[0] === 'number' || obj instanceof L.LatLng) {
+			obj = L.latLng(obj);
+		} else {
+			obj = L.latLngBounds(obj);
+		}
+
+		var sw = this._southWest,
+		    ne = this._northEast,
+		    sw2, ne2;
+
+		if (obj instanceof L.LatLngBounds) {
+			sw2 = obj.getSouthWest();
+			ne2 = obj.getNorthEast();
+		} else {
+			sw2 = ne2 = obj;
+		}
+
+		return (sw2.lat >= sw.lat) && (ne2.lat <= ne.lat) &&
+		       (sw2.lng >= sw.lng) && (ne2.lng <= ne.lng);
+	},
+
+	intersects: function (bounds) { // (LatLngBounds)
+		bounds = L.latLngBounds(bounds);
+
+		var sw = this._southWest,
+		    ne = this._northEast,
+		    sw2 = bounds.getSouthWest(),
+		    ne2 = bounds.getNorthEast(),
+
+		    latIntersects = (ne2.lat >= sw.lat) && (sw2.lat <= ne.lat),
+		    lngIntersects = (ne2.lng >= sw.lng) && (sw2.lng <= ne.lng);
+
+		return latIntersects && lngIntersects;
+	},
+
+	toBBoxString: function () {
+		return [this.getWest(), this.getSouth(), this.getEast(), this.getNorth()].join(',');
+	},
+
+	equals: function (bounds) { // (LatLngBounds)
+		if (!bounds) { return false; }
+
+		bounds = L.latLngBounds(bounds);
+
+		return this._southWest.equals(bounds.getSouthWest()) &&
+		       this._northEast.equals(bounds.getNorthEast());
+	},
+
+	isValid: function () {
+		return !!(this._southWest && this._northEast);
+	}
+};
+
+//TODO International date line?
+
+L.latLngBounds = function (a, b) { // (LatLngBounds) or (LatLng, LatLng)
+	if (!a || a instanceof L.LatLngBounds) {
+		return a;
+	}
+	return new L.LatLngBounds(a, b);
+};
+
+
+/*
+ * L.Projection contains various geographical projections used by CRS classes.
+ */
+
+L.Projection = {};
+
+
+/*
+ * Spherical Mercator is the most popular map projection, used by EPSG:3857 CRS used by default.
+ */
+
+L.Projection.SphericalMercator = {
+	MAX_LATITUDE: 85.0511287798,
+
+	project: function (latlng) { // (LatLng) -> Point
+		var d = L.LatLng.DEG_TO_RAD,
+		    max = this.MAX_LATITUDE,
+		    lat = Math.max(Math.min(max, latlng.lat), -max),
+		    x = latlng.lng * d,
+		    y = lat * d;
+
+		y = Math.log(Math.tan((Math.PI / 4) + (y / 2)));
+
+		return new L.Point(x, y);
+	},
+
+	unproject: function (point) { // (Point, Boolean) -> LatLng
+		var d = L.LatLng.RAD_TO_DEG,
+		    lng = point.x * d,
+		    lat = (2 * Math.atan(Math.exp(point.y)) - (Math.PI / 2)) * d;
+
+		return new L.LatLng(lat, lng);
+	}
+};
+
+
+/*
+ * Simple equirectangular (Plate Carree) projection, used by CRS like EPSG:4326 and Simple.
+ */
+
+L.Projection.LonLat = {
+	project: function (latlng) {
+		return new L.Point(latlng.lng, latlng.lat);
+	},
+
+	unproject: function (point) {
+		return new L.LatLng(point.y, point.x);
+	}
+};
+
+
+/*
+ * L.CRS is a base object for all defined CRS (Coordinate Reference Systems) in Leaflet.
+ */
+
+L.CRS = {
+	latLngToPoint: function (latlng, zoom) { // (LatLng, Number) -> Point
+		var projectedPoint = this.projection.project(latlng),
+		    scale = this.scale(zoom);
+
+		return this.transformation._transform(projectedPoint, scale);
+	},
+
+	pointToLatLng: function (point, zoom) { // (Point, Number[, Boolean]) -> LatLng
+		var scale = this.scale(zoom),
+		    untransformedPoint = this.transformation.untransform(point, scale);
+
+		return this.projection.unproject(untransformedPoint);
+	},
+
+	project: function (latlng) {
+		return this.projection.project(latlng);
+	},
+
+	scale: function (zoom) {
+		return 256 * Math.pow(2, zoom);
+	},
+
+	getSize: function (zoom) {
+		var s = this.scale(zoom);
+		return L.point(s, s);
+	}
+};
+
+
+/*
+ * A simple CRS that can be used for flat non-Earth maps like panoramas or game maps.
+ */
+
+L.CRS.Simple = L.extend({}, L.CRS, {
+	projection: L.Projection.LonLat,
+	transformation: new L.Transformation(1, 0, -1, 0),
+
+	scale: function (zoom) {
+		return Math.pow(2, zoom);
+	}
+});
+
+
+/*
+ * L.CRS.EPSG3857 (Spherical Mercator) is the most common CRS for web mapping
+ * and is used by Leaflet by default.
+ */
+
+L.CRS.EPSG3857 = L.extend({}, L.CRS, {
+	code: 'EPSG:3857',
+
+	projection: L.Projection.SphericalMercator,
+	transformation: new L.Transformation(0.5 / Math.PI, 0.5, -0.5 / Math.PI, 0.5),
+
+	project: function (latlng) { // (LatLng) -> Point
+		var projectedPoint = this.projection.project(latlng),
+		    earthRadius = 6378137;
+		return projectedPoint.multiplyBy(earthRadius);
+	}
+});
+
+L.CRS.EPSG900913 = L.extend({}, L.CRS.EPSG3857, {
+	code: 'EPSG:900913'
+});
+
+
+/*
+ * L.CRS.EPSG4326 is a CRS popular among advanced GIS specialists.
+ */
+
+L.CRS.EPSG4326 = L.extend({}, L.CRS, {
+	code: 'EPSG:4326',
+
+	projection: L.Projection.LonLat,
+	transformation: new L.Transformation(1 / 360, 0.5, -1 / 360, 0.5)
+});
+
+
+/*
+ * L.Map is the central class of the API - it is used to create a map.
+ */
+
+L.Map = L.Class.extend({
+
+	includes: L.Mixin.Events,
+
+	options: {
+		crs: L.CRS.EPSG3857,
+
+		/*
+		center: LatLng,
+		zoom: Number,
+		layers: Array,
+		*/
+
+		fadeAnimation: L.DomUtil.TRANSITION && !L.Browser.android23,
+		trackResize: true,
+		markerZoomAnimation: L.DomUtil.TRANSITION && L.Browser.any3d
+	},
+
+	initialize: function (id, options) { // (HTMLElement or String, Object)
+		options = L.setOptions(this, options);
+
+
+		this._initContainer(id);
+		this._initLayout();
+
+		// hack for https://github.com/Leaflet/Leaflet/issues/1980
+		this._onResize = L.bind(this._onResize, this);
+
+		this._initEvents();
+
+		if (options.maxBounds) {
+			this.setMaxBounds(options.maxBounds);
+		}
+
+		if (options.center && options.zoom !== undefined) {
+			this.setView(L.latLng(options.center), options.zoom, {reset: true});
+		}
+
+		this._handlers = [];
+
+		this._layers = {};
+		this._zoomBoundLayers = {};
+		this._tileLayersNum = 0;
+
+		this.callInitHooks();
+
+		this._addLayers(options.layers);
+	},
+
+
+	// public methods that modify map state
+
+	// replaced by animation-powered implementation in Map.PanAnimation.js
+	setView: function (center, zoom) {
+		zoom = zoom === undefined ? this.getZoom() : zoom;
+		this._resetView(L.latLng(center), this._limitZoom(zoom));
+		return this;
+	},
+
+	setZoom: function (zoom, options) {
+		if (!this._loaded) {
+			this._zoom = this._limitZoom(zoom);
+			return this;
+		}
+		return this.setView(this.getCenter(), zoom, {zoom: options});
+	},
+
+	zoomIn: function (delta, options) {
+		return this.setZoom(this._zoom + (delta || 1), options);
+	},
+
+	zoomOut: function (delta, options) {
+		return this.setZoom(this._zoom - (delta || 1), options);
+	},
+
+	setZoomAround: function (latlng, zoom, options) {
+		var scale = this.getZoomScale(zoom),
+		    viewHalf = this.getSize().divideBy(2),
+		    containerPoint = latlng instanceof L.Point ? latlng : this.latLngToContainerPoint(latlng),
+
+		    centerOffset = containerPoint.subtract(viewHalf).multiplyBy(1 - 1 / scale),
+		    newCenter = this.containerPointToLatLng(viewHalf.add(centerOffset));
+
+		return this.setView(newCenter, zoom, {zoom: options});
+	},
+
+	fitBounds: function (bounds, options) {
+
+		options = options || {};
+		bounds = bounds.getBounds ? bounds.getBounds() : L.latLngBounds(bounds);
+
+		var paddingTL = L.point(options.paddingTopLeft || options.padding || [0, 0]),
+		    paddingBR = L.point(options.paddingBottomRight || options.padding || [0, 0]),
+
+		    zoom = this.getBoundsZoom(bounds, false, paddingTL.add(paddingBR));
+
+		zoom = (options.maxZoom) ? Math.min(options.maxZoom, zoom) : zoom;
+
+		var paddingOffset = paddingBR.subtract(paddingTL).divideBy(2),
+
+		    swPoint = this.project(bounds.getSouthWest(), zoom),
+		    nePoint = this.project(bounds.getNorthEast(), zoom),
+		    center = this.unproject(swPoint.add(nePoint).divideBy(2).add(paddingOffset), zoom);
+
+		return this.setView(center, zoom, options);
+	},
+
+	fitWorld: function (options) {
+		return this.fitBounds([[-90, -180], [90, 180]], options);
+	},
+
+	panTo: function (center, options) { // (LatLng)
+		return this.setView(center, this._zoom, {pan: options});
+	},
+
+	panBy: function (offset) { // (Point)
+		// replaced with animated panBy in Map.PanAnimation.js
+		this.fire('movestart');
+
+		this._rawPanBy(L.point(offset));
+
+		this.fire('move');
+		return this.fire('moveend');
+	},
+
+	setMaxBounds: function (bounds) {
+		bounds = L.latLngBounds(bounds);
+
+		this.options.maxBounds = bounds;
+
+		if (!bounds) {
+			return this.off('moveend', this._panInsideMaxBounds, this);
+		}
+
+		if (this._loaded) {
+			this._panInsideMaxBounds();
+		}
+
+		return this.on('moveend', this._panInsideMaxBounds, this);
+	},
+
+	panInsideBounds: function (bounds, options) {
+		var center = this.getCenter(),
+			newCenter = this._limitCenter(center, this._zoom, bounds);
+
+		if (center.equals(newCenter)) { return this; }
+
+		return this.panTo(newCenter, options);
+	},
+
+	addLayer: function (layer) {
+		// TODO method is too big, refactor
+
+		var id = L.stamp(layer);
+
+		if (this._layers[id]) { return this; }
+
+		this._layers[id] = layer;
+
+		// TODO getMaxZoom, getMinZoom in ILayer (instead of options)
+		if (layer.options && (!isNaN(layer.options.maxZoom) || !isNaN(layer.options.minZoom))) {
+			this._zoomBoundLayers[id] = layer;
+			this._updateZoomLevels();
+		}
+
+		// TODO looks ugly, refactor!!!
+		if (this.options.zoomAnimation && L.TileLayer && (layer instanceof L.TileLayer)) {
+			this._tileLayersNum++;
+			this._tileLayersToLoad++;
+			layer.on('load', this._onTileLayerLoad, this);
+		}
+
+		if (this._loaded) {
+			this._layerAdd(layer);
+		}
+
+		return this;
+	},
+
+	removeLayer: function (layer) {
+		var id = L.stamp(layer);
+
+		if (!this._layers[id]) { return this; }
+
+		if (this._loaded) {
+			layer.onRemove(this);
+		}
+
+		delete this._layers[id];
+
+		if (this._loaded) {
+			this.fire('layerremove', {layer: layer});
+		}
+
+		if (this._zoomBoundLayers[id]) {
+			delete this._zoomBoundLayers[id];
+			this._updateZoomLevels();
+		}
+
+		// TODO looks ugly, refactor
+		if (this.options.zoomAnimation && L.TileLayer && (layer instanceof L.TileLayer)) {
+			this._tileLayersNum--;
+			this._tileLayersToLoad--;
+			layer.off('load', this._onTileLayerLoad, this);
+		}
+
+		return this;
+	},
+
+	hasLayer: function (layer) {
+		if (!layer) { return false; }
+
+		return (L.stamp(layer) in this._layers);
+	},
+
+	eachLayer: function (method, context) {
+		for (var i in this._layers) {
+			method.call(context, this._layers[i]);
+		}
+		return this;
+	},
+
+	invalidateSize: function (options) {
+		if (!this._loaded) { return this; }
+
+		options = L.extend({
+			animate: false,
+			pan: true
+		}, options === true ? {animate: true} : options);
+
+		var oldSize = this.getSize();
+		this._sizeChanged = true;
+		this._initialCenter = null;
+
+		var newSize = this.getSize(),
+		    oldCenter = oldSize.divideBy(2).round(),
+		    newCenter = newSize.divideBy(2).round(),
+		    offset = oldCenter.subtract(newCenter);
+
+		if (!offset.x && !offset.y) { return this; }
+
+		if (options.animate && options.pan) {
+			this.panBy(offset);
+
+		} else {
+			if (options.pan) {
+				this._rawPanBy(offset);
+			}
+
+			this.fire('move');
+
+			if (options.debounceMoveend) {
+				clearTimeout(this._sizeTimer);
+				this._sizeTimer = setTimeout(L.bind(this.fire, this, 'moveend'), 200);
+			} else {
+				this.fire('moveend');
+			}
+		}
+
+		return this.fire('resize', {
+			oldSize: oldSize,
+			newSize: newSize
+		});
+	},
+
+	// TODO handler.addTo
+	addHandler: function (name, HandlerClass) {
+		if (!HandlerClass) { return this; }
+
+		var handler = this[name] = new HandlerClass(this);
+
+		this._handlers.push(handler);
+
+		if (this.options[name]) {
+			handler.enable();
+		}
+
+		return this;
+	},
+
+	remove: function () {
+		if (this._loaded) {
+			this.fire('unload');
+		}
+
+		this._initEvents('off');
+
+		try {
+			// throws error in IE6-8
+			delete this._container._leaflet;
+		} catch (e) {
+			this._container._leaflet = undefined;
+		}
+
+		this._clearPanes();
+		if (this._clearControlPos) {
+			this._clearControlPos();
+		}
+
+		this._clearHandlers();
+
+		return this;
+	},
+
+
+	// public methods for getting map state
+
+	getCenter: function () { // (Boolean) -> LatLng
+		this._checkIfLoaded();
+
+		if (this._initialCenter && !this._moved()) {
+			return this._initialCenter;
+		}
+		return this.layerPointToLatLng(this._getCenterLayerPoint());
+	},
+
+	getZoom: function () {
+		return this._zoom;
+	},
+
+	getBounds: function () {
+		var bounds = this.getPixelBounds(),
+		    sw = this.unproject(bounds.getBottomLeft()),
+		    ne = this.unproject(bounds.getTopRight());
+
+		return new L.LatLngBounds(sw, ne);
+	},
+
+	getMinZoom: function () {
+		return this.options.minZoom === undefined ?
+			(this._layersMinZoom === undefined ? 0 : this._layersMinZoom) :
+			this.options.minZoom;
+	},
+
+	getMaxZoom: function () {
+		return this.options.maxZoom === undefined ?
+			(this._layersMaxZoom === undefined ? Infinity : this._layersMaxZoom) :
+			this.options.maxZoom;
+	},
+
+	getBoundsZoom: function (bounds, inside, padding) { // (LatLngBounds[, Boolean, Point]) -> Number
+		bounds = L.latLngBounds(bounds);
+
+		var zoom = this.getMinZoom() - (inside ? 1 : 0),
+		    maxZoom = this.getMaxZoom(),
+		    size = this.getSize(),
+
+		    nw = bounds.getNorthWest(),
+		    se = bounds.getSouthEast(),
+
+		    zoomNotFound = true,
+		    boundsSize;
+
+		padding = L.point(padding || [0, 0]);
+
+		do {
+			zoom++;
+			boundsSize = this.project(se, zoom).subtract(this.project(nw, zoom)).add(padding);
+			zoomNotFound = !inside ? size.contains(boundsSize) : boundsSize.x < size.x || boundsSize.y < size.y;
+
+		} while (zoomNotFound && zoom <= maxZoom);
+
+		if (zoomNotFound && inside) {
+			return null;
+		}
+
+		return inside ? zoom : zoom - 1;
+	},
+
+	getSize: function () {
+		if (!this._size || this._sizeChanged) {
+			this._size = new L.Point(
+				this._container.clientWidth,
+				this._container.clientHeight);
+
+			this._sizeChanged = false;
+		}
+		return this._size.clone();
+	},
+
+	getPixelBounds: function () {
+		var topLeftPoint = this._getTopLeftPoint();
+		return new L.Bounds(topLeftPoint, topLeftPoint.add(this.getSize()));
+	},
+
+	getPixelOrigin: function () {
+		this._checkIfLoaded();
+		return this._initialTopLeftPoint;
+	},
+
+	getPanes: function () {
+		return this._panes;
+	},
+
+	getContainer: function () {
+		return this._container;
+	},
+
+
+	// TODO replace with universal implementation after refactoring projections
+
+	getZoomScale: function (toZoom) {
+		var crs = this.options.crs;
+		return crs.scale(toZoom) / crs.scale(this._zoom);
+	},
+
+	getScaleZoom: function (scale) {
+		return this._zoom + (Math.log(scale) / Math.LN2);
+	},
+
+
+	// conversion methods
+
+	project: function (latlng, zoom) { // (LatLng[, Number]) -> Point
+		zoom = zoom === undefined ? this._zoom : zoom;
+		return this.options.crs.latLngToPoint(L.latLng(latlng), zoom);
+	},
+
+	unproject: function (point, zoom) { // (Point[, Number]) -> LatLng
+		zoom = zoom === undefined ? this._zoom : zoom;
+		return this.options.crs.pointToLatLng(L.point(point), zoom);
+	},
+
+	layerPointToLatLng: function (point) { // (Point)
+		var projectedPoint = L.point(point).add(this.getPixelOrigin());
+		return this.unproject(projectedPoint);
+	},
+
+	latLngToLayerPoint: function (latlng) { // (LatLng)
+		var projectedPoint = this.project(L.latLng(latlng))._round();
+		return projectedPoint._subtract(this.getPixelOrigin());
+	},
+
+	containerPointToLayerPoint: function (point) { // (Point)
+		return L.point(point).subtract(this._getMapPanePos());
+	},
+
+	layerPointToContainerPoint: function (point) { // (Point)
+		return L.point(point).add(this._getMapPanePos());
+	},
+
+	containerPointToLatLng: function (point) {
+		var layerPoint = this.containerPointToLayerPoint(L.point(point));
+		return this.layerPointToLatLng(layerPoint);
+	},
+
+	latLngToContainerPoint: function (latlng) {
+		return this.layerPointToContainerPoint(this.latLngToLayerPoint(L.latLng(latlng)));
+	},
+
+	mouseEventToContainerPoint: function (e) { // (MouseEvent)
+		return L.DomEvent.getMousePosition(e, this._container);
+	},
+
+	mouseEventToLayerPoint: function (e) { // (MouseEvent)
+		return this.containerPointToLayerPoint(this.mouseEventToContainerPoint(e));
+	},
+
+	mouseEventToLatLng: function (e) { // (MouseEvent)
+		return this.layerPointToLatLng(this.mouseEventToLayerPoint(e));
+	},
+
+
+	// map initialization methods
+
+	_initContainer: function (id) {
+		var container = this._container = L.DomUtil.get(id);
+
+		if (!container) {
+			throw new Error('Map container not found.');
+		} else if (container._leaflet) {
+			throw new Error('Map container is already initialized.');
+		}
+
+		container._leaflet = true;
+	},
+
+	_initLayout: function () {
+		var container = this._container;
+
+		L.DomUtil.addClass(container, 'leaflet-container' +
+			(L.Browser.touch ? ' leaflet-touch' : '') +
+			(L.Browser.retina ? ' leaflet-retina' : '') +
+			(L.Browser.ielt9 ? ' leaflet-oldie' : '') +
+			(this.options.fadeAnimation ? ' leaflet-fade-anim' : ''));
+
+		var position = L.DomUtil.getStyle(container, 'position');
+
+		if (position !== 'absolute' && position !== 'relative' && position !== 'fixed') {
+			container.style.position = 'relative';
+		}
+
+		this._initPanes();
+
+		if (this._initControlPos) {
+			this._initControlPos();
+		}
+	},
+
+	_initPanes: function () {
+		var panes = this._panes = {};
+
+		this._mapPane = panes.mapPane = this._createPane('leaflet-map-pane', this._container);
+
+		this._tilePane = panes.tilePane = this._createPane('leaflet-tile-pane', this._mapPane);
+		panes.objectsPane = this._createPane('leaflet-objects-pane', this._mapPane);
+		panes.shadowPane = this._createPane('leaflet-shadow-pane');
+		panes.overlayPane = this._createPane('leaflet-overlay-pane');
+		panes.markerPane = this._createPane('leaflet-marker-pane');
+		panes.popupPane = this._createPane('leaflet-popup-pane');
+
+		var zoomHide = ' leaflet-zoom-hide';
+
+		if (!this.options.markerZoomAnimation) {
+			L.DomUtil.addClass(panes.markerPane, zoomHide);
+			L.DomUtil.addClass(panes.shadowPane, zoomHide);
+			L.DomUtil.addClass(panes.popupPane, zoomHide);
+		}
+	},
+
+	_createPane: function (className, container) {
+		return L.DomUtil.create('div', className, container || this._panes.objectsPane);
+	},
+
+	_clearPanes: function () {
+		this._container.removeChild(this._mapPane);
+	},
+
+	_addLayers: function (layers) {
+		layers = layers ? (L.Util.isArray(layers) ? layers : [layers]) : [];
+
+		for (var i = 0, len = layers.length; i < len; i++) {
+			this.addLayer(layers[i]);
+		}
+	},
+
+
+	// private methods that modify map state
+
+	_resetView: function (center, zoom, preserveMapOffset, afterZoomAnim) {
+
+		var zoomChanged = (this._zoom !== zoom);
+
+		if (!afterZoomAnim) {
+			this.fire('movestart');
+
+			if (zoomChanged) {
+				this.fire('zoomstart');
+			}
+		}
+
+		this._zoom = zoom;
+		this._initialCenter = center;
+
+		this._initialTopLeftPoint = this._getNewTopLeftPoint(center);
+
+		if (!preserveMapOffset) {
+			L.DomUtil.setPosition(this._mapPane, new L.Point(0, 0));
+		} else {
+			this._initialTopLeftPoint._add(this._getMapPanePos());
+		}
+
+		this._tileLayersToLoad = this._tileLayersNum;
+
+		var loading = !this._loaded;
+		this._loaded = true;
+
+		this.fire('viewreset', {hard: !preserveMapOffset});
+
+		if (loading) {
+			this.fire('load');
+			this.eachLayer(this._layerAdd, this);
+		}
+
+		this.fire('move');
+
+		if (zoomChanged || afterZoomAnim) {
+			this.fire('zoomend');
+		}
+
+		this.fire('moveend', {hard: !preserveMapOffset});
+	},
+
+	_rawPanBy: function (offset) {
+		L.DomUtil.setPosition(this._mapPane, this._getMapPanePos().subtract(offset));
+	},
+
+	_getZoomSpan: function () {
+		return this.getMaxZoom() - this.getMinZoom();
+	},
+
+	_updateZoomLevels: function () {
+		var i,
+			minZoom = Infinity,
+			maxZoom = -Infinity,
+			oldZoomSpan = this._getZoomSpan();
+
+		for (i in this._zoomBoundLayers) {
+			var layer = this._zoomBoundLayers[i];
+			if (!isNaN(layer.options.minZoom)) {
+				minZoom = Math.min(minZoom, layer.options.minZoom);
+			}
+			if (!isNaN(layer.options.maxZoom)) {
+				maxZoom = Math.max(maxZoom, layer.options.maxZoom);
+			}
+		}
+
+		if (i === undefined) { // we have no tilelayers
+			this._layersMaxZoom = this._layersMinZoom = undefined;
+		} else {
+			this._layersMaxZoom = maxZoom;
+			this._layersMinZoom = minZoom;
+		}
+
+		if (oldZoomSpan !== this._getZoomSpan()) {
+			this.fire('zoomlevelschange');
+		}
+	},
+
+	_panInsideMaxBounds: function () {
+		this.panInsideBounds(this.options.maxBounds);
+	},
+
+	_checkIfLoaded: function () {
+		if (!this._loaded) {
+			throw new Error('Set map center and zoom first.');
+		}
+	},
+
+	// map events
+
+	_initEvents: function (onOff) {
+		if (!L.DomEvent) { return; }
+
+		onOff = onOff || 'on';
+
+		L.DomEvent[onOff](this._container, 'click', this._onMouseClick, this);
+
+		var events = ['dblclick', 'mousedown', 'mouseup', 'mouseenter',
+		              'mouseleave', 'mousemove', 'contextmenu'],
+		    i, len;
+
+		for (i = 0, len = events.length; i < len; i++) {
+			L.DomEvent[onOff](this._container, events[i], this._fireMouseEvent, this);
+		}
+
+		if (this.options.trackResize) {
+			L.DomEvent[onOff](window, 'resize', this._onResize, this);
+		}
+	},
+
+	_onResize: function () {
+		L.Util.cancelAnimFrame(this._resizeRequest);
+		this._resizeRequest = L.Util.requestAnimFrame(
+		        function () { this.invalidateSize({debounceMoveend: true}); }, this, false, this._container);
+	},
+
+	_onMouseClick: function (e) {
+		if (!this._loaded || (!e._simulated &&
+		        ((this.dragging && this.dragging.moved()) ||
+		         (this.boxZoom  && this.boxZoom.moved()))) ||
+		            L.DomEvent._skipped(e)) { return; }
+
+		this.fire('preclick');
+		this._fireMouseEvent(e);
+	},
+
+	_fireMouseEvent: function (e) {
+		if (!this._loaded || L.DomEvent._skipped(e)) { return; }
+
+		var type = e.type;
+
+		type = (type === 'mouseenter' ? 'mouseover' : (type === 'mouseleave' ? 'mouseout' : type));
+
+		if (!this.hasEventListeners(type)) { return; }
+
+		if (type === 'contextmenu') {
+			L.DomEvent.preventDefault(e);
+		}
+
+		var containerPoint = this.mouseEventToContainerPoint(e),
+		    layerPoint = this.containerPointToLayerPoint(containerPoint),
+		    latlng = this.layerPointToLatLng(layerPoint);
+
+		this.fire(type, {
+			latlng: latlng,
+			layerPoint: layerPoint,
+			containerPoint: containerPoint,
+			originalEvent: e
+		});
+	},
+
+	_onTileLayerLoad: function () {
+		this._tileLayersToLoad--;
+		if (this._tileLayersNum && !this._tileLayersToLoad) {
+			this.fire('tilelayersload');
+		}
+	},
+
+	_clearHandlers: function () {
+		for (var i = 0, len = this._handlers.length; i < len; i++) {
+			this._handlers[i].disable();
+		}
+	},
+
+	whenReady: function (callback, context) {
+		if (this._loaded) {
+			callback.call(context || this, this);
+		} else {
+			this.on('load', callback, context);
+		}
+		return this;
+	},
+
+	_layerAdd: function (layer) {
+		layer.onAdd(this);
+		this.fire('layeradd', {layer: layer});
+	},
+
+
+	// private methods for getting map state
+
+	_getMapPanePos: function () {
+		return L.DomUtil.getPosition(this._mapPane);
+	},
+
+	_moved: function () {
+		var pos = this._getMapPanePos();
+		return pos && !pos.equals([0, 0]);
+	},
+
+	_getTopLeftPoint: function () {
+		return this.getPixelOrigin().subtract(this._getMapPanePos());
+	},
+
+	_getNewTopLeftPoint: function (center, zoom) {
+		var viewHalf = this.getSize()._divideBy(2);
+		// TODO round on display, not calculation to increase precision?
+		return this.project(center, zoom)._subtract(viewHalf)._round();
+	},
+
+	_latLngToNewLayerPoint: function (latlng, newZoom, newCenter) {
+		var topLeft = this._getNewTopLeftPoint(newCenter, newZoom).add(this._getMapPanePos());
+		return this.project(latlng, newZoom)._subtract(topLeft);
+	},
+
+	// layer point of the current center
+	_getCenterLayerPoint: function () {
+		return this.containerPointToLayerPoint(this.getSize()._divideBy(2));
+	},
+
+	// offset of the specified place to the current center in pixels
+	_getCenterOffset: function (latlng) {
+		return this.latLngToLayerPoint(latlng).subtract(this._getCenterLayerPoint());
+	},
+
+	// adjust center for view to get inside bounds
+	_limitCenter: function (center, zoom, bounds) {
+
+		if (!bounds) { return center; }
+
+		var centerPoint = this.project(center, zoom),
+		    viewHalf = this.getSize().divideBy(2),
+		    viewBounds = new L.Bounds(centerPoint.subtract(viewHalf), centerPoint.add(viewHalf)),
+		    offset = this._getBoundsOffset(viewBounds, bounds, zoom);
+
+		return this.unproject(centerPoint.add(offset), zoom);
+	},
+
+	// adjust offset for view to get inside bounds
+	_limitOffset: function (offset, bounds) {
+		if (!bounds) { return offset; }
+
+		var viewBounds = this.getPixelBounds(),
+		    newBounds = new L.Bounds(viewBounds.min.add(offset), viewBounds.max.add(offset));
+
+		return offset.add(this._getBoundsOffset(newBounds, bounds));
+	},
+
+	// returns offset needed for pxBounds to get inside maxBounds at a specified zoom
+	_getBoundsOffset: function (pxBounds, maxBounds, zoom) {
+		var nwOffset = this.project(maxBounds.getNorthWest(), zoom).subtract(pxBounds.min),
+		    seOffset = this.project(maxBounds.getSouthEast(), zoom).subtract(pxBounds.max),
+
+		    dx = this._rebound(nwOffset.x, -seOffset.x),
+		    dy = this._rebound(nwOffset.y, -seOffset.y);
+
+		return new L.Point(dx, dy);
+	},
+
+	_rebound: function (left, right) {
+		return left + right > 0 ?
+			Math.round(left - right) / 2 :
+			Math.max(0, Math.ceil(left)) - Math.max(0, Math.floor(right));
+	},
+
+	_limitZoom: function (zoom) {
+		var min = this.getMinZoom(),
+		    max = this.getMaxZoom();
+
+		return Math.max(min, Math.min(max, zoom));
+	}
+});
+
+L.map = function (id, options) {
+	return new L.Map(id, options);
+};
+
+
+/*
+ * Mercator projection that takes into account that the Earth is not a perfect sphere.
+ * Less popular than spherical mercator; used by projections like EPSG:3395.
+ */
+
+L.Projection.Mercator = {
+	MAX_LATITUDE: 85.0840591556,
+
+	R_MINOR: 6356752.314245179,
+	R_MAJOR: 6378137,
+
+	project: function (latlng) { // (LatLng) -> Point
+		var d = L.LatLng.DEG_TO_RAD,
+		    max = this.MAX_LATITUDE,
+		    lat = Math.max(Math.min(max, latlng.lat), -max),
+		    r = this.R_MAJOR,
+		    r2 = this.R_MINOR,
+		    x = latlng.lng * d * r,
+		    y = lat * d,
+		    tmp = r2 / r,
+		    eccent = Math.sqrt(1.0 - tmp * tmp),
+		    con = eccent * Math.sin(y);
+
+		con = Math.pow((1 - con) / (1 + con), eccent * 0.5);
+
+		var ts = Math.tan(0.5 * ((Math.PI * 0.5) - y)) / con;
+		y = -r * Math.log(ts);
+
+		return new L.Point(x, y);
+	},
+
+	unproject: function (point) { // (Point, Boolean) -> LatLng
+		var d = L.LatLng.RAD_TO_DEG,
+		    r = this.R_MAJOR,
+		    r2 = this.R_MINOR,
+		    lng = point.x * d / r,
+		    tmp = r2 / r,
+		    eccent = Math.sqrt(1 - (tmp * tmp)),
+		    ts = Math.exp(- point.y / r),
+		    phi = (Math.PI / 2) - 2 * Math.atan(ts),
+		    numIter = 15,
+		    tol = 1e-7,
+		    i = numIter,
+		    dphi = 0.1,
+		    con;
+
+		while ((Math.abs(dphi) > tol) && (--i > 0)) {
+			con = eccent * Math.sin(phi);
+			dphi = (Math.PI / 2) - 2 * Math.atan(ts *
+			            Math.pow((1.0 - con) / (1.0 + con), 0.5 * eccent)) - phi;
+			phi += dphi;
+		}
+
+		return new L.LatLng(phi * d, lng);
+	}
+};
+
+
+
+L.CRS.EPSG3395 = L.extend({}, L.CRS, {
+	code: 'EPSG:3395',
+
+	projection: L.Projection.Mercator,
+
+	transformation: (function () {
+		var m = L.Projection.Mercator,
+		    r = m.R_MAJOR,
+		    scale = 0.5 / (Math.PI * r);
+
+		return new L.Transformation(scale, 0.5, -scale, 0.5);
+	}())
+});
+
+
+/*
+ * L.TileLayer is used for standard xyz-numbered tile layers.
+ */
+
+L.TileLayer = L.Class.extend({
+	includes: L.Mixin.Events,
+
+	options: {
+		minZoom: 0,
+		maxZoom: 18,
+		tileSize: 256,
+		subdomains: 'abc',
+		errorTileUrl: '',
+		attribution: '',
+		zoomOffset: 0,
+		opacity: 1,
+		/*
+		maxNativeZoom: null,
+		zIndex: null,
+		tms: false,
+		continuousWorld: false,
+		noWrap: false,
+		zoomReverse: false,
+		detectRetina: false,
+		reuseTiles: false,
+		bounds: false,
+		*/
+		unloadInvisibleTiles: L.Browser.mobile,
+		updateWhenIdle: L.Browser.mobile
+	},
+
+	initialize: function (url, options) {
+		options = L.setOptions(this, options);
+
+		// detecting retina displays, adjusting tileSize and zoom levels
+		if (options.detectRetina && L.Browser.retina && options.maxZoom > 0) {
+
+			options.tileSize = Math.floor(options.tileSize / 2);
+			options.zoomOffset++;
+
+			if (options.minZoom > 0) {
+				options.minZoom--;
+			}
+			this.options.maxZoom--;
+		}
+
+		if (options.bounds) {
+			options.bounds = L.latLngBounds(options.bounds);
+		}
+
+		this._url = url;
+
+		var subdomains = this.options.subdomains;
+
+		if (typeof subdomains === 'string') {
+			this.options.subdomains = subdomains.split('');
+		}
+	},
+
+	onAdd: function (map) {
+		this._map = map;
+		this._animated = map._zoomAnimated;
+
+		// create a container div for tiles
+		this._initContainer();
+
+		// set up events
+		map.on({
+			'viewreset': this._reset,
+			'moveend': this._update
+		}, this);
+
+		if (this._animated) {
+			map.on({
+				'zoomanim': this._animateZoom,
+				'zoomend': this._endZoomAnim
+			}, this);
+		}
+
+		if (!this.options.updateWhenIdle) {
+			this._limitedUpdate = L.Util.limitExecByInterval(this._update, 150, this);
+			map.on('move', this._limitedUpdate, this);
+		}
+
+		this._reset();
+		this._update();
+	},
+
+	addTo: function (map) {
+		map.addLayer(this);
+		return this;
+	},
+
+	onRemove: function (map) {
+		this._container.parentNode.removeChild(this._container);
+
+		map.off({
+			'viewreset': this._reset,
+			'moveend': this._update
+		}, this);
+
+		if (this._animated) {
+			map.off({
+				'zoomanim': this._animateZoom,
+				'zoomend': this._endZoomAnim
+			}, this);
+		}
+
+		if (!this.options.updateWhenIdle) {
+			map.off('move', this._limitedUpdate, this);
+		}
+
+		this._container = null;
+		this._map = null;
+	},
+
+	bringToFront: function () {
+		var pane = this._map._panes.tilePane;
+
+		if (this._container) {
+			pane.appendChild(this._container);
+			this._setAutoZIndex(pane, Math.max);
+		}
+
+		return this;
+	},
+
+	bringToBack: function () {
+		var pane = this._map._panes.tilePane;
+
+		if (this._container) {
+			pane.insertBefore(this._container, pane.firstChild);
+			this._setAutoZIndex(pane, Math.min);
+		}
+
+		return this;
+	},
+
+	getAttribution: function () {
+		return this.options.attribution;
+	},
+
+	getContainer: function () {
+		return this._container;
+	},
+
+	setOpacity: function (opacity) {
+		this.options.opacity = opacity;
+
+		if (this._map) {
+			this._updateOpacity();
+		}
+
+		return this;
+	},
+
+	setZIndex: function (zIndex) {
+		this.options.zIndex = zIndex;
+		this._updateZIndex();
+
+		return this;
+	},
+
+	setUrl: function (url, noRedraw) {
+		this._url = url;
+
+		if (!noRedraw) {
+			this.redraw();
+		}
+
+		return this;
+	},
+
+	redraw: function () {
+		if (this._map) {
+			this._reset({hard: true});
+			this._update();
+		}
+		return this;
+	},
+
+	_updateZIndex: function () {
+		if (this._container && this.options.zIndex !== undefined) {
+			this._container.style.zIndex = this.options.zIndex;
+		}
+	},
+
+	_setAutoZIndex: function (pane, compare) {
+
+		var layers = pane.children,
+		    edgeZIndex = -compare(Infinity, -Infinity), // -Infinity for max, Infinity for min
+		    zIndex, i, len;
+
+		for (i = 0, len = layers.length; i < len; i++) {
+
+			if (layers[i] !== this._container) {
+				zIndex = parseInt(layers[i].style.zIndex, 10);
+
+				if (!isNaN(zIndex)) {
+					edgeZIndex = compare(edgeZIndex, zIndex);
+				}
+			}
+		}
+
+		this.options.zIndex = this._container.style.zIndex =
+		        (isFinite(edgeZIndex) ? edgeZIndex : 0) + compare(1, -1);
+	},
+
+	_updateOpacity: function () {
+		var i,
+		    tiles = this._tiles;
+
+		if (L.Browser.ielt9) {
+			for (i in tiles) {
+				L.DomUtil.setOpacity(tiles[i], this.options.opacity);
+			}
+		} else {
+			L.DomUtil.setOpacity(this._container, this.options.opacity);
+		}
+	},
+
+	_initContainer: function () {
+		var tilePane = this._map._panes.tilePane;
+
+		if (!this._container) {
+			this._container = L.DomUtil.create('div', 'leaflet-layer');
+
+			this._updateZIndex();
+
+			if (this._animated) {
+				var className = 'leaflet-tile-container';
+
+				this._bgBuffer = L.DomUtil.create('div', className, this._container);
+				this._tileContainer = L.DomUtil.create('div', className, this._container);
+
+			} else {
+				this._tileContainer = this._container;
+			}
+
+			tilePane.appendChild(this._container);
+
+			if (this.options.opacity < 1) {
+				this._updateOpacity();
+			}
+		}
+	},
+
+	_reset: function (e) {
+		for (var key in this._tiles) {
+			this.fire('tileunload', {tile: this._tiles[key]});
+		}
+
+		this._tiles = {};
+		this._tilesToLoad = 0;
+
+		if (this.options.reuseTiles) {
+			this._unusedTiles = [];
+		}
+
+		this._tileContainer.innerHTML = '';
+
+		if (this._animated && e && e.hard) {
+			this._clearBgBuffer();
+		}
+
+		this._initContainer();
+	},
+
+	_getTileSize: function () {
+		var map = this._map,
+		    zoom = map.getZoom() + this.options.zoomOffset,
+		    zoomN = this.options.maxNativeZoom,
+		    tileSize = this.options.tileSize;
+
+		if (zoomN && zoom > zoomN) {
+			tileSize = Math.round(map.getZoomScale(zoom) / map.getZoomScale(zoomN) * tileSize);
+		}
+
+		return tileSize;
+	},
+
+	_update: function () {
+
+		if (!this._map) { return; }
+
+		var map = this._map,
+		    bounds = map.getPixelBounds(),
+		    zoom = map.getZoom(),
+		    tileSize = this._getTileSize();
+
+		if (zoom > this.options.maxZoom || zoom < this.options.minZoom) {
+			return;
+		}
+
+		var tileBounds = L.bounds(
+		        bounds.min.divideBy(tileSize)._floor(),
+		        bounds.max.divideBy(tileSize)._floor());
+
+		this._addTilesFromCenterOut(tileBounds);
+
+		if (this.options.unloadInvisibleTiles || this.options.reuseTiles) {
+			this._removeOtherTiles(tileBounds);
+		}
+	},
+
+	_addTilesFromCenterOut: function (bounds) {
+		var queue = [],
+		    center = bounds.getCenter();
+
+		var j, i, point;
+
+		for (j = bounds.min.y; j <= bounds.max.y; j++) {
+			for (i = bounds.min.x; i <= bounds.max.x; i++) {
+				point = new L.Point(i, j);
+
+				if (this._tileShouldBeLoaded(point)) {
+					queue.push(point);
+				}
+			}
+		}
+
+		var tilesToLoad = queue.length;
+
+		if (tilesToLoad === 0) { return; }
+
+		// load tiles in order of their distance to center
+		queue.sort(function (a, b) {
+			return a.distanceTo(center) - b.distanceTo(center);
+		});
+
+		var fragment = document.createDocumentFragment();
+
+		// if its the first batch of tiles to load
+		if (!this._tilesToLoad) {
+			this.fire('loading');
+		}
+
+		this._tilesToLoad += tilesToLoad;
+
+		for (i = 0; i < tilesToLoad; i++) {
+			this._addTile(queue[i], fragment);
+		}
+
+		this._tileContainer.appendChild(fragment);
+	},
+
+	_tileShouldBeLoaded: function (tilePoint) {
+		if ((tilePoint.x + ':' + tilePoint.y) in this._tiles) {
+			return false; // already loaded
+		}
+
+		var options = this.options;
+
+		if (!options.continuousWorld) {
+			var limit = this._getWrapTileNum();
+
+			// don't load if exceeds world bounds
+			if ((options.noWrap && (tilePoint.x < 0 || tilePoint.x >= limit.x)) ||
+				tilePoint.y < 0 || tilePoint.y >= limit.y) { return false; }
+		}
+
+		if (options.bounds) {
+			var tileSize = this._getTileSize(),
+			    nwPoint = tilePoint.multiplyBy(tileSize),
+			    sePoint = nwPoint.add([tileSize, tileSize]),
+			    nw = this._map.unproject(nwPoint),
+			    se = this._map.unproject(sePoint);
+
+			// TODO temporary hack, will be removed after refactoring projections
+			// https://github.com/Leaflet/Leaflet/issues/1618
+			if (!options.continuousWorld && !options.noWrap) {
+				nw = nw.wrap();
+				se = se.wrap();
+			}
+
+			if (!options.bounds.intersects([nw, se])) { return false; }
+		}
+
+		return true;
+	},
+
+	_removeOtherTiles: function (bounds) {
+		var kArr, x, y, key;
+
+		for (key in this._tiles) {
+			kArr = key.split(':');
+			x = parseInt(kArr[0], 10);
+			y = parseInt(kArr[1], 10);
+
+			// remove tile if it's out of bounds
+			if (x < bounds.min.x || x > bounds.max.x || y < bounds.min.y || y > bounds.max.y) {
+				this._removeTile(key);
+			}
+		}
+	},
+
+	_removeTile: function (key) {
+		var tile = this._tiles[key];
+
+		this.fire('tileunload', {tile: tile, url: tile.src});
+
+		if (this.options.reuseTiles) {
+			L.DomUtil.removeClass(tile, 'leaflet-tile-loaded');
+			this._unusedTiles.push(tile);
+
+		} else if (tile.parentNode === this._tileContainer) {
+			this._tileContainer.removeChild(tile);
+		}
+
+		// for https://github.com/CloudMade/Leaflet/issues/137
+		if (!L.Browser.android) {
+			tile.onload = null;
+			tile.src = L.Util.emptyImageUrl;
+		}
+
+		delete this._tiles[key];
+	},
+
+	_addTile: function (tilePoint, container) {
+		var tilePos = this._getTilePos(tilePoint);
+
+		// get unused tile - or create a new tile
+		var tile = this._getTile();
+
+		/*
+		Chrome 20 layouts much faster with top/left (verify with timeline, frames)
+		Android 4 browser has display issues with top/left and requires transform instead
+		(other browsers don't currently care) - see debug/hacks/jitter.html for an example
+		*/
+		L.DomUtil.setPosition(tile, tilePos, L.Browser.chrome);
+
+		this._tiles[tilePoint.x + ':' + tilePoint.y] = tile;
+
+		this._loadTile(tile, tilePoint);
+
+		if (tile.parentNode !== this._tileContainer) {
+			container.appendChild(tile);
+		}
+	},
+
+	_getZoomForUrl: function () {
+
+		var options = this.options,
+		    zoom = this._map.getZoom();
+
+		if (options.zoomReverse) {
+			zoom = options.maxZoom - zoom;
+		}
+
+		zoom += options.zoomOffset;
+
+		return options.maxNativeZoom ? Math.min(zoom, options.maxNativeZoom) : zoom;
+	},
+
+	_getTilePos: function (tilePoint) {
+		var origin = this._map.getPixelOrigin(),
+		    tileSize = this._getTileSize();
+
+		return tilePoint.multiplyBy(tileSize).subtract(origin);
+	},
+
+	// image-specific code (override to implement e.g. Canvas or SVG tile layer)
+
+	getTileUrl: function (tilePoint) {
+		return L.Util.template(this._url, L.extend({
+			s: this._getSubdomain(tilePoint),
+			z: tilePoint.z,
+			x: tilePoint.x,
+			y: tilePoint.y
+		}, this.options));
+	},
+
+	_getWrapTileNum: function () {
+		var crs = this._map.options.crs,
+		    size = crs.getSize(this._map.getZoom());
+		return size.divideBy(this._getTileSize())._floor();
+	},
+
+	_adjustTilePoint: function (tilePoint) {
+
+		var limit = this._getWrapTileNum();
+
+		// wrap tile coordinates
+		if (!this.options.continuousWorld && !this.options.noWrap) {
+			tilePoint.x = ((tilePoint.x % limit.x) + limit.x) % limit.x;
+		}
+
+		if (this.options.tms) {
+			tilePoint.y = limit.y - tilePoint.y - 1;
+		}
+
+		tilePoint.z = this._getZoomForUrl();
+	},
+
+	_getSubdomain: function (tilePoint) {
+		var index = Math.abs(tilePoint.x + tilePoint.y) % this.options.subdomains.length;
+		return this.options.subdomains[index];
+	},
+
+	_getTile: function () {
+		if (this.options.reuseTiles && this._unusedTiles.length > 0) {
+			var tile = this._unusedTiles.pop();
+			this._resetTile(tile);
+			return tile;
+		}
+		return this._createTile();
+	},
+
+	// Override if data stored on a tile needs to be cleaned up before reuse
+	_resetTile: function (/*tile*/) {},
+
+	_createTile: function () {
+		var tile = L.DomUtil.create('img', 'leaflet-tile');
+		tile.style.width = tile.style.height = this._getTileSize() + 'px';
+		tile.galleryimg = 'no';
+
+		tile.onselectstart = tile.onmousemove = L.Util.falseFn;
+
+		if (L.Browser.ielt9 && this.options.opacity !== undefined) {
+			L.DomUtil.setOpacity(tile, this.options.opacity);
+		}
+		// without this hack, tiles disappear after zoom on Chrome for Android
+		// https://github.com/Leaflet/Leaflet/issues/2078
+		if (L.Browser.mobileWebkit3d) {
+			tile.style.WebkitBackfaceVisibility = 'hidden';
+		}
+		return tile;
+	},
+
+	_loadTile: function (tile, tilePoint) {
+		tile._layer  = this;
+		tile.onload  = this._tileOnLoad;
+		tile.onerror = this._tileOnError;
+
+		this._adjustTilePoint(tilePoint);
+		tile.src     = this.getTileUrl(tilePoint);
+
+		this.fire('tileloadstart', {
+			tile: tile,
+			url: tile.src
+		});
+	},
+
+	_tileLoaded: function () {
+		this._tilesToLoad--;
+
+		if (this._animated) {
+			L.DomUtil.addClass(this._tileContainer, 'leaflet-zoom-animated');
+		}
+
+		if (!this._tilesToLoad) {
+			this.fire('load');
+
+			if (this._animated) {
+				// clear scaled tiles after all new tiles are loaded (for performance)
+				clearTimeout(this._clearBgBufferTimer);
+				this._clearBgBufferTimer = setTimeout(L.bind(this._clearBgBuffer, this), 500);
+			}
+		}
+	},
+
+	_tileOnLoad: function () {
+		var layer = this._layer;
+
+		//Only if we are loading an actual image
+		if (this.src !== L.Util.emptyImageUrl) {
+			L.DomUtil.addClass(this, 'leaflet-tile-loaded');
+
+			layer.fire('tileload', {
+				tile: this,
+				url: this.src
+			});
+		}
+
+		layer._tileLoaded();
+	},
+
+	_tileOnError: function () {
+		var layer = this._layer;
+
+		layer.fire('tileerror', {
+			tile: this,
+			url: this.src
+		});
+
+		var newUrl = layer.options.errorTileUrl;
+		if (newUrl) {
+			this.src = newUrl;
+		}
+
+		layer._tileLoaded();
+	}
+});
+
+L.tileLayer = function (url, options) {
+	return new L.TileLayer(url, options);
+};
+
+
+/*
+ * L.TileLayer.WMS is used for putting WMS tile layers on the map.
+ */
+
+L.TileLayer.WMS = L.TileLayer.extend({
+
+	defaultWmsParams: {
+		service: 'WMS',
+		request: 'GetMap',
+		version: '1.1.1',
+		layers: '',
+		styles: '',
+		format: 'image/jpeg',
+		transparent: false
+	},
+
+	initialize: function (url, options) { // (String, Object)
+
+		this._url = url;
+
+		var wmsParams = L.extend({}, this.defaultWmsParams),
+		    tileSize = options.tileSize || this.options.tileSize;
+
+		if (options.detectRetina && L.Browser.retina) {
+			wmsParams.width = wmsParams.height = tileSize * 2;
+		} else {
+			wmsParams.width = wmsParams.height = tileSize;
+		}
+
+		for (var i in options) {
+			// all keys that are not TileLayer options go to WMS params
+			if (!this.options.hasOwnProperty(i) && i !== 'crs') {
+				wmsParams[i] = options[i];
+			}
+		}
+
+		this.wmsParams = wmsParams;
+
+		L.setOptions(this, options);
+	},
+
+	onAdd: function (map) {
+
+		this._crs = this.options.crs || map.options.crs;
+
+		this._wmsVersion = parseFloat(this.wmsParams.version);
+
+		var projectionKey = this._wmsVersion >= 1.3 ? 'crs' : 'srs';
+		this.wmsParams[projectionKey] = this._crs.code;
+
+		L.TileLayer.prototype.onAdd.call(this, map);
+	},
+
+	getTileUrl: function (tilePoint) { // (Point, Number) -> String
+
+		var map = this._map,
+		    tileSize = this.options.tileSize,
+
+		    nwPoint = tilePoint.multiplyBy(tileSize),
+		    sePoint = nwPoint.add([tileSize, tileSize]),
+
+		    nw = this._crs.project(map.unproject(nwPoint, tilePoint.z)),
+		    se = this._crs.project(map.unproject(sePoint, tilePoint.z)),
+		    bbox = this._wmsVersion >= 1.3 && this._crs === L.CRS.EPSG4326 ?
+		        [se.y, nw.x, nw.y, se.x].join(',') :
+		        [nw.x, se.y, se.x, nw.y].join(','),
+
+		    url = L.Util.template(this._url, {s: this._getSubdomain(tilePoint)});
+
+		return url + L.Util.getParamString(this.wmsParams, url, true) + '&BBOX=' + bbox;
+	},
+
+	setParams: function (params, noRedraw) {
+
+		L.extend(this.wmsParams, params);
+
+		if (!noRedraw) {
+			this.redraw();
+		}
+
+		return this;
+	}
+});
+
+L.tileLayer.wms = function (url, options) {
+	return new L.TileLayer.WMS(url, options);
+};
+
+
+/*
+ * L.TileLayer.Canvas is a class that you can use as a base for creating
+ * dynamically drawn Canvas-based tile layers.
+ */
+
+L.TileLayer.Canvas = L.TileLayer.extend({
+	options: {
+		async: false
+	},
+
+	initialize: function (options) {
+		L.setOptions(this, options);
+	},
+
+	redraw: function () {
+		if (this._map) {
+			this._reset({hard: true});
+			this._update();
+		}
+
+		for (var i in this._tiles) {
+			this._redrawTile(this._tiles[i]);
+		}
+		return this;
+	},
+
+	_redrawTile: function (tile) {
+		this.drawTile(tile, tile._tilePoint, this._map._zoom);
+	},
+
+	_createTile: function () {
+		var tile = L.DomUtil.create('canvas', 'leaflet-tile');
+		tile.width = tile.height = this.options.tileSize;
+		tile.onselectstart = tile.onmousemove = L.Util.falseFn;
+		return tile;
+	},
+
+	_loadTile: function (tile, tilePoint) {
+		tile._layer = this;
+		tile._tilePoint = tilePoint;
+
+		this._redrawTile(tile);
+
+		if (!this.options.async) {
+			this.tileDrawn(tile);
+		}
+	},
+
+	drawTile: function (/*tile, tilePoint*/) {
+		// override with rendering code
+	},
+
+	tileDrawn: function (tile) {
+		this._tileOnLoad.call(tile);
+	}
+});
+
+
+L.tileLayer.canvas = function (options) {
+	return new L.TileLayer.Canvas(options);
+};
+
+
+/*
+ * L.ImageOverlay is used to overlay images over the map (to specific geographical bounds).
+ */
+
+L.ImageOverlay = L.Class.extend({
+	includes: L.Mixin.Events,
+
+	options: {
+		opacity: 1
+	},
+
+	initialize: function (url, bounds, options) { // (String, LatLngBounds, Object)
+		this._url = url;
+		this._bounds = L.latLngBounds(bounds);
+
+		L.setOptions(this, options);
+	},
+
+	onAdd: function (map) {
+		this._map = map;
+
+		if (!this._image) {
+			this._initImage();
+		}
+
+		map._panes.overlayPane.appendChild(this._image);
+
+		map.on('viewreset', this._reset, this);
+
+		if (map.options.zoomAnimation && L.Browser.any3d) {
+			map.on('zoomanim', this._animateZoom, this);
+		}
+
+		this._reset();
+	},
+
+	onRemove: function (map) {
+		map.getPanes().overlayPane.removeChild(this._image);
+
+		map.off('viewreset', this._reset, this);
+
+		if (map.options.zoomAnimation) {
+			map.off('zoomanim', this._animateZoom, this);
+		}
+	},
+
+	addTo: function (map) {
+		map.addLayer(this);
+		return this;
+	},
+
+	setOpacity: function (opacity) {
+		this.options.opacity = opacity;
+		this._updateOpacity();
+		return this;
+	},
+
+	// TODO remove bringToFront/bringToBack duplication from TileLayer/Path
+	bringToFront: function () {
+		if (this._image) {
+			this._map._panes.overlayPane.appendChild(this._image);
+		}
+		return this;
+	},
+
+	bringToBack: function () {
+		var pane = this._map._panes.overlayPane;
+		if (this._image) {
+			pane.insertBefore(this._image, pane.firstChild);
+		}
+		return this;
+	},
+
+	setUrl: function (url) {
+		this._url = url;
+		this._image.src = this._url;
+	},
+
+	getAttribution: function () {
+		return this.options.attribution;
+	},
+
+	_initImage: function () {
+		this._image = L.DomUtil.create('img', 'leaflet-image-layer');
+
+		if (this._map.options.zoomAnimation && L.Browser.any3d) {
+			L.DomUtil.addClass(this._image, 'leaflet-zoom-animated');
+		} else {
+			L.DomUtil.addClass(this._image, 'leaflet-zoom-hide');
+		}
+
+		this._updateOpacity();
+
+		//TODO createImage util method to remove duplication
+		L.extend(this._image, {
+			galleryimg: 'no',
+			onselectstart: L.Util.falseFn,
+			onmousemove: L.Util.falseFn,
+			onload: L.bind(this._onImageLoad, this),
+			src: this._url
+		});
+	},
+
+	_animateZoom: function (e) {
+		var map = this._map,
+		    image = this._image,
+		    scale = map.getZoomScale(e.zoom),
+		    nw = this._bounds.getNorthWest(),
+		    se = this._bounds.getSouthEast(),
+
+		    topLeft = map._latLngToNewLayerPoint(nw, e.zoom, e.center),
+		    size = map._latLngToNewLayerPoint(se, e.zoom, e.center)._subtract(topLeft),
+		    origin = topLeft._add(size._multiplyBy((1 / 2) * (1 - 1 / scale)));
+
+		image.style[L.DomUtil.TRANSFORM] =
+		        L.DomUtil.getTranslateString(origin) + ' scale(' + scale + ') ';
+	},
+
+	_reset: function () {
+		var image   = this._image,
+		    topLeft = this._map.latLngToLayerPoint(this._bounds.getNorthWest()),
+		    size = this._map.latLngToLayerPoint(this._bounds.getSouthEast())._subtract(topLeft);
+
+		L.DomUtil.setPosition(image, topLeft);
+
+		image.style.width  = size.x + 'px';
+		image.style.height = size.y + 'px';
+	},
+
+	_onImageLoad: function () {
+		this.fire('load');
+	},
+
+	_updateOpacity: function () {
+		L.DomUtil.setOpacity(this._image, this.options.opacity);
+	}
+});
+
+L.imageOverlay = function (url, bounds, options) {
+	return new L.ImageOverlay(url, bounds, options);
+};
+
+
+/*
+ * L.Icon is an image-based icon class that you can use with L.Marker for custom markers.
+ */
+
+L.Icon = L.Class.extend({
+	options: {
+		/*
+		iconUrl: (String) (required)
+		iconRetinaUrl: (String) (optional, used for retina devices if detected)
+		iconSize: (Point) (can be set through CSS)
+		iconAnchor: (Point) (centered by default, can be set in CSS with negative margins)
+		popupAnchor: (Point) (if not specified, popup opens in the anchor point)
+		shadowUrl: (String) (no shadow by default)
+		shadowRetinaUrl: (String) (optional, used for retina devices if detected)
+		shadowSize: (Point)
+		shadowAnchor: (Point)
+		*/
+		className: ''
+	},
+
+	initialize: function (options) {
+		L.setOptions(this, options);
+	},
+
+	createIcon: function (oldIcon) {
+		return this._createIcon('icon', oldIcon);
+	},
+
+	createShadow: function (oldIcon) {
+		return this._createIcon('shadow', oldIcon);
+	},
+
+	_createIcon: function (name, oldIcon) {
+		var src = this._getIconUrl(name);
+
+		if (!src) {
+			if (name === 'icon') {
+				throw new Error('iconUrl not set in Icon options (see the docs).');
+			}
+			return null;
+		}
+
+		var img;
+		if (!oldIcon || oldIcon.tagName !== 'IMG') {
+			img = this._createImg(src);
+		} else {
+			img = this._createImg(src, oldIcon);
+		}
+		this._setIconStyles(img, name);
+
+		return img;
+	},
+
+	_setIconStyles: function (img, name) {
+		var options = this.options,
+		    size = L.point(options[name + 'Size']),
+		    anchor;
+
+		if (name === 'shadow') {
+			anchor = L.point(options.shadowAnchor || options.iconAnchor);
+		} else {
+			anchor = L.point(options.iconAnchor);
+		}
+
+		if (!anchor && size) {
+			anchor = size.divideBy(2, true);
+		}
+
+		img.className = 'leaflet-marker-' + name + ' ' + options.className;
+
+		if (anchor) {
+			img.style.marginLeft = (-anchor.x) + 'px';
+			img.style.marginTop  = (-anchor.y) + 'px';
+		}
+
+		if (size) {
+			img.style.width  = size.x + 'px';
+			img.style.height = size.y + 'px';
+		}
+	},
+
+	_createImg: function (src, el) {
+		el = el || document.createElement('img');
+		el.src = src;
+		return el;
+	},
+
+	_getIconUrl: function (name) {
+		if (L.Browser.retina && this.options[name + 'RetinaUrl']) {
+			return this.options[name + 'RetinaUrl'];
+		}
+		return this.options[name + 'Url'];
+	}
+});
+
+L.icon = function (options) {
+	return new L.Icon(options);
+};
+
+
+/*
+ * L.Icon.Default is the blue marker icon used by default in Leaflet.
+ */
+
+L.Icon.Default = L.Icon.extend({
+
+	options: {
+		iconSize: [25, 41],
+		iconAnchor: [12, 41],
+		popupAnchor: [1, -34],
+
+		shadowSize: [41, 41]
+	},
+
+	_getIconUrl: function (name) {
+		var key = name + 'Url';
+
+		if (this.options[key]) {
+			return this.options[key];
+		}
+
+		if (L.Browser.retina && name === 'icon') {
+			name += '-2x';
+		}
+
+		var path = L.Icon.Default.imagePath;
+
+		if (!path) {
+			throw new Error('Couldn\'t autodetect L.Icon.Default.imagePath, set it manually.');
+		}
+
+		return path + '/marker-' + name + '.png';
+	}
+});
+
+L.Icon.Default.imagePath = (function () {
+	var scripts = document.getElementsByTagName('script'),
+	    leafletRe = /[\/^]leaflet[\-\._]?([\w\-\._]*)\.js\??/;
+
+	var i, len, src, matches, path;
+
+	for (i = 0, len = scripts.length; i < len; i++) {
+		src = scripts[i].src;
+		matches = src.match(leafletRe);
+
+		if (matches) {
+			path = src.split(leafletRe)[0];
+			return (path ? path + '/' : '') + 'images';
+		}
+	}
+}());
+
+
+/*
+ * L.Marker is used to display clickable/draggable icons on the map.
+ */
+
+L.Marker = L.Class.extend({
+
+	includes: L.Mixin.Events,
+
+	options: {
+		icon: new L.Icon.Default(),
+		title: '',
+		alt: '',
+		clickable: true,
+		draggable: false,
+		keyboard: true,
+		zIndexOffset: 0,
+		opacity: 1,
+		riseOnHover: false,
+		riseOffset: 250
+	},
+
+	initialize: function (latlng, options) {
+		L.setOptions(this, options);
+		this._latlng = L.latLng(latlng);
+	},
+
+	onAdd: function (map) {
+		this._map = map;
+
+		map.on('viewreset', this.update, this);
+
+		this._initIcon();
+		this.update();
+		this.fire('add');
+
+		if (map.options.zoomAnimation && map.options.markerZoomAnimation) {
+			map.on('zoomanim', this._animateZoom, this);
+		}
+	},
+
+	addTo: function (map) {
+		map.addLayer(this);
+		return this;
+	},
+
+	onRemove: function (map) {
+		if (this.dragging) {
+			this.dragging.disable();
+		}
+
+		this._removeIcon();
+		this._removeShadow();
+
+		this.fire('remove');
+
+		map.off({
+			'viewreset': this.update,
+			'zoomanim': this._animateZoom
+		}, this);
+
+		this._map = null;
+	},
+
+	getLatLng: function () {
+		return this._latlng;
+	},
+
+	setLatLng: function (latlng) {
+		this._latlng = L.latLng(latlng);
+
+		this.update();
+
+		return this.fire('move', { latlng: this._latlng });
+	},
+
+	setZIndexOffset: function (offset) {
+		this.options.zIndexOffset = offset;
+		this.update();
+
+		return this;
+	},
+
+	setIcon: function (icon) {
+
+		this.options.icon = icon;
+
+		if (this._map) {
+			this._initIcon();
+			this.update();
+		}
+
+		if (this._popup) {
+			this.bindPopup(this._popup);
+		}
+
+		return this;
+	},
+
+	update: function () {
+		if (this._icon) {
+			this._setPos(this._map.latLngToLayerPoint(this._latlng).round());
+		}
+		return this;
+	},
+
+	_initIcon: function () {
+		var options = this.options,
+		    map = this._map,
+		    animation = (map.options.zoomAnimation && map.options.markerZoomAnimation),
+		    classToAdd = animation ? 'leaflet-zoom-animated' : 'leaflet-zoom-hide';
+
+		var icon = options.icon.createIcon(this._icon),
+			addIcon = false;
+
+		// if we're not reusing the icon, remove the old one and init new one
+		if (icon !== this._icon) {
+			if (this._icon) {
+				this._removeIcon();
+			}
+			addIcon = true;
+
+			if (options.title) {
+				icon.title = options.title;
+			}
+
+			if (options.alt) {
+				icon.alt = options.alt;
+			}
+		}
+
+		L.DomUtil.addClass(icon, classToAdd);
+
+		if (options.keyboard) {
+			icon.tabIndex = '0';
+		}
+
+		this._icon = icon;
+
+		this._initInteraction();
+
+		if (options.riseOnHover) {
+			L.DomEvent
+				.on(icon, 'mouseover', this._bringToFront, this)
+				.on(icon, 'mouseout', this._resetZIndex, this);
+		}
+
+		var newShadow = options.icon.createShadow(this._shadow),
+			addShadow = false;
+
+		if (newShadow !== this._shadow) {
+			this._removeShadow();
+			addShadow = true;
+		}
+
+		if (newShadow) {
+			L.DomUtil.addClass(newShadow, classToAdd);
+		}
+		this._shadow = newShadow;
+
+
+		if (options.opacity < 1) {
+			this._updateOpacity();
+		}
+
+
+		var panes = this._map._panes;
+
+		if (addIcon) {
+			panes.markerPane.appendChild(this._icon);
+		}
+
+		if (newShadow && addShadow) {
+			panes.shadowPane.appendChild(this._shadow);
+		}
+	},
+
+	_removeIcon: function () {
+		if (this.options.riseOnHover) {
+			L.DomEvent
+			    .off(this._icon, 'mouseover', this._bringToFront)
+			    .off(this._icon, 'mouseout', this._resetZIndex);
+		}
+
+		this._map._panes.markerPane.removeChild(this._icon);
+
+		this._icon = null;
+	},
+
+	_removeShadow: function () {
+		if (this._shadow) {
+			this._map._panes.shadowPane.removeChild(this._shadow);
+		}
+		this._shadow = null;
+	},
+
+	_setPos: function (pos) {
+		L.DomUtil.setPosition(this._icon, pos);
+
+		if (this._shadow) {
+			L.DomUtil.setPosition(this._shadow, pos);
+		}
+
+		this._zIndex = pos.y + this.options.zIndexOffset;
+
+		this._resetZIndex();
+	},
+
+	_updateZIndex: function (offset) {
+		this._icon.style.zIndex = this._zIndex + offset;
+	},
+
+	_animateZoom: function (opt) {
+		var pos = this._map._latLngToNewLayerPoint(this._latlng, opt.zoom, opt.center).round();
+
+		this._setPos(pos);
+	},
+
+	_initInteraction: function () {
+
+		if (!this.options.clickable) { return; }
+
+		// TODO refactor into something shared with Map/Path/etc. to DRY it up
+
+		var icon = this._icon,
+		    events = ['dblclick', 'mousedown', 'mouseover', 'mouseout', 'contextmenu'];
+
+		L.DomUtil.addClass(icon, 'leaflet-clickable');
+		L.DomEvent.on(icon, 'click', this._onMouseClick, this);
+		L.DomEvent.on(icon, 'keypress', this._onKeyPress, this);
+
+		for (var i = 0; i < events.length; i++) {
+			L.DomEvent.on(icon, events[i], this._fireMouseEvent, this);
+		}
+
+		if (L.Handler.MarkerDrag) {
+			this.dragging = new L.Handler.MarkerDrag(this);
+
+			if (this.options.draggable) {
+				this.dragging.enable();
+			}
+		}
+	},
+
+	_onMouseClick: function (e) {
+		var wasDragged = this.dragging && this.dragging.moved();
+
+		if (this.hasEventListeners(e.type) || wasDragged) {
+			L.DomEvent.stopPropagation(e);
+		}
+
+		if (wasDragged) { return; }
+
+		if ((!this.dragging || !this.dragging._enabled) && this._map.dragging && this._map.dragging.moved()) { return; }
+
+		this.fire(e.type, {
+			originalEvent: e,
+			latlng: this._latlng
+		});
+	},
+
+	_onKeyPress: function (e) {
+		if (e.keyCode === 13) {
+			this.fire('click', {
+				originalEvent: e,
+				latlng: this._latlng
+			});
+		}
+	},
+
+	_fireMouseEvent: function (e) {
+
+		this.fire(e.type, {
+			originalEvent: e,
+			latlng: this._latlng
+		});
+
+		// TODO proper custom event propagation
+		// this line will always be called if marker is in a FeatureGroup
+		if (e.type === 'contextmenu' && this.hasEventListeners(e.type)) {
+			L.DomEvent.preventDefault(e);
+		}
+		if (e.type !== 'mousedown') {
+			L.DomEvent.stopPropagation(e);
+		} else {
+			L.DomEvent.preventDefault(e);
+		}
+	},
+
+	setOpacity: function (opacity) {
+		this.options.opacity = opacity;
+		if (this._map) {
+			this._updateOpacity();
+		}
+
+		return this;
+	},
+
+	_updateOpacity: function () {
+		L.DomUtil.setOpacity(this._icon, this.options.opacity);
+		if (this._shadow) {
+			L.DomUtil.setOpacity(this._shadow, this.options.opacity);
+		}
+	},
+
+	_bringToFront: function () {
+		this._updateZIndex(this.options.riseOffset);
+	},
+
+	_resetZIndex: function () {
+		this._updateZIndex(0);
+	}
+});
+
+L.marker = function (latlng, options) {
+	return new L.Marker(latlng, options);
+};
+
+
+/*
+ * L.DivIcon is a lightweight HTML-based icon class (as opposed to the image-based L.Icon)
+ * to use with L.Marker.
+ */
+
+L.DivIcon = L.Icon.extend({
+	options: {
+		iconSize: [12, 12], // also can be set through CSS
+		/*
+		iconAnchor: (Point)
+		popupAnchor: (Point)
+		html: (String)
+		bgPos: (Point)
+		*/
+		className: 'leaflet-div-icon',
+		html: false
+	},
+
+	createIcon: function (oldIcon) {
+		var div = (oldIcon && oldIcon.tagName === 'DIV') ? oldIcon : document.createElement('div'),
+		    options = this.options;
+
+		if (options.html !== false) {
+			div.innerHTML = options.html;
+		} else {
+			div.innerHTML = '';
+		}
+
+		if (options.bgPos) {
+			div.style.backgroundPosition =
+			        (-options.bgPos.x) + 'px ' + (-options.bgPos.y) + 'px';
+		}
+
+		this._setIconStyles(div, 'icon');
+		return div;
+	},
+
+	createShadow: function () {
+		return null;
+	}
+});
+
+L.divIcon = function (options) {
+	return new L.DivIcon(options);
+};
+
+
+/*
+ * L.Popup is used for displaying popups on the map.
+ */
+
+L.Map.mergeOptions({
+	closePopupOnClick: true
+});
+
+L.Popup = L.Class.extend({
+	includes: L.Mixin.Events,
+
+	options: {
+		minWidth: 50,
+		maxWidth: 300,
+		// maxHeight: null,
+		autoPan: true,
+		closeButton: true,
+		offset: [0, 7],
+		autoPanPadding: [5, 5],
+		// autoPanPaddingTopLeft: null,
+		// autoPanPaddingBottomRight: null,
+		keepInView: false,
+		className: '',
+		zoomAnimation: true
+	},
+
+	initialize: function (options, source) {
+		L.setOptions(this, options);
+
+		this._source = source;
+		this._animated = L.Browser.any3d && this.options.zoomAnimation;
+		this._isOpen = false;
+	},
+
+	onAdd: function (map) {
+		this._map = map;
+
+		if (!this._container) {
+			this._initLayout();
+		}
+
+		var animFade = map.options.fadeAnimation;
+
+		if (animFade) {
+			L.DomUtil.setOpacity(this._container, 0);
+		}
+		map._panes.popupPane.appendChild(this._container);
+
+		map.on(this._getEvents(), this);
+
+		this.update();
+
+		if (animFade) {
+			L.DomUtil.setOpacity(this._container, 1);
+		}
+
+		this.fire('open');
+
+		map.fire('popupopen', {popup: this});
+
+		if (this._source) {
+			this._source.fire('popupopen', {popup: this});
+		}
+	},
+
+	addTo: function (map) {
+		map.addLayer(this);
+		return this;
+	},
+
+	openOn: function (map) {
+		map.openPopup(this);
+		return this;
+	},
+
+	onRemove: function (map) {
+		map._panes.popupPane.removeChild(this._container);
+
+		L.Util.falseFn(this._container.offsetWidth); // force reflow
+
+		map.off(this._getEvents(), this);
+
+		if (map.options.fadeAnimation) {
+			L.DomUtil.setOpacity(this._container, 0);
+		}
+
+		this._map = null;
+
+		this.fire('close');
+
+		map.fire('popupclose', {popup: this});
+
+		if (this._source) {
+			this._source.fire('popupclose', {popup: this});
+		}
+	},
+
+	getLatLng: function () {
+		return this._latlng;
+	},
+
+	setLatLng: function (latlng) {
+		this._latlng = L.latLng(latlng);
+		if (this._map) {
+			this._updatePosition();
+			this._adjustPan();
+		}
+		return this;
+	},
+
+	getContent: function () {
+		return this._content;
+	},
+
+	setContent: function (content) {
+		this._content = content;
+		this.update();
+		return this;
+	},
+
+	update: function () {
+		if (!this._map) { return; }
+
+		this._container.style.visibility = 'hidden';
+
+		this._updateContent();
+		this._updateLayout();
+		this._updatePosition();
+
+		this._container.style.visibility = '';
+
+		this._adjustPan();
+	},
+
+	_getEvents: function () {
+		var events = {
+			viewreset: this._updatePosition
+		};
+
+		if (this._animated) {
+			events.zoomanim = this._zoomAnimation;
+		}
+		if ('closeOnClick' in this.options ? this.options.closeOnClick : this._map.options.closePopupOnClick) {
+			events.preclick = this._close;
+		}
+		if (this.options.keepInView) {
+			events.moveend = this._adjustPan;
+		}
+
+		return events;
+	},
+
+	_close: function () {
+		if (this._map) {
+			this._map.closePopup(this);
+		}
+	},
+
+	_initLayout: function () {
+		var prefix = 'leaflet-popup',
+			containerClass = prefix + ' ' + this.options.className + ' leaflet-zoom-' +
+			        (this._animated ? 'animated' : 'hide'),
+			container = this._container = L.DomUtil.create('div', containerClass),
+			closeButton;
+
+		if (this.options.closeButton) {
+			closeButton = this._closeButton =
+			        L.DomUtil.create('a', prefix + '-close-button', container);
+			closeButton.href = '#close';
+			closeButton.innerHTML = '&#215;';
+			L.DomEvent.disableClickPropagation(closeButton);
+
+			L.DomEvent.on(closeButton, 'click', this._onCloseButtonClick, this);
+		}
+
+		var wrapper = this._wrapper =
+		        L.DomUtil.create('div', prefix + '-content-wrapper', container);
+		L.DomEvent.disableClickPropagation(wrapper);
+
+		this._contentNode = L.DomUtil.create('div', prefix + '-content', wrapper);
+
+		L.DomEvent.disableScrollPropagation(this._contentNode);
+		L.DomEvent.on(wrapper, 'contextmenu', L.DomEvent.stopPropagation);
+
+		this._tipContainer = L.DomUtil.create('div', prefix + '-tip-container', container);
+		this._tip = L.DomUtil.create('div', prefix + '-tip', this._tipContainer);
+	},
+
+	_updateContent: function () {
+		if (!this._content) { return; }
+
+		if (typeof this._content === 'string') {
+			this._contentNode.innerHTML = this._content;
+		} else {
+			while (this._contentNode.hasChildNodes()) {
+				this._contentNode.removeChild(this._contentNode.firstChild);
+			}
+			this._contentNode.appendChild(this._content);
+		}
+		this.fire('contentupdate');
+	},
+
+	_updateLayout: function () {
+		var container = this._contentNode,
+		    style = container.style;
+
+		style.width = '';
+		style.whiteSpace = 'nowrap';
+
+		var width = container.offsetWidth;
+		width = Math.min(width, this.options.maxWidth);
+		width = Math.max(width, this.options.minWidth);
+
+		style.width = (width + 1) + 'px';
+		style.whiteSpace = '';
+
+		style.height = '';
+
+		var height = container.offsetHeight,
+		    maxHeight = this.options.maxHeight,
+		    scrolledClass = 'leaflet-popup-scrolled';
+
+		if (maxHeight && height > maxHeight) {
+			style.height = maxHeight + 'px';
+			L.DomUtil.addClass(container, scrolledClass);
+		} else {
+			L.DomUtil.removeClass(container, scrolledClass);
+		}
+
+		this._containerWidth = this._container.offsetWidth;
+	},
+
+	_updatePosition: function () {
+		if (!this._map) { return; }
+
+		var pos = this._map.latLngToLayerPoint(this._latlng),
+		    animated = this._animated,
+		    offset = L.point(this.options.offset);
+
+		if (animated) {
+			L.DomUtil.setPosition(this._container, pos);
+		}
+
+		this._containerBottom = -offset.y - (animated ? 0 : pos.y);
+		this._containerLeft = -Math.round(this._containerWidth / 2) + offset.x + (animated ? 0 : pos.x);
+
+		// bottom position the popup in case the height of the popup changes (images loading etc)
+		this._container.style.bottom = this._containerBottom + 'px';
+		this._container.style.left = this._containerLeft + 'px';
+	},
+
+	_zoomAnimation: function (opt) {
+		var pos = this._map._latLngToNewLayerPoint(this._latlng, opt.zoom, opt.center);
+
+		L.DomUtil.setPosition(this._container, pos);
+	},
+
+	_adjustPan: function () {
+		if (!this.options.autoPan) { return; }
+
+		var map = this._map,
+		    containerHeight = this._container.offsetHeight,
+		    containerWidth = this._containerWidth,
+
+		    layerPos = new L.Point(this._containerLeft, -containerHeight - this._containerBottom);
+
+		if (this._animated) {
+			layerPos._add(L.DomUtil.getPosition(this._container));
+		}
+
+		var containerPos = map.layerPointToContainerPoint(layerPos),
+		    padding = L.point(this.options.autoPanPadding),
+		    paddingTL = L.point(this.options.autoPanPaddingTopLeft || padding),
+		    paddingBR = L.point(this.options.autoPanPaddingBottomRight || padding),
+		    size = map.getSize(),
+		    dx = 0,
+		    dy = 0;
+
+		if (containerPos.x + containerWidth + paddingBR.x > size.x) { // right
+			dx = containerPos.x + containerWidth - size.x + paddingBR.x;
+		}
+		if (containerPos.x - dx - paddingTL.x < 0) { // left
+			dx = containerPos.x - paddingTL.x;
+		}
+		if (containerPos.y + containerHeight + paddingBR.y > size.y) { // bottom
+			dy = containerPos.y + containerHeight - size.y + paddingBR.y;
+		}
+		if (containerPos.y - dy - paddingTL.y < 0) { // top
+			dy = containerPos.y - paddingTL.y;
+		}
+
+		if (dx || dy) {
+			map
+			    .fire('autopanstart')
+			    .panBy([dx, dy]);
+		}
+	},
+
+	_onCloseButtonClick: function (e) {
+		this._close();
+		L.DomEvent.stop(e);
+	}
+});
+
+L.popup = function (options, source) {
+	return new L.Popup(options, source);
+};
+
+
+L.Map.include({
+	openPopup: function (popup, latlng, options) { // (Popup) or (String || HTMLElement, LatLng[, Object])
+		this.closePopup();
+
+		if (!(popup instanceof L.Popup)) {
+			var content = popup;
+
+			popup = new L.Popup(options)
+			    .setLatLng(latlng)
+			    .setContent(content);
+		}
+		popup._isOpen = true;
+
+		this._popup = popup;
+		return this.addLayer(popup);
+	},
+
+	closePopup: function (popup) {
+		if (!popup || popup === this._popup) {
+			popup = this._popup;
+			this._popup = null;
+		}
+		if (popup) {
+			this.removeLayer(popup);
+			popup._isOpen = false;
+		}
+		return this;
+	}
+});
+
+
+/*
+ * Popup extension to L.Marker, adding popup-related methods.
+ */
+
+L.Marker.include({
+	openPopup: function () {
+		if (this._popup && this._map && !this._map.hasLayer(this._popup)) {
+			this._popup.setLatLng(this._latlng);
+			this._map.openPopup(this._popup);
+		}
+
+		return this;
+	},
+
+	closePopup: function () {
+		if (this._popup) {
+			this._popup._close();
+		}
+		return this;
+	},
+
+	togglePopup: function () {
+		if (this._popup) {
+			if (this._popup._isOpen) {
+				this.closePopup();
+			} else {
+				this.openPopup();
+			}
+		}
+		return this;
+	},
+
+	bindPopup: function (content, options) {
+		var anchor = L.point(this.options.icon.options.popupAnchor || [0, 0]);
+
+		anchor = anchor.add(L.Popup.prototype.options.offset);
+
+		if (options && options.offset) {
+			anchor = anchor.add(options.offset);
+		}
+
+		options = L.extend({offset: anchor}, options);
+
+		if (!this._popupHandlersAdded) {
+			this
+			    .on('click', this.togglePopup, this)
+			    .on('remove', this.closePopup, this)
+			    .on('move', this._movePopup, this);
+			this._popupHandlersAdded = true;
+		}
+
+		if (content instanceof L.Popup) {
+			L.setOptions(content, options);
+			this._popup = content;
+			content._source = this;
+		} else {
+			this._popup = new L.Popup(options, this)
+				.setContent(content);
+		}
+
+		return this;
+	},
+
+	setPopupContent: function (content) {
+		if (this._popup) {
+			this._popup.setContent(content);
+		}
+		return this;
+	},
+
+	unbindPopup: function () {
+		if (this._popup) {
+			this._popup = null;
+			this
+			    .off('click', this.togglePopup, this)
+			    .off('remove', this.closePopup, this)
+			    .off('move', this._movePopup, this);
+			this._popupHandlersAdded = false;
+		}
+		return this;
+	},
+
+	getPopup: function () {
+		return this._popup;
+	},
+
+	_movePopup: function (e) {
+		this._popup.setLatLng(e.latlng);
+	}
+});
+
+
+/*
+ * L.LayerGroup is a class to combine several layers into one so that
+ * you can manipulate the group (e.g. add/remove it) as one layer.
+ */
+
+L.LayerGroup = L.Class.extend({
+	initialize: function (layers) {
+		this._layers = {};
+
+		var i, len;
+
+		if (layers) {
+			for (i = 0, len = layers.length; i < len; i++) {
+				this.addLayer(layers[i]);
+			}
+		}
+	},
+
+	addLayer: function (layer) {
+		var id = this.getLayerId(layer);
+
+		this._layers[id] = layer;
+
+		if (this._map) {
+			this._map.addLayer(layer);
+		}
+
+		return this;
+	},
+
+	removeLayer: function (layer) {
+		var id = layer in this._layers ? layer : this.getLayerId(layer);
+
+		if (this._map && this._layers[id]) {
+			this._map.removeLayer(this._layers[id]);
+		}
+
+		delete this._layers[id];
+
+		return this;
+	},
+
+	hasLayer: function (layer) {
+		if (!layer) { return false; }
+
+		return (layer in this._layers || this.getLayerId(layer) in this._layers);
+	},
+
+	clearLayers: function () {
+		this.eachLayer(this.removeLayer, this);
+		return this;
+	},
+
+	invoke: function (methodName) {
+		var args = Array.prototype.slice.call(arguments, 1),
+		    i, layer;
+
+		for (i in this._layers) {
+			layer = this._layers[i];
+
+			if (layer[methodName]) {
+				layer[methodName].apply(layer, args);
+			}
+		}
+
+		return this;
+	},
+
+	onAdd: function (map) {
+		this._map = map;
+		this.eachLayer(map.addLayer, map);
+	},
+
+	onRemove: function (map) {
+		this.eachLayer(map.removeLayer, map);
+		this._map = null;
+	},
+
+	addTo: function (map) {
+		map.addLayer(this);
+		return this;
+	},
+
+	eachLayer: function (method, context) {
+		for (var i in this._layers) {
+			method.call(context, this._layers[i]);
+		}
+		return this;
+	},
+
+	getLayer: function (id) {
+		return this._layers[id];
+	},
+
+	getLayers: function () {
+		var layers = [];
+
+		for (var i in this._layers) {
+			layers.push(this._layers[i]);
+		}
+		return layers;
+	},
+
+	setZIndex: function (zIndex) {
+		return this.invoke('setZIndex', zIndex);
+	},
+
+	getLayerId: function (layer) {
+		return L.stamp(layer);
+	}
+});
+
+L.layerGroup = function (layers) {
+	return new L.LayerGroup(layers);
+};
+
+
+/*
+ * L.FeatureGroup extends L.LayerGroup by introducing mouse events and additional methods
+ * shared between a group of interactive layers (like vectors or markers).
+ */
+
+L.FeatureGroup = L.LayerGroup.extend({
+	includes: L.Mixin.Events,
+
+	statics: {
+		EVENTS: 'click dblclick mouseover mouseout mousemove contextmenu popupopen popupclose'
+	},
+
+	addLayer: function (layer) {
+		if (this.hasLayer(layer)) {
+			return this;
+		}
+
+		if ('on' in layer) {
+			layer.on(L.FeatureGroup.EVENTS, this._propagateEvent, this);
+		}
+
+		L.LayerGroup.prototype.addLayer.call(this, layer);
+
+		if (this._popupContent && layer.bindPopup) {
+			layer.bindPopup(this._popupContent, this._popupOptions);
+		}
+
+		return this.fire('layeradd', {layer: layer});
+	},
+
+	removeLayer: function (layer) {
+		if (!this.hasLayer(layer)) {
+			return this;
+		}
+		if (layer in this._layers) {
+			layer = this._layers[layer];
+		}
+
+		if ('off' in layer) {
+			layer.off(L.FeatureGroup.EVENTS, this._propagateEvent, this);
+		}
+
+		L.LayerGroup.prototype.removeLayer.call(this, layer);
+
+		if (this._popupContent) {
+			this.invoke('unbindPopup');
+		}
+
+		return this.fire('layerremove', {layer: layer});
+	},
+
+	bindPopup: function (content, options) {
+		this._popupContent = content;
+		this._popupOptions = options;
+		return this.invoke('bindPopup', content, options);
+	},
+
+	openPopup: function (latlng) {
+		// open popup on the first layer
+		for (var id in this._layers) {
+			this._layers[id].openPopup(latlng);
+			break;
+		}
+		return this;
+	},
+
+	setStyle: function (style) {
+		return this.invoke('setStyle', style);
+	},
+
+	bringToFront: function () {
+		return this.invoke('bringToFront');
+	},
+
+	bringToBack: function () {
+		return this.invoke('bringToBack');
+	},
+
+	getBounds: function () {
+		var bounds = new L.LatLngBounds();
+
+		this.eachLayer(function (layer) {
+			bounds.extend(layer instanceof L.Marker ? layer.getLatLng() : layer.getBounds());
+		});
+
+		return bounds;
+	},
+
+	_propagateEvent: function (e) {
+		e = L.extend({
+			layer: e.target,
+			target: this
+		}, e);
+		this.fire(e.type, e);
+	}
+});
+
+L.featureGroup = function (layers) {
+	return new L.FeatureGroup(layers);
+};
+
+
+/*
+ * L.Path is a base class for rendering vector paths on a map. Inherited by Polyline, Circle, etc.
+ */
+
+L.Path = L.Class.extend({
+	includes: [L.Mixin.Events],
+
+	statics: {
+		// how much to extend the clip area around the map view
+		// (relative to its size, e.g. 0.5 is half the screen in each direction)
+		// set it so that SVG element doesn't exceed 1280px (vectors flicker on dragend if it is)
+		CLIP_PADDING: (function () {
+			var max = L.Browser.mobile ? 1280 : 2000,
+			    target = (max / Math.max(window.outerWidth, window.outerHeight) - 1) / 2;
+			return Math.max(0, Math.min(0.5, target));
+		})()
+	},
+
+	options: {
+		stroke: true,
+		color: '#0033ff',
+		dashArray: null,
+		lineCap: null,
+		lineJoin: null,
+		weight: 5,
+		opacity: 0.5,
+
+		fill: false,
+		fillColor: null, //same as color by default
+		fillOpacity: 0.2,
+
+		clickable: true
+	},
+
+	initialize: function (options) {
+		L.setOptions(this, options);
+	},
+
+	onAdd: function (map) {
+		this._map = map;
+
+		if (!this._container) {
+			this._initElements();
+			this._initEvents();
+		}
+
+		this.projectLatlngs();
+		this._updatePath();
+
+		if (this._container) {
+			this._map._pathRoot.appendChild(this._container);
+		}
+
+		this.fire('add');
+
+		map.on({
+			'viewreset': this.projectLatlngs,
+			'moveend': this._updatePath
+		}, this);
+	},
+
+	addTo: function (map) {
+		map.addLayer(this);
+		return this;
+	},
+
+	onRemove: function (map) {
+		map._pathRoot.removeChild(this._container);
+
+		// Need to fire remove event before we set _map to null as the event hooks might need the object
+		this.fire('remove');
+		this._map = null;
+
+		if (L.Browser.vml) {
+			this._container = null;
+			this._stroke = null;
+			this._fill = null;
+		}
+
+		map.off({
+			'viewreset': this.projectLatlngs,
+			'moveend': this._updatePath
+		}, this);
+	},
+
+	projectLatlngs: function () {
+		// do all projection stuff here
+	},
+
+	setStyle: function (style) {
+		L.setOptions(this, style);
+
+		if (this._container) {
+			this._updateStyle();
+		}
+
+		return this;
+	},
+
+	redraw: function () {
+		if (this._map) {
+			this.projectLatlngs();
+			this._updatePath();
+		}
+		return this;
+	}
+});
+
+L.Map.include({
+	_updatePathViewport: function () {
+		var p = L.Path.CLIP_PADDING,
+		    size = this.getSize(),
+		    panePos = L.DomUtil.getPosition(this._mapPane),
+		    min = panePos.multiplyBy(-1)._subtract(size.multiplyBy(p)._round()),
+		    max = min.add(size.multiplyBy(1 + p * 2)._round());
+
+		this._pathViewport = new L.Bounds(min, max);
+	}
+});
+
+
+/*
+ * Extends L.Path with SVG-specific rendering code.
+ */
+
+L.Path.SVG_NS = 'http://www.w3.org/2000/svg';
+
+L.Browser.svg = !!(document.createElementNS && document.createElementNS(L.Path.SVG_NS, 'svg').createSVGRect);
+
+L.Path = L.Path.extend({
+	statics: {
+		SVG: L.Browser.svg
+	},
+
+	bringToFront: function () {
+		var root = this._map._pathRoot,
+		    path = this._container;
+
+		if (path && root.lastChild !== path) {
+			root.appendChild(path);
+		}
+		return this;
+	},
+
+	bringToBack: function () {
+		var root = this._map._pathRoot,
+		    path = this._container,
+		    first = root.firstChild;
+
+		if (path && first !== path) {
+			root.insertBefore(path, first);
+		}
+		return this;
+	},
+
+	getPathString: function () {
+		// form path string here
+	},
+
+	_createElement: function (name) {
+		return document.createElementNS(L.Path.SVG_NS, name);
+	},
+
+	_initElements: function () {
+		this._map._initPathRoot();
+		this._initPath();
+		this._initStyle();
+	},
+
+	_initPath: function () {
+		this._container = this._createElement('g');
+
+		this._path = this._createElement('path');
+
+		if (this.options.className) {
+			L.DomUtil.addClass(this._path, this.options.className);
+		}
+
+		this._container.appendChild(this._path);
+	},
+
+	_initStyle: function () {
+		if (this.options.stroke) {
+			this._path.setAttribute('stroke-linejoin', 'round');
+			this._path.setAttribute('stroke-linecap', 'round');
+		}
+		if (this.options.fill) {
+			this._path.setAttribute('fill-rule', 'evenodd');
+		}
+		if (this.options.pointerEvents) {
+			this._path.setAttribute('pointer-events', this.options.pointerEvents);
+		}
+		if (!this.options.clickable && !this.options.pointerEvents) {
+			this._path.setAttribute('pointer-events', 'none');
+		}
+		this._updateStyle();
+	},
+
+	_updateStyle: function () {
+		if (this.options.stroke) {
+			this._path.setAttribute('stroke', this.options.color);
+			this._path.setAttribute('stroke-opacity', this.options.opacity);
+			this._path.setAttribute('stroke-width', this.options.weight);
+			if (this.options.dashArray) {
+				this._path.setAttribute('stroke-dasharray', this.options.dashArray);
+			} else {
+				this._path.removeAttribute('stroke-dasharray');
+			}
+			if (this.options.lineCap) {
+				this._path.setAttribute('stroke-linecap', this.options.lineCap);
+			}
+			if (this.options.lineJoin) {
+				this._path.setAttribute('stroke-linejoin', this.options.lineJoin);
+			}
+		} else {
+			this._path.setAttribute('stroke', 'none');
+		}
+		if (this.options.fill) {
+			this._path.setAttribute('fill', this.options.fillColor || this.options.color);
+			this._path.setAttribute('fill-opacity', this.options.fillOpacity);
+		} else {
+			this._path.setAttribute('fill', 'none');
+		}
+	},
+
+	_updatePath: function () {
+		var str = this.getPathString();
+		if (!str) {
+			// fix webkit empty string parsing bug
+			str = 'M0 0';
+		}
+		this._path.setAttribute('d', str);
+	},
+
+	// TODO remove duplication with L.Map
+	_initEvents: function () {
+		if (this.options.clickable) {
+			if (L.Browser.svg || !L.Browser.vml) {
+				L.DomUtil.addClass(this._path, 'leaflet-clickable');
+			}
+
+			L.DomEvent.on(this._container, 'click', this._onMouseClick, this);
+
+			var events = ['dblclick', 'mousedown', 'mouseover',
+			              'mouseout', 'mousemove', 'contextmenu'];
+			for (var i = 0; i < events.length; i++) {
+				L.DomEvent.on(this._container, events[i], this._fireMouseEvent, this);
+			}
+		}
+	},
+
+	_onMouseClick: function (e) {
+		if (this._map.dragging && this._map.dragging.moved()) { return; }
+
+		this._fireMouseEvent(e);
+	},
+
+	_fireMouseEvent: function (e) {
+		if (!this._map || !this.hasEventListeners(e.type)) { return; }
+
+		var map = this._map,
+		    containerPoint = map.mouseEventToContainerPoint(e),
+		    layerPoint = map.containerPointToLayerPoint(containerPoint),
+		    latlng = map.layerPointToLatLng(layerPoint);
+
+		this.fire(e.type, {
+			latlng: latlng,
+			layerPoint: layerPoint,
+			containerPoint: containerPoint,
+			originalEvent: e
+		});
+
+		if (e.type === 'contextmenu') {
+			L.DomEvent.preventDefault(e);
+		}
+		if (e.type !== 'mousemove') {
+			L.DomEvent.stopPropagation(e);
+		}
+	}
+});
+
+L.Map.include({
+	_initPathRoot: function () {
+		if (!this._pathRoot) {
+			this._pathRoot = L.Path.prototype._createElement('svg');
+			this._panes.overlayPane.appendChild(this._pathRoot);
+
+			if (this.options.zoomAnimation && L.Browser.any3d) {
+				L.DomUtil.addClass(this._pathRoot, 'leaflet-zoom-animated');
+
+				this.on({
+					'zoomanim': this._animatePathZoom,
+					'zoomend': this._endPathZoom
+				});
+			} else {
+				L.DomUtil.addClass(this._pathRoot, 'leaflet-zoom-hide');
+			}
+
+			this.on('moveend', this._updateSvgViewport);
+			this._updateSvgViewport();
+		}
+	},
+
+	_animatePathZoom: function (e) {
+		var scale = this.getZoomScale(e.zoom),
+		    offset = this._getCenterOffset(e.center)._multiplyBy(-scale)._add(this._pathViewport.min);
+
+		this._pathRoot.style[L.DomUtil.TRANSFORM] =
+		        L.DomUtil.getTranslateString(offset) + ' scale(' + scale + ') ';
+
+		this._pathZooming = true;
+	},
+
+	_endPathZoom: function () {
+		this._pathZooming = false;
+	},
+
+	_updateSvgViewport: function () {
+
+		if (this._pathZooming) {
+			// Do not update SVGs while a zoom animation is going on otherwise the animation will break.
+			// When the zoom animation ends we will be updated again anyway
+			// This fixes the case where you do a momentum move and zoom while the move is still ongoing.
+			return;
+		}
+
+		this._updatePathViewport();
+
+		var vp = this._pathViewport,
+		    min = vp.min,
+		    max = vp.max,
+		    width = max.x - min.x,
+		    height = max.y - min.y,
+		    root = this._pathRoot,
+		    pane = this._panes.overlayPane;
+
+		// Hack to make flicker on drag end on mobile webkit less irritating
+		if (L.Browser.mobileWebkit) {
+			pane.removeChild(root);
+		}
+
+		L.DomUtil.setPosition(root, min);
+		root.setAttribute('width', width);
+		root.setAttribute('height', height);
+		root.setAttribute('viewBox', [min.x, min.y, width, height].join(' '));
+
+		if (L.Browser.mobileWebkit) {
+			pane.appendChild(root);
+		}
+	}
+});
+
+
+/*
+ * Popup extension to L.Path (polylines, polygons, circles), adding popup-related methods.
+ */
+
+L.Path.include({
+
+	bindPopup: function (content, options) {
+
+		if (content instanceof L.Popup) {
+			this._popup = content;
+		} else {
+			if (!this._popup || options) {
+				this._popup = new L.Popup(options, this);
+			}
+			this._popup.setContent(content);
+		}
+
+		if (!this._popupHandlersAdded) {
+			this
+			    .on('click', this._openPopup, this)
+			    .on('remove', this.closePopup, this);
+
+			this._popupHandlersAdded = true;
+		}
+
+		return this;
+	},
+
+	unbindPopup: function () {
+		if (this._popup) {
+			this._popup = null;
+			this
+			    .off('click', this._openPopup)
+			    .off('remove', this.closePopup);
+
+			this._popupHandlersAdded = false;
+		}
+		return this;
+	},
+
+	openPopup: function (latlng) {
+
+		if (this._popup) {
+			// open the popup from one of the path's points if not specified
+			latlng = latlng || this._latlng ||
+			         this._latlngs[Math.floor(this._latlngs.length / 2)];
+
+			this._openPopup({latlng: latlng});
+		}
+
+		return this;
+	},
+
+	closePopup: function () {
+		if (this._popup) {
+			this._popup._close();
+		}
+		return this;
+	},
+
+	_openPopup: function (e) {
+		this._popup.setLatLng(e.latlng);
+		this._map.openPopup(this._popup);
+	}
+});
+
+
+/*
+ * Vector rendering for IE6-8 through VML.
+ * Thanks to Dmitry Baranovsky and his Raphael library for inspiration!
+ */
+
+L.Browser.vml = !L.Browser.svg && (function () {
+	try {
+		var div = document.createElement('div');
+		div.innerHTML = '<v:shape adj="1"/>';
+
+		var shape = div.firstChild;
+		shape.style.behavior = 'url(#default#VML)';
+
+		return shape && (typeof shape.adj === 'object');
+
+	} catch (e) {
+		return false;
+	}
+}());
+
+L.Path = L.Browser.svg || !L.Browser.vml ? L.Path : L.Path.extend({
+	statics: {
+		VML: true,
+		CLIP_PADDING: 0.02
+	},
+
+	_createElement: (function () {
+		try {
+			document.namespaces.add('lvml', 'urn:schemas-microsoft-com:vml');
+			return function (name) {
+				return document.createElement('<lvml:' + name + ' class="lvml">');
+			};
+		} catch (e) {
+			return function (name) {
+				return document.createElement(
+				        '<' + name + ' xmlns="urn:schemas-microsoft.com:vml" class="lvml">');
+			};
+		}
+	}()),
+
+	_initPath: function () {
+		var container = this._container = this._createElement('shape');
+
+		L.DomUtil.addClass(container, 'leaflet-vml-shape' +
+			(this.options.className ? ' ' + this.options.className : ''));
+
+		if (this.options.clickable) {
+			L.DomUtil.addClass(container, 'leaflet-clickable');
+		}
+
+		container.coordsize = '1 1';
+
+		this._path = this._createElement('path');
+		container.appendChild(this._path);
+
+		this._map._pathRoot.appendChild(container);
+	},
+
+	_initStyle: function () {
+		this._updateStyle();
+	},
+
+	_updateStyle: function () {
+		var stroke = this._stroke,
+		    fill = this._fill,
+		    options = this.options,
+		    container = this._container;
+
+		container.stroked = options.stroke;
+		container.filled = options.fill;
+
+		if (options.stroke) {
+			if (!stroke) {
+				stroke = this._stroke = this._createElement('stroke');
+				stroke.endcap = 'round';
+				container.appendChild(stroke);
+			}
+			stroke.weight = options.weight + 'px';
+			stroke.color = options.color;
+			stroke.opacity = options.opacity;
+
+			if (options.dashArray) {
+				stroke.dashStyle = L.Util.isArray(options.dashArray) ?
+				    options.dashArray.join(' ') :
+				    options.dashArray.replace(/( *, *)/g, ' ');
+			} else {
+				stroke.dashStyle = '';
+			}
+			if (options.lineCap) {
+				stroke.endcap = options.lineCap.replace('butt', 'flat');
+			}
+			if (options.lineJoin) {
+				stroke.joinstyle = options.lineJoin;
+			}
+
+		} else if (stroke) {
+			container.removeChild(stroke);
+			this._stroke = null;
+		}
+
+		if (options.fill) {
+			if (!fill) {
+				fill = this._fill = this._createElement('fill');
+				container.appendChild(fill);
+			}
+			fill.color = options.fillColor || options.color;
+			fill.opacity = options.fillOpacity;
+
+		} else if (fill) {
+			container.removeChild(fill);
+			this._fill = null;
+		}
+	},
+
+	_updatePath: function () {
+		var style = this._container.style;
+
+		style.display = 'none';
+		this._path.v = this.getPathString() + ' '; // the space fixes IE empty path string bug
+		style.display = '';
+	}
+});
+
+L.Map.include(L.Browser.svg || !L.Browser.vml ? {} : {
+	_initPathRoot: function () {
+		if (this._pathRoot) { return; }
+
+		var root = this._pathRoot = document.createElement('div');
+		root.className = 'leaflet-vml-container';
+		this._panes.overlayPane.appendChild(root);
+
+		this.on('moveend', this._updatePathViewport);
+		this._updatePathViewport();
+	}
+});
+
+
+/*
+ * Vector rendering for all browsers that support canvas.
+ */
+
+L.Browser.canvas = (function () {
+	return !!document.createElement('canvas').getContext;
+}());
+
+L.Path = (L.Path.SVG && !window.L_PREFER_CANVAS) || !L.Browser.canvas ? L.Path : L.Path.extend({
+	statics: {
+		//CLIP_PADDING: 0.02, // not sure if there's a need to set it to a small value
+		CANVAS: true,
+		SVG: false
+	},
+
+	redraw: function () {
+		if (this._map) {
+			this.projectLatlngs();
+			this._requestUpdate();
+		}
+		return this;
+	},
+
+	setStyle: function (style) {
+		L.setOptions(this, style);
+
+		if (this._map) {
+			this._updateStyle();
+			this._requestUpdate();
+		}
+		return this;
+	},
+
+	onRemove: function (map) {
+		map
+		    .off('viewreset', this.projectLatlngs, this)
+		    .off('moveend', this._updatePath, this);
+
+		if (this.options.clickable) {
+			this._map.off('click', this._onClick, this);
+			this._map.off('mousemove', this._onMouseMove, this);
+		}
+
+		this._requestUpdate();
+		
+		this.fire('remove');
+		this._map = null;
+	},
+
+	_requestUpdate: function () {
+		if (this._map && !L.Path._updateRequest) {
+			L.Path._updateRequest = L.Util.requestAnimFrame(this._fireMapMoveEnd, this._map);
+		}
+	},
+
+	_fireMapMoveEnd: function () {
+		L.Path._updateRequest = null;
+		this.fire('moveend');
+	},
+
+	_initElements: function () {
+		this._map._initPathRoot();
+		this._ctx = this._map._canvasCtx;
+	},
+
+	_updateStyle: function () {
+		var options = this.options;
+
+		if (options.stroke) {
+			this._ctx.lineWidth = options.weight;
+			this._ctx.strokeStyle = options.color;
+		}
+		if (options.fill) {
+			this._ctx.fillStyle = options.fillColor || options.color;
+		}
+
+		if (options.lineCap) {
+			this._ctx.lineCap = options.lineCap;
+		}
+		if (options.lineJoin) {
+			this._ctx.lineJoin = options.lineJoin;
+		}
+	},
+
+	_drawPath: function () {
+		var i, j, len, len2, point, drawMethod;
+
+		this._ctx.beginPath();
+
+		for (i = 0, len = this._parts.length; i < len; i++) {
+			for (j = 0, len2 = this._parts[i].length; j < len2; j++) {
+				point = this._parts[i][j];
+				drawMethod = (j === 0 ? 'move' : 'line') + 'To';
+
+				this._ctx[drawMethod](point.x, point.y);
+			}
+			// TODO refactor ugly hack
+			if (this instanceof L.Polygon) {
+				this._ctx.closePath();
+			}
+		}
+	},
+
+	_checkIfEmpty: function () {
+		return !this._parts.length;
+	},
+
+	_updatePath: function () {
+		if (this._checkIfEmpty()) { return; }
+
+		var ctx = this._ctx,
+		    options = this.options;
+
+		this._drawPath();
+		ctx.save();
+		this._updateStyle();
+
+		if (options.fill) {
+			ctx.globalAlpha = options.fillOpacity;
+			ctx.fill(options.fillRule || 'evenodd');
+		}
+
+		if (options.stroke) {
+			ctx.globalAlpha = options.opacity;
+			ctx.stroke();
+		}
+
+		ctx.restore();
+
+		// TODO optimization: 1 fill/stroke for all features with equal style instead of 1 for each feature
+	},
+
+	_initEvents: function () {
+		if (this.options.clickable) {
+			this._map.on('mousemove', this._onMouseMove, this);
+			this._map.on('click dblclick contextmenu', this._fireMouseEvent, this);
+		}
+	},
+
+	_fireMouseEvent: function (e) {
+		if (this._containsPoint(e.layerPoint)) {
+			this.fire(e.type, e);
+		}
+	},
+
+	_onMouseMove: function (e) {
+		if (!this._map || this._map._animatingZoom) { return; }
+
+		// TODO don't do on each move
+		if (this._containsPoint(e.layerPoint)) {
+			this._ctx.canvas.style.cursor = 'pointer';
+			this._mouseInside = true;
+			this.fire('mouseover', e);
+
+		} else if (this._mouseInside) {
+			this._ctx.canvas.style.cursor = '';
+			this._mouseInside = false;
+			this.fire('mouseout', e);
+		}
+	}
+});
+
+L.Map.include((L.Path.SVG && !window.L_PREFER_CANVAS) || !L.Browser.canvas ? {} : {
+	_initPathRoot: function () {
+		var root = this._pathRoot,
+		    ctx;
+
+		if (!root) {
+			root = this._pathRoot = document.createElement('canvas');
+			root.style.position = 'absolute';
+			ctx = this._canvasCtx = root.getContext('2d');
+
+			ctx.lineCap = 'round';
+			ctx.lineJoin = 'round';
+
+			this._panes.overlayPane.appendChild(root);
+
+			if (this.options.zoomAnimation) {
+				this._pathRoot.className = 'leaflet-zoom-animated';
+				this.on('zoomanim', this._animatePathZoom);
+				this.on('zoomend', this._endPathZoom);
+			}
+			this.on('moveend', this._updateCanvasViewport);
+			this._updateCanvasViewport();
+		}
+	},
+
+	_updateCanvasViewport: function () {
+		// don't redraw while zooming. See _updateSvgViewport for more details
+		if (this._pathZooming) { return; }
+		this._updatePathViewport();
+
+		var vp = this._pathViewport,
+		    min = vp.min,
+		    size = vp.max.subtract(min),
+		    root = this._pathRoot;
+
+		//TODO check if this works properly on mobile webkit
+		L.DomUtil.setPosition(root, min);
+		root.width = size.x;
+		root.height = size.y;
+		root.getContext('2d').translate(-min.x, -min.y);
+	}
+});
+
+
+/*
+ * L.LineUtil contains different utility functions for line segments
+ * and polylines (clipping, simplification, distances, etc.)
+ */
+
+/*jshint bitwise:false */ // allow bitwise operations for this file
+
+L.LineUtil = {
+
+	// Simplify polyline with vertex reduction and Douglas-Peucker simplification.
+	// Improves rendering performance dramatically by lessening the number of points to draw.
+
+	simplify: function (/*Point[]*/ points, /*Number*/ tolerance) {
+		if (!tolerance || !points.length) {
+			return points.slice();
+		}
+
+		var sqTolerance = tolerance * tolerance;
+
+		// stage 1: vertex reduction
+		points = this._reducePoints(points, sqTolerance);
+
+		// stage 2: Douglas-Peucker simplification
+		points = this._simplifyDP(points, sqTolerance);
+
+		return points;
+	},
+
+	// distance from a point to a segment between two points
+	pointToSegmentDistance:  function (/*Point*/ p, /*Point*/ p1, /*Point*/ p2) {
+		return Math.sqrt(this._sqClosestPointOnSegment(p, p1, p2, true));
+	},
+
+	closestPointOnSegment: function (/*Point*/ p, /*Point*/ p1, /*Point*/ p2) {
+		return this._sqClosestPointOnSegment(p, p1, p2);
+	},
+
+	// Douglas-Peucker simplification, see http://en.wikipedia.org/wiki/Douglas-Peucker_algorithm
+	_simplifyDP: function (points, sqTolerance) {
+
+		var len = points.length,
+		    ArrayConstructor = typeof Uint8Array !== undefined + '' ? Uint8Array : Array,
+		    markers = new ArrayConstructor(len);
+
+		markers[0] = markers[len - 1] = 1;
+
+		this._simplifyDPStep(points, markers, sqTolerance, 0, len - 1);
+
+		var i,
+		    newPoints = [];
+
+		for (i = 0; i < len; i++) {
+			if (markers[i]) {
+				newPoints.push(points[i]);
+			}
+		}
+
+		return newPoints;
+	},
+
+	_simplifyDPStep: function (points, markers, sqTolerance, first, last) {
+
+		var maxSqDist = 0,
+		    index, i, sqDist;
+
+		for (i = first + 1; i <= last - 1; i++) {
+			sqDist = this._sqClosestPointOnSegment(points[i], points[first], points[last], true);
+
+			if (sqDist > maxSqDist) {
+				index = i;
+				maxSqDist = sqDist;
+			}
+		}
+
+		if (maxSqDist > sqTolerance) {
+			markers[index] = 1;
+
+			this._simplifyDPStep(points, markers, sqTolerance, first, index);
+			this._simplifyDPStep(points, markers, sqTolerance, index, last);
+		}
+	},
+
+	// reduce points that are too close to each other to a single point
+	_reducePoints: function (points, sqTolerance) {
+		var reducedPoints = [points[0]];
+
+		for (var i = 1, prev = 0, len = points.length; i < len; i++) {
+			if (this._sqDist(points[i], points[prev]) > sqTolerance) {
+				reducedPoints.push(points[i]);
+				prev = i;
+			}
+		}
+		if (prev < len - 1) {
+			reducedPoints.push(points[len - 1]);
+		}
+		return reducedPoints;
+	},
+
+	// Cohen-Sutherland line clipping algorithm.
+	// Used to avoid rendering parts of a polyline that are not currently visible.
+
+	clipSegment: function (a, b, bounds, useLastCode) {
+		var codeA = useLastCode ? this._lastCode : this._getBitCode(a, bounds),
+		    codeB = this._getBitCode(b, bounds),
+
+		    codeOut, p, newCode;
+
+		// save 2nd code to avoid calculating it on the next segment
+		this._lastCode = codeB;
+
+		while (true) {
+			// if a,b is inside the clip window (trivial accept)
+			if (!(codeA | codeB)) {
+				return [a, b];
+			// if a,b is outside the clip window (trivial reject)
+			} else if (codeA & codeB) {
+				return false;
+			// other cases
+			} else {
+				codeOut = codeA || codeB;
+				p = this._getEdgeIntersection(a, b, codeOut, bounds);
+				newCode = this._getBitCode(p, bounds);
+
+				if (codeOut === codeA) {
+					a = p;
+					codeA = newCode;
+				} else {
+					b = p;
+					codeB = newCode;
+				}
+			}
+		}
+	},
+
+	_getEdgeIntersection: function (a, b, code, bounds) {
+		var dx = b.x - a.x,
+		    dy = b.y - a.y,
+		    min = bounds.min,
+		    max = bounds.max;
+
+		if (code & 8) { // top
+			return new L.Point(a.x + dx * (max.y - a.y) / dy, max.y);
+		} else if (code & 4) { // bottom
+			return new L.Point(a.x + dx * (min.y - a.y) / dy, min.y);
+		} else if (code & 2) { // right
+			return new L.Point(max.x, a.y + dy * (max.x - a.x) / dx);
+		} else if (code & 1) { // left
+			return new L.Point(min.x, a.y + dy * (min.x - a.x) / dx);
+		}
+	},
+
+	_getBitCode: function (/*Point*/ p, bounds) {
+		var code = 0;
+
+		if (p.x < bounds.min.x) { // left
+			code |= 1;
+		} else if (p.x > bounds.max.x) { // right
+			code |= 2;
+		}
+		if (p.y < bounds.min.y) { // bottom
+			code |= 4;
+		} else if (p.y > bounds.max.y) { // top
+			code |= 8;
+		}
+
+		return code;
+	},
+
+	// square distance (to avoid unnecessary Math.sqrt calls)
+	_sqDist: function (p1, p2) {
+		var dx = p2.x - p1.x,
+		    dy = p2.y - p1.y;
+		return dx * dx + dy * dy;
+	},
+
+	// return closest point on segment or distance to that point
+	_sqClosestPointOnSegment: function (p, p1, p2, sqDist) {
+		var x = p1.x,
+		    y = p1.y,
+		    dx = p2.x - x,
+		    dy = p2.y - y,
+		    dot = dx * dx + dy * dy,
+		    t;
+
+		if (dot > 0) {
+			t = ((p.x - x) * dx + (p.y - y) * dy) / dot;
+
+			if (t > 1) {
+				x = p2.x;
+				y = p2.y;
+			} else if (t > 0) {
+				x += dx * t;
+				y += dy * t;
+			}
+		}
+
+		dx = p.x - x;
+		dy = p.y - y;
+
+		return sqDist ? dx * dx + dy * dy : new L.Point(x, y);
+	}
+};
+
+
+/*
+ * L.Polyline is used to display polylines on a map.
+ */
+
+L.Polyline = L.Path.extend({
+	initialize: function (latlngs, options) {
+		L.Path.prototype.initialize.call(this, options);
+
+		this._latlngs = this._convertLatLngs(latlngs);
+	},
+
+	options: {
+		// how much to simplify the polyline on each zoom level
+		// more = better performance and smoother look, less = more accurate
+		smoothFactor: 1.0,
+		noClip: false
+	},
+
+	projectLatlngs: function () {
+		this._originalPoints = [];
+
+		for (var i = 0, len = this._latlngs.length; i < len; i++) {
+			this._originalPoints[i] = this._map.latLngToLayerPoint(this._latlngs[i]);
+		}
+	},
+
+	getPathString: function () {
+		for (var i = 0, len = this._parts.length, str = ''; i < len; i++) {
+			str += this._getPathPartStr(this._parts[i]);
+		}
+		return str;
+	},
+
+	getLatLngs: function () {
+		return this._latlngs;
+	},
+
+	setLatLngs: function (latlngs) {
+		this._latlngs = this._convertLatLngs(latlngs);
+		return this.redraw();
+	},
+
+	addLatLng: function (latlng) {
+		this._latlngs.push(L.latLng(latlng));
+		return this.redraw();
+	},
+
+	spliceLatLngs: function () { // (Number index, Number howMany)
+		var removed = [].splice.apply(this._latlngs, arguments);
+		this._convertLatLngs(this._latlngs, true);
+		this.redraw();
+		return removed;
+	},
+
+	closestLayerPoint: function (p) {
+		var minDistance = Infinity, parts = this._parts, p1, p2, minPoint = null;
+
+		for (var j = 0, jLen = parts.length; j < jLen; j++) {
+			var points = parts[j];
+			for (var i = 1, len = points.length; i < len; i++) {
+				p1 = points[i - 1];
+				p2 = points[i];
+				var sqDist = L.LineUtil._sqClosestPointOnSegment(p, p1, p2, true);
+				if (sqDist < minDistance) {
+					minDistance = sqDist;
+					minPoint = L.LineUtil._sqClosestPointOnSegment(p, p1, p2);
+				}
+			}
+		}
+		if (minPoint) {
+			minPoint.distance = Math.sqrt(minDistance);
+		}
+		return minPoint;
+	},
+
+	getBounds: function () {
+		return new L.LatLngBounds(this.getLatLngs());
+	},
+
+	_convertLatLngs: function (latlngs, overwrite) {
+		var i, len, target = overwrite ? latlngs : [];
+
+		for (i = 0, len = latlngs.length; i < len; i++) {
+			if (L.Util.isArray(latlngs[i]) && typeof latlngs[i][0] !== 'number') {
+				return;
+			}
+			target[i] = L.latLng(latlngs[i]);
+		}
+		return target;
+	},
+
+	_initEvents: function () {
+		L.Path.prototype._initEvents.call(this);
+	},
+
+	_getPathPartStr: function (points) {
+		var round = L.Path.VML;
+
+		for (var j = 0, len2 = points.length, str = '', p; j < len2; j++) {
+			p = points[j];
+			if (round) {
+				p._round();
+			}
+			str += (j ? 'L' : 'M') + p.x + ' ' + p.y;
+		}
+		return str;
+	},
+
+	_clipPoints: function () {
+		var points = this._originalPoints,
+		    len = points.length,
+		    i, k, segment;
+
+		if (this.options.noClip) {
+			this._parts = [points];
+			return;
+		}
+
+		this._parts = [];
+
+		var parts = this._parts,
+		    vp = this._map._pathViewport,
+		    lu = L.LineUtil;
+
+		for (i = 0, k = 0; i < len - 1; i++) {
+			segment = lu.clipSegment(points[i], points[i + 1], vp, i);
+			if (!segment) {
+				continue;
+			}
+
+			parts[k] = parts[k] || [];
+			parts[k].push(segment[0]);
+
+			// if segment goes out of screen, or it's the last one, it's the end of the line part
+			if ((segment[1] !== points[i + 1]) || (i === len - 2)) {
+				parts[k].push(segment[1]);
+				k++;
+			}
+		}
+	},
+
+	// simplify each clipped part of the polyline
+	_simplifyPoints: function () {
+		var parts = this._parts,
+		    lu = L.LineUtil;
+
+		for (var i = 0, len = parts.length; i < len; i++) {
+			parts[i] = lu.simplify(parts[i], this.options.smoothFactor);
+		}
+	},
+
+	_updatePath: function () {
+		if (!this._map) { return; }
+
+		this._clipPoints();
+		this._simplifyPoints();
+
+		L.Path.prototype._updatePath.call(this);
+	}
+});
+
+L.polyline = function (latlngs, options) {
+	return new L.Polyline(latlngs, options);
+};
+
+
+/*
+ * L.PolyUtil contains utility functions for polygons (clipping, etc.).
+ */
+
+/*jshint bitwise:false */ // allow bitwise operations here
+
+L.PolyUtil = {};
+
+/*
+ * Sutherland-Hodgeman polygon clipping algorithm.
+ * Used to avoid rendering parts of a polygon that are not currently visible.
+ */
+L.PolyUtil.clipPolygon = function (points, bounds) {
+	var clippedPoints,
+	    edges = [1, 4, 2, 8],
+	    i, j, k,
+	    a, b,
+	    len, edge, p,
+	    lu = L.LineUtil;
+
+	for (i = 0, len = points.length; i < len; i++) {
+		points[i]._code = lu._getBitCode(points[i], bounds);
+	}
+
+	// for each edge (left, bottom, right, top)
+	for (k = 0; k < 4; k++) {
+		edge = edges[k];
+		clippedPoints = [];
+
+		for (i = 0, len = points.length, j = len - 1; i < len; j = i++) {
+			a = points[i];
+			b = points[j];
+
+			// if a is inside the clip window
+			if (!(a._code & edge)) {
+				// if b is outside the clip window (a->b goes out of screen)
+				if (b._code & edge) {
+					p = lu._getEdgeIntersection(b, a, edge, bounds);
+					p._code = lu._getBitCode(p, bounds);
+					clippedPoints.push(p);
+				}
+				clippedPoints.push(a);
+
+			// else if b is inside the clip window (a->b enters the screen)
+			} else if (!(b._code & edge)) {
+				p = lu._getEdgeIntersection(b, a, edge, bounds);
+				p._code = lu._getBitCode(p, bounds);
+				clippedPoints.push(p);
+			}
+		}
+		points = clippedPoints;
+	}
+
+	return points;
+};
+
+
+/*
+ * L.Polygon is used to display polygons on a map.
+ */
+
+L.Polygon = L.Polyline.extend({
+	options: {
+		fill: true
+	},
+
+	initialize: function (latlngs, options) {
+		L.Polyline.prototype.initialize.call(this, latlngs, options);
+		this._initWithHoles(latlngs);
+	},
+
+	_initWithHoles: function (latlngs) {
+		var i, len, hole;
+		if (latlngs && L.Util.isArray(latlngs[0]) && (typeof latlngs[0][0] !== 'number')) {
+			this._latlngs = this._convertLatLngs(latlngs[0]);
+			this._holes = latlngs.slice(1);
+
+			for (i = 0, len = this._holes.length; i < len; i++) {
+				hole = this._holes[i] = this._convertLatLngs(this._holes[i]);
+				if (hole[0].equals(hole[hole.length - 1])) {
+					hole.pop();
+				}
+			}
+		}
+
+		// filter out last point if its equal to the first one
+		latlngs = this._latlngs;
+
+		if (latlngs.length >= 2 && latlngs[0].equals(latlngs[latlngs.length - 1])) {
+			latlngs.pop();
+		}
+	},
+
+	projectLatlngs: function () {
+		L.Polyline.prototype.projectLatlngs.call(this);
+
+		// project polygon holes points
+		// TODO move this logic to Polyline to get rid of duplication
+		this._holePoints = [];
+
+		if (!this._holes) { return; }
+
+		var i, j, len, len2;
+
+		for (i = 0, len = this._holes.length; i < len; i++) {
+			this._holePoints[i] = [];
+
+			for (j = 0, len2 = this._holes[i].length; j < len2; j++) {
+				this._holePoints[i][j] = this._map.latLngToLayerPoint(this._holes[i][j]);
+			}
+		}
+	},
+
+	setLatLngs: function (latlngs) {
+		if (latlngs && L.Util.isArray(latlngs[0]) && (typeof latlngs[0][0] !== 'number')) {
+			this._initWithHoles(latlngs);
+			return this.redraw();
+		} else {
+			return L.Polyline.prototype.setLatLngs.call(this, latlngs);
+		}
+	},
+
+	_clipPoints: function () {
+		var points = this._originalPoints,
+		    newParts = [];
+
+		this._parts = [points].concat(this._holePoints);
+
+		if (this.options.noClip) { return; }
+
+		for (var i = 0, len = this._parts.length; i < len; i++) {
+			var clipped = L.PolyUtil.clipPolygon(this._parts[i], this._map._pathViewport);
+			if (clipped.length) {
+				newParts.push(clipped);
+			}
+		}
+
+		this._parts = newParts;
+	},
+
+	_getPathPartStr: function (points) {
+		var str = L.Polyline.prototype._getPathPartStr.call(this, points);
+		return str + (L.Browser.svg ? 'z' : 'x');
+	}
+});
+
+L.polygon = function (latlngs, options) {
+	return new L.Polygon(latlngs, options);
+};
+
+
+/*
+ * Contains L.MultiPolyline and L.MultiPolygon layers.
+ */
+
+(function () {
+	function createMulti(Klass) {
+
+		return L.FeatureGroup.extend({
+
+			initialize: function (latlngs, options) {
+				this._layers = {};
+				this._options = options;
+				this.setLatLngs(latlngs);
+			},
+
+			setLatLngs: function (latlngs) {
+				var i = 0,
+				    len = latlngs.length;
+
+				this.eachLayer(function (layer) {
+					if (i < len) {
+						layer.setLatLngs(latlngs[i++]);
+					} else {
+						this.removeLayer(layer);
+					}
+				}, this);
+
+				while (i < len) {
+					this.addLayer(new Klass(latlngs[i++], this._options));
+				}
+
+				return this;
+			},
+
+			getLatLngs: function () {
+				var latlngs = [];
+
+				this.eachLayer(function (layer) {
+					latlngs.push(layer.getLatLngs());
+				});
+
+				return latlngs;
+			}
+		});
+	}
+
+	L.MultiPolyline = createMulti(L.Polyline);
+	L.MultiPolygon = createMulti(L.Polygon);
+
+	L.multiPolyline = function (latlngs, options) {
+		return new L.MultiPolyline(latlngs, options);
+	};
+
+	L.multiPolygon = function (latlngs, options) {
+		return new L.MultiPolygon(latlngs, options);
+	};
+}());
+
+
+/*
+ * L.Rectangle extends Polygon and creates a rectangle when passed a LatLngBounds object.
+ */
+
+L.Rectangle = L.Polygon.extend({
+	initialize: function (latLngBounds, options) {
+		L.Polygon.prototype.initialize.call(this, this._boundsToLatLngs(latLngBounds), options);
+	},
+
+	setBounds: function (latLngBounds) {
+		this.setLatLngs(this._boundsToLatLngs(latLngBounds));
+	},
+
+	_boundsToLatLngs: function (latLngBounds) {
+		latLngBounds = L.latLngBounds(latLngBounds);
+		return [
+			latLngBounds.getSouthWest(),
+			latLngBounds.getNorthWest(),
+			latLngBounds.getNorthEast(),
+			latLngBounds.getSouthEast()
+		];
+	}
+});
+
+L.rectangle = function (latLngBounds, options) {
+	return new L.Rectangle(latLngBounds, options);
+};
+
+
+/*
+ * L.Circle is a circle overlay (with a certain radius in meters).
+ */
+
+L.Circle = L.Path.extend({
+	initialize: function (latlng, radius, options) {
+		L.Path.prototype.initialize.call(this, options);
+
+		this._latlng = L.latLng(latlng);
+		this._mRadius = radius;
+	},
+
+	options: {
+		fill: true
+	},
+
+	setLatLng: function (latlng) {
+		this._latlng = L.latLng(latlng);
+		return this.redraw();
+	},
+
+	setRadius: function (radius) {
+		this._mRadius = radius;
+		return this.redraw();
+	},
+
+	projectLatlngs: function () {
+		var lngRadius = this._getLngRadius(),
+		    latlng = this._latlng,
+		    pointLeft = this._map.latLngToLayerPoint([latlng.lat, latlng.lng - lngRadius]);
+
+		this._point = this._map.latLngToLayerPoint(latlng);
+		this._radius = Math.max(this._point.x - pointLeft.x, 1);
+	},
+
+	getBounds: function () {
+		var lngRadius = this._getLngRadius(),
+		    latRadius = (this._mRadius / 40075017) * 360,
+		    latlng = this._latlng;
+
+		return new L.LatLngBounds(
+		        [latlng.lat - latRadius, latlng.lng - lngRadius],
+		        [latlng.lat + latRadius, latlng.lng + lngRadius]);
+	},
+
+	getLatLng: function () {
+		return this._latlng;
+	},
+
+	getPathString: function () {
+		var p = this._point,
+		    r = this._radius;
+
+		if (this._checkIfEmpty()) {
+			return '';
+		}
+
+		if (L.Browser.svg) {
+			return 'M' + p.x + ',' + (p.y - r) +
+			       'A' + r + ',' + r + ',0,1,1,' +
+			       (p.x - 0.1) + ',' + (p.y - r) + ' z';
+		} else {
+			p._round();
+			r = Math.round(r);
+			return 'AL ' + p.x + ',' + p.y + ' ' + r + ',' + r + ' 0,' + (65535 * 360);
+		}
+	},
+
+	getRadius: function () {
+		return this._mRadius;
+	},
+
+	// TODO Earth hardcoded, move into projection code!
+
+	_getLatRadius: function () {
+		return (this._mRadius / 40075017) * 360;
+	},
+
+	_getLngRadius: function () {
+		return this._getLatRadius() / Math.cos(L.LatLng.DEG_TO_RAD * this._latlng.lat);
+	},
+
+	_checkIfEmpty: function () {
+		if (!this._map) {
+			return false;
+		}
+		var vp = this._map._pathViewport,
+		    r = this._radius,
+		    p = this._point;
+
+		return p.x - r > vp.max.x || p.y - r > vp.max.y ||
+		       p.x + r < vp.min.x || p.y + r < vp.min.y;
+	}
+});
+
+L.circle = function (latlng, radius, options) {
+	return new L.Circle(latlng, radius, options);
+};
+
+
+/*
+ * L.CircleMarker is a circle overlay with a permanent pixel radius.
+ */
+
+L.CircleMarker = L.Circle.extend({
+	options: {
+		radius: 10,
+		weight: 2
+	},
+
+	initialize: function (latlng, options) {
+		L.Circle.prototype.initialize.call(this, latlng, null, options);
+		this._radius = this.options.radius;
+	},
+
+	projectLatlngs: function () {
+		this._point = this._map.latLngToLayerPoint(this._latlng);
+	},
+
+	_updateStyle : function () {
+		L.Circle.prototype._updateStyle.call(this);
+		this.setRadius(this.options.radius);
+	},
+
+	setLatLng: function (latlng) {
+		L.Circle.prototype.setLatLng.call(this, latlng);
+		if (this._popup && this._popup._isOpen) {
+			this._popup.setLatLng(latlng);
+		}
+		return this;
+	},
+
+	setRadius: function (radius) {
+		this.options.radius = this._radius = radius;
+		return this.redraw();
+	},
+
+	getRadius: function () {
+		return this._radius;
+	}
+});
+
+L.circleMarker = function (latlng, options) {
+	return new L.CircleMarker(latlng, options);
+};
+
+
+/*
+ * Extends L.Polyline to be able to manually detect clicks on Canvas-rendered polylines.
+ */
+
+L.Polyline.include(!L.Path.CANVAS ? {} : {
+	_containsPoint: function (p, closed) {
+		var i, j, k, len, len2, dist, part,
+		    w = this.options.weight / 2;
+
+		if (L.Browser.touch) {
+			w += 10; // polyline click tolerance on touch devices
+		}
+
+		for (i = 0, len = this._parts.length; i < len; i++) {
+			part = this._parts[i];
+			for (j = 0, len2 = part.length, k = len2 - 1; j < len2; k = j++) {
+				if (!closed && (j === 0)) {
+					continue;
+				}
+
+				dist = L.LineUtil.pointToSegmentDistance(p, part[k], part[j]);
+
+				if (dist <= w) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+});
+
+
+/*
+ * Extends L.Polygon to be able to manually detect clicks on Canvas-rendered polygons.
+ */
+
+L.Polygon.include(!L.Path.CANVAS ? {} : {
+	_containsPoint: function (p) {
+		var inside = false,
+		    part, p1, p2,
+		    i, j, k,
+		    len, len2;
+
+		// TODO optimization: check if within bounds first
+
+		if (L.Polyline.prototype._containsPoint.call(this, p, true)) {
+			// click on polygon border
+			return true;
+		}
+
+		// ray casting algorithm for detecting if point is in polygon
+
+		for (i = 0, len = this._parts.length; i < len; i++) {
+			part = this._parts[i];
+
+			for (j = 0, len2 = part.length, k = len2 - 1; j < len2; k = j++) {
+				p1 = part[j];
+				p2 = part[k];
+
+				if (((p1.y > p.y) !== (p2.y > p.y)) &&
+						(p.x < (p2.x - p1.x) * (p.y - p1.y) / (p2.y - p1.y) + p1.x)) {
+					inside = !inside;
+				}
+			}
+		}
+
+		return inside;
+	}
+});
+
+
+/*
+ * Extends L.Circle with Canvas-specific code.
+ */
+
+L.Circle.include(!L.Path.CANVAS ? {} : {
+	_drawPath: function () {
+		var p = this._point;
+		this._ctx.beginPath();
+		this._ctx.arc(p.x, p.y, this._radius, 0, Math.PI * 2, false);
+	},
+
+	_containsPoint: function (p) {
+		var center = this._point,
+		    w2 = this.options.stroke ? this.options.weight / 2 : 0;
+
+		return (p.distanceTo(center) <= this._radius + w2);
+	}
+});
+
+
+/*
+ * CircleMarker canvas specific drawing parts.
+ */
+
+L.CircleMarker.include(!L.Path.CANVAS ? {} : {
+	_updateStyle: function () {
+		L.Path.prototype._updateStyle.call(this);
+	}
+});
+
+
+/*
+ * L.GeoJSON turns any GeoJSON data into a Leaflet layer.
+ */
+
+L.GeoJSON = L.FeatureGroup.extend({
+
+	initialize: function (geojson, options) {
+		L.setOptions(this, options);
+
+		this._layers = {};
+
+		if (geojson) {
+			this.addData(geojson);
+		}
+	},
+
+	addData: function (geojson) {
+		var features = L.Util.isArray(geojson) ? geojson : geojson.features,
+		    i, len, feature;
+
+		if (features) {
+			for (i = 0, len = features.length; i < len; i++) {
+				// Only add this if geometry or geometries are set and not null
+				feature = features[i];
+				if (feature.geometries || feature.geometry || feature.features || feature.coordinates) {
+					this.addData(features[i]);
+				}
+			}
+			return this;
+		}
+
+		var options = this.options;
+
+		if (options.filter && !options.filter(geojson)) { return; }
+
+		var layer = L.GeoJSON.geometryToLayer(geojson, options.pointToLayer, options.coordsToLatLng, options);
+		layer.feature = L.GeoJSON.asFeature(geojson);
+
+		layer.defaultOptions = layer.options;
+		this.resetStyle(layer);
+
+		if (options.onEachFeature) {
+			options.onEachFeature(geojson, layer);
+		}
+
+		return this.addLayer(layer);
+	},
+
+	resetStyle: function (layer) {
+		var style = this.options.style;
+		if (style) {
+			// reset any custom styles
+			L.Util.extend(layer.options, layer.defaultOptions);
+
+			this._setLayerStyle(layer, style);
+		}
+	},
+
+	setStyle: function (style) {
+		this.eachLayer(function (layer) {
+			this._setLayerStyle(layer, style);
+		}, this);
+	},
+
+	_setLayerStyle: function (layer, style) {
+		if (typeof style === 'function') {
+			style = style(layer.feature);
+		}
+		if (layer.setStyle) {
+			layer.setStyle(style);
+		}
+	}
+});
+
+L.extend(L.GeoJSON, {
+	geometryToLayer: function (geojson, pointToLayer, coordsToLatLng, vectorOptions) {
+		var geometry = geojson.type === 'Feature' ? geojson.geometry : geojson,
+		    coords = geometry.coordinates,
+		    layers = [],
+		    latlng, latlngs, i, len;
+
+		coordsToLatLng = coordsToLatLng || this.coordsToLatLng;
+
+		switch (geometry.type) {
+		case 'Point':
+			latlng = coordsToLatLng(coords);
+			return pointToLayer ? pointToLayer(geojson, latlng) : new L.Marker(latlng);
+
+		case 'MultiPoint':
+			for (i = 0, len = coords.length; i < len; i++) {
+				latlng = coordsToLatLng(coords[i]);
+				layers.push(pointToLayer ? pointToLayer(geojson, latlng) : new L.Marker(latlng));
+			}
+			return new L.FeatureGroup(layers);
+
+		case 'LineString':
+			latlngs = this.coordsToLatLngs(coords, 0, coordsToLatLng);
+			return new L.Polyline(latlngs, vectorOptions);
+
+		case 'Polygon':
+			if (coords.length === 2 && !coords[1].length) {
+				throw new Error('Invalid GeoJSON object.');
+			}
+			latlngs = this.coordsToLatLngs(coords, 1, coordsToLatLng);
+			return new L.Polygon(latlngs, vectorOptions);
+
+		case 'MultiLineString':
+			latlngs = this.coordsToLatLngs(coords, 1, coordsToLatLng);
+			return new L.MultiPolyline(latlngs, vectorOptions);
+
+		case 'MultiPolygon':
+			latlngs = this.coordsToLatLngs(coords, 2, coordsToLatLng);
+			return new L.MultiPolygon(latlngs, vectorOptions);
+
+		case 'GeometryCollection':
+			for (i = 0, len = geometry.geometries.length; i < len; i++) {
+
+				layers.push(this.geometryToLayer({
+					geometry: geometry.geometries[i],
+					type: 'Feature',
+					properties: geojson.properties
+				}, pointToLayer, coordsToLatLng, vectorOptions));
+			}
+			return new L.FeatureGroup(layers);
+
+		default:
+			throw new Error('Invalid GeoJSON object.');
+		}
+	},
+
+	coordsToLatLng: function (coords) { // (Array[, Boolean]) -> LatLng
+		return new L.LatLng(coords[1], coords[0], coords[2]);
+	},
+
+	coordsToLatLngs: function (coords, levelsDeep, coordsToLatLng) { // (Array[, Number, Function]) -> Array
+		var latlng, i, len,
+		    latlngs = [];
+
+		for (i = 0, len = coords.length; i < len; i++) {
+			latlng = levelsDeep ?
+			        this.coordsToLatLngs(coords[i], levelsDeep - 1, coordsToLatLng) :
+			        (coordsToLatLng || this.coordsToLatLng)(coords[i]);
+
+			latlngs.push(latlng);
+		}
+
+		return latlngs;
+	},
+
+	latLngToCoords: function (latlng) {
+		var coords = [latlng.lng, latlng.lat];
+
+		if (latlng.alt !== undefined) {
+			coords.push(latlng.alt);
+		}
+		return coords;
+	},
+
+	latLngsToCoords: function (latLngs) {
+		var coords = [];
+
+		for (var i = 0, len = latLngs.length; i < len; i++) {
+			coords.push(L.GeoJSON.latLngToCoords(latLngs[i]));
+		}
+
+		return coords;
+	},
+
+	getFeature: function (layer, newGeometry) {
+		return layer.feature ? L.extend({}, layer.feature, {geometry: newGeometry}) : L.GeoJSON.asFeature(newGeometry);
+	},
+
+	asFeature: function (geoJSON) {
+		if (geoJSON.type === 'Feature') {
+			return geoJSON;
+		}
+
+		return {
+			type: 'Feature',
+			properties: {},
+			geometry: geoJSON
+		};
+	}
+});
+
+var PointToGeoJSON = {
+	toGeoJSON: function () {
+		return L.GeoJSON.getFeature(this, {
+			type: 'Point',
+			coordinates: L.GeoJSON.latLngToCoords(this.getLatLng())
+		});
+	}
+};
+
+L.Marker.include(PointToGeoJSON);
+L.Circle.include(PointToGeoJSON);
+L.CircleMarker.include(PointToGeoJSON);
+
+L.Polyline.include({
+	toGeoJSON: function () {
+		return L.GeoJSON.getFeature(this, {
+			type: 'LineString',
+			coordinates: L.GeoJSON.latLngsToCoords(this.getLatLngs())
+		});
+	}
+});
+
+L.Polygon.include({
+	toGeoJSON: function () {
+		var coords = [L.GeoJSON.latLngsToCoords(this.getLatLngs())],
+		    i, len, hole;
+
+		coords[0].push(coords[0][0]);
+
+		if (this._holes) {
+			for (i = 0, len = this._holes.length; i < len; i++) {
+				hole = L.GeoJSON.latLngsToCoords(this._holes[i]);
+				hole.push(hole[0]);
+				coords.push(hole);
+			}
+		}
+
+		return L.GeoJSON.getFeature(this, {
+			type: 'Polygon',
+			coordinates: coords
+		});
+	}
+});
+
+(function () {
+	function multiToGeoJSON(type) {
+		return function () {
+			var coords = [];
+
+			this.eachLayer(function (layer) {
+				coords.push(layer.toGeoJSON().geometry.coordinates);
+			});
+
+			return L.GeoJSON.getFeature(this, {
+				type: type,
+				coordinates: coords
+			});
+		};
+	}
+
+	L.MultiPolyline.include({toGeoJSON: multiToGeoJSON('MultiLineString')});
+	L.MultiPolygon.include({toGeoJSON: multiToGeoJSON('MultiPolygon')});
+
+	L.LayerGroup.include({
+		toGeoJSON: function () {
+
+			var geometry = this.feature && this.feature.geometry,
+				jsons = [],
+				json;
+
+			if (geometry && geometry.type === 'MultiPoint') {
+				return multiToGeoJSON('MultiPoint').call(this);
+			}
+
+			var isGeometryCollection = geometry && geometry.type === 'GeometryCollection';
+
+			this.eachLayer(function (layer) {
+				if (layer.toGeoJSON) {
+					json = layer.toGeoJSON();
+					jsons.push(isGeometryCollection ? json.geometry : L.GeoJSON.asFeature(json));
+				}
+			});
+
+			if (isGeometryCollection) {
+				return L.GeoJSON.getFeature(this, {
+					geometries: jsons,
+					type: 'GeometryCollection'
+				});
+			}
+
+			return {
+				type: 'FeatureCollection',
+				features: jsons
+			};
+		}
+	});
+}());
+
+L.geoJson = function (geojson, options) {
+	return new L.GeoJSON(geojson, options);
+};
+
+
+/*
+ * L.DomEvent contains functions for working with DOM events.
+ */
+
+L.DomEvent = {
+	/* inspired by John Resig, Dean Edwards and YUI addEvent implementations */
+	addListener: function (obj, type, fn, context) { // (HTMLElement, String, Function[, Object])
+
+		var id = L.stamp(fn),
+		    key = '_leaflet_' + type + id,
+		    handler, originalHandler, newType;
+
+		if (obj[key]) { return this; }
+
+		handler = function (e) {
+			return fn.call(context || obj, e || L.DomEvent._getEvent());
+		};
+
+		if (L.Browser.pointer && type.indexOf('touch') === 0) {
+			return this.addPointerListener(obj, type, handler, id);
+		}
+		if (L.Browser.touch && (type === 'dblclick') && this.addDoubleTapListener) {
+			this.addDoubleTapListener(obj, handler, id);
+		}
+
+		if ('addEventListener' in obj) {
+
+			if (type === 'mousewheel') {
+				obj.addEventListener('DOMMouseScroll', handler, false);
+				obj.addEventListener(type, handler, false);
+
+			} else if ((type === 'mouseenter') || (type === 'mouseleave')) {
+
+				originalHandler = handler;
+				newType = (type === 'mouseenter' ? 'mouseover' : 'mouseout');
+
+				handler = function (e) {
+					if (!L.DomEvent._checkMouse(obj, e)) { return; }
+					return originalHandler(e);
+				};
+
+				obj.addEventListener(newType, handler, false);
+
+			} else if (type === 'click' && L.Browser.android) {
+				originalHandler = handler;
+				handler = function (e) {
+					return L.DomEvent._filterClick(e, originalHandler);
+				};
+
+				obj.addEventListener(type, handler, false);
+			} else {
+				obj.addEventListener(type, handler, false);
+			}
+
+		} else if ('attachEvent' in obj) {
+			obj.attachEvent('on' + type, handler);
+		}
+
+		obj[key] = handler;
+
+		return this;
+	},
+
+	removeListener: function (obj, type, fn) {  // (HTMLElement, String, Function)
+
+		var id = L.stamp(fn),
+		    key = '_leaflet_' + type + id,
+		    handler = obj[key];
+
+		if (!handler) { return this; }
+
+		if (L.Browser.pointer && type.indexOf('touch') === 0) {
+			this.removePointerListener(obj, type, id);
+		} else if (L.Browser.touch && (type === 'dblclick') && this.removeDoubleTapListener) {
+			this.removeDoubleTapListener(obj, id);
+
+		} else if ('removeEventListener' in obj) {
+
+			if (type === 'mousewheel') {
+				obj.removeEventListener('DOMMouseScroll', handler, false);
+				obj.removeEventListener(type, handler, false);
+
+			} else if ((type === 'mouseenter') || (type === 'mouseleave')) {
+				obj.removeEventListener((type === 'mouseenter' ? 'mouseover' : 'mouseout'), handler, false);
+			} else {
+				obj.removeEventListener(type, handler, false);
+			}
+		} else if ('detachEvent' in obj) {
+			obj.detachEvent('on' + type, handler);
+		}
+
+		obj[key] = null;
+
+		return this;
+	},
+
+	stopPropagation: function (e) {
+
+		if (e.stopPropagation) {
+			e.stopPropagation();
+		} else {
+			e.cancelBubble = true;
+		}
+		L.DomEvent._skipped(e);
+
+		return this;
+	},
+
+	disableScrollPropagation: function (el) {
+		var stop = L.DomEvent.stopPropagation;
+
+		return L.DomEvent
+			.on(el, 'mousewheel', stop)
+			.on(el, 'MozMousePixelScroll', stop);
+	},
+
+	disableClickPropagation: function (el) {
+		var stop = L.DomEvent.stopPropagation;
+
+		for (var i = L.Draggable.START.length - 1; i >= 0; i--) {
+			L.DomEvent.on(el, L.Draggable.START[i], stop);
+		}
+
+		return L.DomEvent
+			.on(el, 'click', L.DomEvent._fakeStop)
+			.on(el, 'dblclick', stop);
+	},
+
+	preventDefault: function (e) {
+
+		if (e.preventDefault) {
+			e.preventDefault();
+		} else {
+			e.returnValue = false;
+		}
+		return this;
+	},
+
+	stop: function (e) {
+		return L.DomEvent
+			.preventDefault(e)
+			.stopPropagation(e);
+	},
+
+	getMousePosition: function (e, container) {
+		if (!container) {
+			return new L.Point(e.clientX, e.clientY);
+		}
+
+		var rect = container.getBoundingClientRect();
+
+		return new L.Point(
+			e.clientX - rect.left - container.clientLeft,
+			e.clientY - rect.top - container.clientTop);
+	},
+
+	getWheelDelta: function (e) {
+
+		var delta = 0;
+
+		if (e.wheelDelta) {
+			delta = e.wheelDelta / 120;
+		}
+		if (e.detail) {
+			delta = -e.detail / 3;
+		}
+		return delta;
+	},
+
+	_skipEvents: {},
+
+	_fakeStop: function (e) {
+		// fakes stopPropagation by setting a special event flag, checked/reset with L.DomEvent._skipped(e)
+		L.DomEvent._skipEvents[e.type] = true;
+	},
+
+	_skipped: function (e) {
+		var skipped = this._skipEvents[e.type];
+		// reset when checking, as it's only used in map container and propagates outside of the map
+		this._skipEvents[e.type] = false;
+		return skipped;
+	},
+
+	// check if element really left/entered the event target (for mouseenter/mouseleave)
+	_checkMouse: function (el, e) {
+
+		var related = e.relatedTarget;
+
+		if (!related) { return true; }
+
+		try {
+			while (related && (related !== el)) {
+				related = related.parentNode;
+			}
+		} catch (err) {
+			return false;
+		}
+		return (related !== el);
+	},
+
+	_getEvent: function () { // evil magic for IE
+		/*jshint noarg:false */
+		var e = window.event;
+		if (!e) {
+			var caller = arguments.callee.caller;
+			while (caller) {
+				e = caller['arguments'][0];
+				if (e && window.Event === e.constructor) {
+					break;
+				}
+				caller = caller.caller;
+			}
+		}
+		return e;
+	},
+
+	// this is a horrible workaround for a bug in Android where a single touch triggers two click events
+	_filterClick: function (e, handler) {
+		var timeStamp = (e.timeStamp || e.originalEvent.timeStamp),
+			elapsed = L.DomEvent._lastClick && (timeStamp - L.DomEvent._lastClick);
+
+		// are they closer together than 500ms yet more than 100ms?
+		// Android typically triggers them ~300ms apart while multiple listeners
+		// on the same event should be triggered far faster;
+		// or check if click is simulated on the element, and if it is, reject any non-simulated events
+
+		if ((elapsed && elapsed > 100 && elapsed < 500) || (e.target._simulatedClick && !e._simulated)) {
+			L.DomEvent.stop(e);
+			return;
+		}
+		L.DomEvent._lastClick = timeStamp;
+
+		return handler(e);
+	}
+};
+
+L.DomEvent.on = L.DomEvent.addListener;
+L.DomEvent.off = L.DomEvent.removeListener;
+
+
+/*
+ * L.Draggable allows you to add dragging capabilities to any element. Supports mobile devices too.
+ */
+
+L.Draggable = L.Class.extend({
+	includes: L.Mixin.Events,
+
+	statics: {
+		START: L.Browser.touch ? ['touchstart', 'mousedown'] : ['mousedown'],
+		END: {
+			mousedown: 'mouseup',
+			touchstart: 'touchend',
+			pointerdown: 'touchend',
+			MSPointerDown: 'touchend'
+		},
+		MOVE: {
+			mousedown: 'mousemove',
+			touchstart: 'touchmove',
+			pointerdown: 'touchmove',
+			MSPointerDown: 'touchmove'
+		}
+	},
+
+	initialize: function (element, dragStartTarget) {
+		this._element = element;
+		this._dragStartTarget = dragStartTarget || element;
+	},
+
+	enable: function () {
+		if (this._enabled) { return; }
+
+		for (var i = L.Draggable.START.length - 1; i >= 0; i--) {
+			L.DomEvent.on(this._dragStartTarget, L.Draggable.START[i], this._onDown, this);
+		}
+
+		this._enabled = true;
+	},
+
+	disable: function () {
+		if (!this._enabled) { return; }
+
+		for (var i = L.Draggable.START.length - 1; i >= 0; i--) {
+			L.DomEvent.off(this._dragStartTarget, L.Draggable.START[i], this._onDown, this);
+		}
+
+		this._enabled = false;
+		this._moved = false;
+	},
+
+	_onDown: function (e) {
+		this._moved = false;
+
+		if (e.shiftKey || ((e.which !== 1) && (e.button !== 1) && !e.touches)) { return; }
+
+		L.DomEvent.stopPropagation(e);
+
+		if (L.Draggable._disabled) { return; }
+
+		L.DomUtil.disableImageDrag();
+		L.DomUtil.disableTextSelection();
+
+		if (this._moving) { return; }
+
+		var first = e.touches ? e.touches[0] : e;
+
+		this._startPoint = new L.Point(first.clientX, first.clientY);
+		this._startPos = this._newPos = L.DomUtil.getPosition(this._element);
+
+		L.DomEvent
+		    .on(document, L.Draggable.MOVE[e.type], this._onMove, this)
+		    .on(document, L.Draggable.END[e.type], this._onUp, this);
+	},
+
+	_onMove: function (e) {
+		if (e.touches && e.touches.length > 1) {
+			this._moved = true;
+			return;
+		}
+
+		var first = (e.touches && e.touches.length === 1 ? e.touches[0] : e),
+		    newPoint = new L.Point(first.clientX, first.clientY),
+		    offset = newPoint.subtract(this._startPoint);
+
+		if (!offset.x && !offset.y) { return; }
+		if (L.Browser.touch && Math.abs(offset.x) + Math.abs(offset.y) < 3) { return; }
+
+		L.DomEvent.preventDefault(e);
+
+		if (!this._moved) {
+			this.fire('dragstart');
+
+			this._moved = true;
+			this._startPos = L.DomUtil.getPosition(this._element).subtract(offset);
+
+			L.DomUtil.addClass(document.body, 'leaflet-dragging');
+			this._lastTarget = e.target || e.srcElement;
+			L.DomUtil.addClass(this._lastTarget, 'leaflet-drag-target');
+		}
+
+		this._newPos = this._startPos.add(offset);
+		this._moving = true;
+
+		L.Util.cancelAnimFrame(this._animRequest);
+		this._animRequest = L.Util.requestAnimFrame(this._updatePosition, this, true, this._dragStartTarget);
+	},
+
+	_updatePosition: function () {
+		this.fire('predrag');
+		L.DomUtil.setPosition(this._element, this._newPos);
+		this.fire('drag');
+	},
+
+	_onUp: function () {
+		L.DomUtil.removeClass(document.body, 'leaflet-dragging');
+
+		if (this._lastTarget) {
+			L.DomUtil.removeClass(this._lastTarget, 'leaflet-drag-target');
+			this._lastTarget = null;
+		}
+
+		for (var i in L.Draggable.MOVE) {
+			L.DomEvent
+			    .off(document, L.Draggable.MOVE[i], this._onMove)
+			    .off(document, L.Draggable.END[i], this._onUp);
+		}
+
+		L.DomUtil.enableImageDrag();
+		L.DomUtil.enableTextSelection();
+
+		if (this._moved && this._moving) {
+			// ensure drag is not fired after dragend
+			L.Util.cancelAnimFrame(this._animRequest);
+
+			this.fire('dragend', {
+				distance: this._newPos.distanceTo(this._startPos)
+			});
+		}
+
+		this._moving = false;
+	}
+});
+
+
+/*
+	L.Handler is a base class for handler classes that are used internally to inject
+	interaction features like dragging to classes like Map and Marker.
+*/
+
+L.Handler = L.Class.extend({
+	initialize: function (map) {
+		this._map = map;
+	},
+
+	enable: function () {
+		if (this._enabled) { return; }
+
+		this._enabled = true;
+		this.addHooks();
+	},
+
+	disable: function () {
+		if (!this._enabled) { return; }
+
+		this._enabled = false;
+		this.removeHooks();
+	},
+
+	enabled: function () {
+		return !!this._enabled;
+	}
+});
+
+
+/*
+ * L.Handler.MapDrag is used to make the map draggable (with panning inertia), enabled by default.
+ */
+
+L.Map.mergeOptions({
+	dragging: true,
+
+	inertia: !L.Browser.android23,
+	inertiaDeceleration: 3400, // px/s^2
+	inertiaMaxSpeed: Infinity, // px/s
+	inertiaThreshold: L.Browser.touch ? 32 : 18, // ms
+	easeLinearity: 0.25,
+
+	// TODO refactor, move to CRS
+	worldCopyJump: false
+});
+
+L.Map.Drag = L.Handler.extend({
+	addHooks: function () {
+		if (!this._draggable) {
+			var map = this._map;
+
+			this._draggable = new L.Draggable(map._mapPane, map._container);
+
+			this._draggable.on({
+				'dragstart': this._onDragStart,
+				'drag': this._onDrag,
+				'dragend': this._onDragEnd
+			}, this);
+
+			if (map.options.worldCopyJump) {
+				this._draggable.on('predrag', this._onPreDrag, this);
+				map.on('viewreset', this._onViewReset, this);
+
+				map.whenReady(this._onViewReset, this);
+			}
+		}
+		this._draggable.enable();
+	},
+
+	removeHooks: function () {
+		this._draggable.disable();
+	},
+
+	moved: function () {
+		return this._draggable && this._draggable._moved;
+	},
+
+	_onDragStart: function () {
+		var map = this._map;
+
+		if (map._panAnim) {
+			map._panAnim.stop();
+		}
+
+		map
+		    .fire('movestart')
+		    .fire('dragstart');
+
+		if (map.options.inertia) {
+			this._positions = [];
+			this._times = [];
+		}
+	},
+
+	_onDrag: function () {
+		if (this._map.options.inertia) {
+			var time = this._lastTime = +new Date(),
+			    pos = this._lastPos = this._draggable._newPos;
+
+			this._positions.push(pos);
+			this._times.push(time);
+
+			if (time - this._times[0] > 200) {
+				this._positions.shift();
+				this._times.shift();
+			}
+		}
+
+		this._map
+		    .fire('move')
+		    .fire('drag');
+	},
+
+	_onViewReset: function () {
+		// TODO fix hardcoded Earth values
+		var pxCenter = this._map.getSize()._divideBy(2),
+		    pxWorldCenter = this._map.latLngToLayerPoint([0, 0]);
+
+		this._initialWorldOffset = pxWorldCenter.subtract(pxCenter).x;
+		this._worldWidth = this._map.project([0, 180]).x;
+	},
+
+	_onPreDrag: function () {
+		// TODO refactor to be able to adjust map pane position after zoom
+		var worldWidth = this._worldWidth,
+		    halfWidth = Math.round(worldWidth / 2),
+		    dx = this._initialWorldOffset,
+		    x = this._draggable._newPos.x,
+		    newX1 = (x - halfWidth + dx) % worldWidth + halfWidth - dx,
+		    newX2 = (x + halfWidth + dx) % worldWidth - halfWidth - dx,
+		    newX = Math.abs(newX1 + dx) < Math.abs(newX2 + dx) ? newX1 : newX2;
+
+		this._draggable._newPos.x = newX;
+	},
+
+	_onDragEnd: function (e) {
+		var map = this._map,
+		    options = map.options,
+		    delay = +new Date() - this._lastTime,
+
+		    noInertia = !options.inertia || delay > options.inertiaThreshold || !this._positions[0];
+
+		map.fire('dragend', e);
+
+		if (noInertia) {
+			map.fire('moveend');
+
+		} else {
+
+			var direction = this._lastPos.subtract(this._positions[0]),
+			    duration = (this._lastTime + delay - this._times[0]) / 1000,
+			    ease = options.easeLinearity,
+
+			    speedVector = direction.multiplyBy(ease / duration),
+			    speed = speedVector.distanceTo([0, 0]),
+
+			    limitedSpeed = Math.min(options.inertiaMaxSpeed, speed),
+			    limitedSpeedVector = speedVector.multiplyBy(limitedSpeed / speed),
+
+			    decelerationDuration = limitedSpeed / (options.inertiaDeceleration * ease),
+			    offset = limitedSpeedVector.multiplyBy(-decelerationDuration / 2).round();
+
+			if (!offset.x || !offset.y) {
+				map.fire('moveend');
+
+			} else {
+				offset = map._limitOffset(offset, map.options.maxBounds);
+
+				L.Util.requestAnimFrame(function () {
+					map.panBy(offset, {
+						duration: decelerationDuration,
+						easeLinearity: ease,
+						noMoveStart: true
+					});
+				});
+			}
+		}
+	}
+});
+
+L.Map.addInitHook('addHandler', 'dragging', L.Map.Drag);
+
+
+/*
+ * L.Handler.DoubleClickZoom is used to handle double-click zoom on the map, enabled by default.
+ */
+
+L.Map.mergeOptions({
+	doubleClickZoom: true
+});
+
+L.Map.DoubleClickZoom = L.Handler.extend({
+	addHooks: function () {
+		this._map.on('dblclick', this._onDoubleClick, this);
+	},
+
+	removeHooks: function () {
+		this._map.off('dblclick', this._onDoubleClick, this);
+	},
+
+	_onDoubleClick: function (e) {
+		var map = this._map,
+		    zoom = map.getZoom() + (e.originalEvent.shiftKey ? -1 : 1);
+
+		if (map.options.doubleClickZoom === 'center') {
+			map.setZoom(zoom);
+		} else {
+			map.setZoomAround(e.containerPoint, zoom);
+		}
+	}
+});
+
+L.Map.addInitHook('addHandler', 'doubleClickZoom', L.Map.DoubleClickZoom);
+
+
+/*
+ * L.Handler.ScrollWheelZoom is used by L.Map to enable mouse scroll wheel zoom on the map.
+ */
+
+L.Map.mergeOptions({
+	scrollWheelZoom: true
+});
+
+L.Map.ScrollWheelZoom = L.Handler.extend({
+	addHooks: function () {
+		L.DomEvent.on(this._map._container, 'mousewheel', this._onWheelScroll, this);
+		L.DomEvent.on(this._map._container, 'MozMousePixelScroll', L.DomEvent.preventDefault);
+		this._delta = 0;
+	},
+
+	removeHooks: function () {
+		L.DomEvent.off(this._map._container, 'mousewheel', this._onWheelScroll);
+		L.DomEvent.off(this._map._container, 'MozMousePixelScroll', L.DomEvent.preventDefault);
+	},
+
+	_onWheelScroll: function (e) {
+		var delta = L.DomEvent.getWheelDelta(e);
+
+		this._delta += delta;
+		this._lastMousePos = this._map.mouseEventToContainerPoint(e);
+
+		if (!this._startTime) {
+			this._startTime = +new Date();
+		}
+
+		var left = Math.max(40 - (+new Date() - this._startTime), 0);
+
+		clearTimeout(this._timer);
+		this._timer = setTimeout(L.bind(this._performZoom, this), left);
+
+		L.DomEvent.preventDefault(e);
+		L.DomEvent.stopPropagation(e);
+	},
+
+	_performZoom: function () {
+		var map = this._map,
+		    delta = this._delta,
+		    zoom = map.getZoom();
+
+		delta = delta > 0 ? Math.ceil(delta) : Math.floor(delta);
+		delta = Math.max(Math.min(delta, 4), -4);
+		delta = map._limitZoom(zoom + delta) - zoom;
+
+		this._delta = 0;
+		this._startTime = null;
+
+		if (!delta) { return; }
+
+		if (map.options.scrollWheelZoom === 'center') {
+			map.setZoom(zoom + delta);
+		} else {
+			map.setZoomAround(this._lastMousePos, zoom + delta);
+		}
+	}
+});
+
+L.Map.addInitHook('addHandler', 'scrollWheelZoom', L.Map.ScrollWheelZoom);
+
+
+/*
+ * Extends the event handling code with double tap support for mobile browsers.
+ */
+
+L.extend(L.DomEvent, {
+
+	_touchstart: L.Browser.msPointer ? 'MSPointerDown' : L.Browser.pointer ? 'pointerdown' : 'touchstart',
+	_touchend: L.Browser.msPointer ? 'MSPointerUp' : L.Browser.pointer ? 'pointerup' : 'touchend',
+
+	// inspired by Zepto touch code by Thomas Fuchs
+	addDoubleTapListener: function (obj, handler, id) {
+		var last,
+		    doubleTap = false,
+		    delay = 250,
+		    touch,
+		    pre = '_leaflet_',
+		    touchstart = this._touchstart,
+		    touchend = this._touchend,
+		    trackedTouches = [];
+
+		function onTouchStart(e) {
+			var count;
+
+			if (L.Browser.pointer) {
+				trackedTouches.push(e.pointerId);
+				count = trackedTouches.length;
+			} else {
+				count = e.touches.length;
+			}
+			if (count > 1) {
+				return;
+			}
+
+			var now = Date.now(),
+				delta = now - (last || now);
+
+			touch = e.touches ? e.touches[0] : e;
+			doubleTap = (delta > 0 && delta <= delay);
+			last = now;
+		}
+
+		function onTouchEnd(e) {
+			if (L.Browser.pointer) {
+				var idx = trackedTouches.indexOf(e.pointerId);
+				if (idx === -1) {
+					return;
+				}
+				trackedTouches.splice(idx, 1);
+			}
+
+			if (doubleTap) {
+				if (L.Browser.pointer) {
+					// work around .type being readonly with MSPointer* events
+					var newTouch = { },
+						prop;
+
+					// jshint forin:false
+					for (var i in touch) {
+						prop = touch[i];
+						if (typeof prop === 'function') {
+							newTouch[i] = prop.bind(touch);
+						} else {
+							newTouch[i] = prop;
+						}
+					}
+					touch = newTouch;
+				}
+				touch.type = 'dblclick';
+				handler(touch);
+				last = null;
+			}
+		}
+		obj[pre + touchstart + id] = onTouchStart;
+		obj[pre + touchend + id] = onTouchEnd;
+
+		// on pointer we need to listen on the document, otherwise a drag starting on the map and moving off screen
+		// will not come through to us, so we will lose track of how many touches are ongoing
+		var endElement = L.Browser.pointer ? document.documentElement : obj;
+
+		obj.addEventListener(touchstart, onTouchStart, false);
+		endElement.addEventListener(touchend, onTouchEnd, false);
+
+		if (L.Browser.pointer) {
+			endElement.addEventListener(L.DomEvent.POINTER_CANCEL, onTouchEnd, false);
+		}
+
+		return this;
+	},
+
+	removeDoubleTapListener: function (obj, id) {
+		var pre = '_leaflet_';
+
+		obj.removeEventListener(this._touchstart, obj[pre + this._touchstart + id], false);
+		(L.Browser.pointer ? document.documentElement : obj).removeEventListener(
+		        this._touchend, obj[pre + this._touchend + id], false);
+
+		if (L.Browser.pointer) {
+			document.documentElement.removeEventListener(L.DomEvent.POINTER_CANCEL, obj[pre + this._touchend + id],
+				false);
+		}
+
+		return this;
+	}
+});
+
+
+/*
+ * Extends L.DomEvent to provide touch support for Internet Explorer and Windows-based devices.
+ */
+
+L.extend(L.DomEvent, {
+
+	//static
+	POINTER_DOWN: L.Browser.msPointer ? 'MSPointerDown' : 'pointerdown',
+	POINTER_MOVE: L.Browser.msPointer ? 'MSPointerMove' : 'pointermove',
+	POINTER_UP: L.Browser.msPointer ? 'MSPointerUp' : 'pointerup',
+	POINTER_CANCEL: L.Browser.msPointer ? 'MSPointerCancel' : 'pointercancel',
+
+	_pointers: [],
+	_pointerDocumentListener: false,
+
+	// Provides a touch events wrapper for (ms)pointer events.
+	// Based on changes by veproza https://github.com/CloudMade/Leaflet/pull/1019
+	//ref http://www.w3.org/TR/pointerevents/ https://www.w3.org/Bugs/Public/show_bug.cgi?id=22890
+
+	addPointerListener: function (obj, type, handler, id) {
+
+		switch (type) {
+		case 'touchstart':
+			return this.addPointerListenerStart(obj, type, handler, id);
+		case 'touchend':
+			return this.addPointerListenerEnd(obj, type, handler, id);
+		case 'touchmove':
+			return this.addPointerListenerMove(obj, type, handler, id);
+		default:
+			throw 'Unknown touch event type';
+		}
+	},
+
+	addPointerListenerStart: function (obj, type, handler, id) {
+		var pre = '_leaflet_',
+		    pointers = this._pointers;
+
+		var cb = function (e) {
+			if (e.pointerType !== 'mouse' && e.pointerType !== e.MSPOINTER_TYPE_MOUSE) {
+				L.DomEvent.preventDefault(e);
+			}
+
+			var alreadyInArray = false;
+			for (var i = 0; i < pointers.length; i++) {
+				if (pointers[i].pointerId === e.pointerId) {
+					alreadyInArray = true;
+					break;
+				}
+			}
+			if (!alreadyInArray) {
+				pointers.push(e);
+			}
+
+			e.touches = pointers.slice();
+			e.changedTouches = [e];
+
+			handler(e);
+		};
+
+		obj[pre + 'touchstart' + id] = cb;
+		obj.addEventListener(this.POINTER_DOWN, cb, false);
+
+		// need to also listen for end events to keep the _pointers list accurate
+		// this needs to be on the body and never go away
+		if (!this._pointerDocumentListener) {
+			var internalCb = function (e) {
+				for (var i = 0; i < pointers.length; i++) {
+					if (pointers[i].pointerId === e.pointerId) {
+						pointers.splice(i, 1);
+						break;
+					}
+				}
+			};
+			//We listen on the documentElement as any drags that end by moving the touch off the screen get fired there
+			document.documentElement.addEventListener(this.POINTER_UP, internalCb, false);
+			document.documentElement.addEventListener(this.POINTER_CANCEL, internalCb, false);
+
+			this._pointerDocumentListener = true;
+		}
+
+		return this;
+	},
+
+	addPointerListenerMove: function (obj, type, handler, id) {
+		var pre = '_leaflet_',
+		    touches = this._pointers;
+
+		function cb(e) {
+
+			// don't fire touch moves when mouse isn't down
+			if ((e.pointerType === e.MSPOINTER_TYPE_MOUSE || e.pointerType === 'mouse') && e.buttons === 0) { return; }
+
+			for (var i = 0; i < touches.length; i++) {
+				if (touches[i].pointerId === e.pointerId) {
+					touches[i] = e;
+					break;
+				}
+			}
+
+			e.touches = touches.slice();
+			e.changedTouches = [e];
+
+			handler(e);
+		}
+
+		obj[pre + 'touchmove' + id] = cb;
+		obj.addEventListener(this.POINTER_MOVE, cb, false);
+
+		return this;
+	},
+
+	addPointerListenerEnd: function (obj, type, handler, id) {
+		var pre = '_leaflet_',
+		    touches = this._pointers;
+
+		var cb = function (e) {
+			for (var i = 0; i < touches.length; i++) {
+				if (touches[i].pointerId === e.pointerId) {
+					touches.splice(i, 1);
+					break;
+				}
+			}
+
+			e.touches = touches.slice();
+			e.changedTouches = [e];
+
+			handler(e);
+		};
+
+		obj[pre + 'touchend' + id] = cb;
+		obj.addEventListener(this.POINTER_UP, cb, false);
+		obj.addEventListener(this.POINTER_CANCEL, cb, false);
+
+		return this;
+	},
+
+	removePointerListener: function (obj, type, id) {
+		var pre = '_leaflet_',
+		    cb = obj[pre + type + id];
+
+		switch (type) {
+		case 'touchstart':
+			obj.removeEventListener(this.POINTER_DOWN, cb, false);
+			break;
+		case 'touchmove':
+			obj.removeEventListener(this.POINTER_MOVE, cb, false);
+			break;
+		case 'touchend':
+			obj.removeEventListener(this.POINTER_UP, cb, false);
+			obj.removeEventListener(this.POINTER_CANCEL, cb, false);
+			break;
+		}
+
+		return this;
+	}
+});
+
+
+/*
+ * L.Handler.TouchZoom is used by L.Map to add pinch zoom on supported mobile browsers.
+ */
+
+L.Map.mergeOptions({
+	touchZoom: L.Browser.touch && !L.Browser.android23,
+	bounceAtZoomLimits: true
+});
+
+L.Map.TouchZoom = L.Handler.extend({
+	addHooks: function () {
+		L.DomEvent.on(this._map._container, 'touchstart', this._onTouchStart, this);
+	},
+
+	removeHooks: function () {
+		L.DomEvent.off(this._map._container, 'touchstart', this._onTouchStart, this);
+	},
+
+	_onTouchStart: function (e) {
+		var map = this._map;
+
+		if (!e.touches || e.touches.length !== 2 || map._animatingZoom || this._zooming) { return; }
+
+		var p1 = map.mouseEventToLayerPoint(e.touches[0]),
+		    p2 = map.mouseEventToLayerPoint(e.touches[1]),
+		    viewCenter = map._getCenterLayerPoint();
+
+		this._startCenter = p1.add(p2)._divideBy(2);
+		this._startDist = p1.distanceTo(p2);
+
+		this._moved = false;
+		this._zooming = true;
+
+		this._centerOffset = viewCenter.subtract(this._startCenter);
+
+		if (map._panAnim) {
+			map._panAnim.stop();
+		}
+
+		L.DomEvent
+		    .on(document, 'touchmove', this._onTouchMove, this)
+		    .on(document, 'touchend', this._onTouchEnd, this);
+
+		L.DomEvent.preventDefault(e);
+	},
+
+	_onTouchMove: function (e) {
+		var map = this._map;
+
+		if (!e.touches || e.touches.length !== 2 || !this._zooming) { return; }
+
+		var p1 = map.mouseEventToLayerPoint(e.touches[0]),
+		    p2 = map.mouseEventToLayerPoint(e.touches[1]);
+
+		this._scale = p1.distanceTo(p2) / this._startDist;
+		this._delta = p1._add(p2)._divideBy(2)._subtract(this._startCenter);
+
+		if (this._scale === 1) { return; }
+
+		if (!map.options.bounceAtZoomLimits) {
+			if ((map.getZoom() === map.getMinZoom() && this._scale < 1) ||
+			    (map.getZoom() === map.getMaxZoom() && this._scale > 1)) { return; }
+		}
+
+		if (!this._moved) {
+			L.DomUtil.addClass(map._mapPane, 'leaflet-touching');
+
+			map
+			    .fire('movestart')
+			    .fire('zoomstart');
+
+			this._moved = true;
+		}
+
+		L.Util.cancelAnimFrame(this._animRequest);
+		this._animRequest = L.Util.requestAnimFrame(
+		        this._updateOnMove, this, true, this._map._container);
+
+		L.DomEvent.preventDefault(e);
+	},
+
+	_updateOnMove: function () {
+		var map = this._map,
+		    origin = this._getScaleOrigin(),
+		    center = map.layerPointToLatLng(origin),
+		    zoom = map.getScaleZoom(this._scale);
+
+		map._animateZoom(center, zoom, this._startCenter, this._scale, this._delta, false, true);
+	},
+
+	_onTouchEnd: function () {
+		if (!this._moved || !this._zooming) {
+			this._zooming = false;
+			return;
+		}
+
+		var map = this._map;
+
+		this._zooming = false;
+		L.DomUtil.removeClass(map._mapPane, 'leaflet-touching');
+		L.Util.cancelAnimFrame(this._animRequest);
+
+		L.DomEvent
+		    .off(document, 'touchmove', this._onTouchMove)
+		    .off(document, 'touchend', this._onTouchEnd);
+
+		var origin = this._getScaleOrigin(),
+		    center = map.layerPointToLatLng(origin),
+
+		    oldZoom = map.getZoom(),
+		    floatZoomDelta = map.getScaleZoom(this._scale) - oldZoom,
+		    roundZoomDelta = (floatZoomDelta > 0 ?
+		            Math.ceil(floatZoomDelta) : Math.floor(floatZoomDelta)),
+
+		    zoom = map._limitZoom(oldZoom + roundZoomDelta),
+		    scale = map.getZoomScale(zoom) / this._scale;
+
+		map._animateZoom(center, zoom, origin, scale);
+	},
+
+	_getScaleOrigin: function () {
+		var centerOffset = this._centerOffset.subtract(this._delta).divideBy(this._scale);
+		return this._startCenter.add(centerOffset);
+	}
+});
+
+L.Map.addInitHook('addHandler', 'touchZoom', L.Map.TouchZoom);
+
+
+/*
+ * L.Map.Tap is used to enable mobile hacks like quick taps and long hold.
+ */
+
+L.Map.mergeOptions({
+	tap: true,
+	tapTolerance: 15
+});
+
+L.Map.Tap = L.Handler.extend({
+	addHooks: function () {
+		L.DomEvent.on(this._map._container, 'touchstart', this._onDown, this);
+	},
+
+	removeHooks: function () {
+		L.DomEvent.off(this._map._container, 'touchstart', this._onDown, this);
+	},
+
+	_onDown: function (e) {
+		if (!e.touches) { return; }
+
+		L.DomEvent.preventDefault(e);
+
+		this._fireClick = true;
+
+		// don't simulate click or track longpress if more than 1 touch
+		if (e.touches.length > 1) {
+			this._fireClick = false;
+			clearTimeout(this._holdTimeout);
+			return;
+		}
+
+		var first = e.touches[0],
+		    el = first.target;
+
+		this._startPos = this._newPos = new L.Point(first.clientX, first.clientY);
+
+		// if touching a link, highlight it
+		if (el.tagName && el.tagName.toLowerCase() === 'a') {
+			L.DomUtil.addClass(el, 'leaflet-active');
+		}
+
+		// simulate long hold but setting a timeout
+		this._holdTimeout = setTimeout(L.bind(function () {
+			if (this._isTapValid()) {
+				this._fireClick = false;
+				this._onUp();
+				this._simulateEvent('contextmenu', first);
+			}
+		}, this), 1000);
+
+		L.DomEvent
+			.on(document, 'touchmove', this._onMove, this)
+			.on(document, 'touchend', this._onUp, this);
+	},
+
+	_onUp: function (e) {
+		clearTimeout(this._holdTimeout);
+
+		L.DomEvent
+			.off(document, 'touchmove', this._onMove, this)
+			.off(document, 'touchend', this._onUp, this);
+
+		if (this._fireClick && e && e.changedTouches) {
+
+			var first = e.changedTouches[0],
+			    el = first.target;
+
+			if (el && el.tagName && el.tagName.toLowerCase() === 'a') {
+				L.DomUtil.removeClass(el, 'leaflet-active');
+			}
+
+			// simulate click if the touch didn't move too much
+			if (this._isTapValid()) {
+				this._simulateEvent('click', first);
+			}
+		}
+	},
+
+	_isTapValid: function () {
+		return this._newPos.distanceTo(this._startPos) <= this._map.options.tapTolerance;
+	},
+
+	_onMove: function (e) {
+		var first = e.touches[0];
+		this._newPos = new L.Point(first.clientX, first.clientY);
+	},
+
+	_simulateEvent: function (type, e) {
+		var simulatedEvent = document.createEvent('MouseEvents');
+
+		simulatedEvent._simulated = true;
+		e.target._simulatedClick = true;
+
+		simulatedEvent.initMouseEvent(
+		        type, true, true, window, 1,
+		        e.screenX, e.screenY,
+		        e.clientX, e.clientY,
+		        false, false, false, false, 0, null);
+
+		e.target.dispatchEvent(simulatedEvent);
+	}
+});
+
+if (L.Browser.touch && !L.Browser.pointer) {
+	L.Map.addInitHook('addHandler', 'tap', L.Map.Tap);
+}
+
+
+/*
+ * L.Handler.ShiftDragZoom is used to add shift-drag zoom interaction to the map
+  * (zoom to a selected bounding box), enabled by default.
+ */
+
+L.Map.mergeOptions({
+	boxZoom: true
+});
+
+L.Map.BoxZoom = L.Handler.extend({
+	initialize: function (map) {
+		this._map = map;
+		this._container = map._container;
+		this._pane = map._panes.overlayPane;
+		this._moved = false;
+	},
+
+	addHooks: function () {
+		L.DomEvent.on(this._container, 'mousedown', this._onMouseDown, this);
+	},
+
+	removeHooks: function () {
+		L.DomEvent.off(this._container, 'mousedown', this._onMouseDown);
+		this._moved = false;
+	},
+
+	moved: function () {
+		return this._moved;
+	},
+
+	_onMouseDown: function (e) {
+		this._moved = false;
+
+		if (!e.shiftKey || ((e.which !== 1) && (e.button !== 1))) { return false; }
+
+		L.DomUtil.disableTextSelection();
+		L.DomUtil.disableImageDrag();
+
+		this._startLayerPoint = this._map.mouseEventToLayerPoint(e);
+
+		L.DomEvent
+		    .on(document, 'mousemove', this._onMouseMove, this)
+		    .on(document, 'mouseup', this._onMouseUp, this)
+		    .on(document, 'keydown', this._onKeyDown, this);
+	},
+
+	_onMouseMove: function (e) {
+		if (!this._moved) {
+			this._box = L.DomUtil.create('div', 'leaflet-zoom-box', this._pane);
+			L.DomUtil.setPosition(this._box, this._startLayerPoint);
+
+			//TODO refactor: move cursor to styles
+			this._container.style.cursor = 'crosshair';
+			this._map.fire('boxzoomstart');
+		}
+
+		var startPoint = this._startLayerPoint,
+		    box = this._box,
+
+		    layerPoint = this._map.mouseEventToLayerPoint(e),
+		    offset = layerPoint.subtract(startPoint),
+
+		    newPos = new L.Point(
+		        Math.min(layerPoint.x, startPoint.x),
+		        Math.min(layerPoint.y, startPoint.y));
+
+		L.DomUtil.setPosition(box, newPos);
+
+		this._moved = true;
+
+		// TODO refactor: remove hardcoded 4 pixels
+		box.style.width  = (Math.max(0, Math.abs(offset.x) - 4)) + 'px';
+		box.style.height = (Math.max(0, Math.abs(offset.y) - 4)) + 'px';
+	},
+
+	_finish: function () {
+		if (this._moved) {
+			this._pane.removeChild(this._box);
+			this._container.style.cursor = '';
+		}
+
+		L.DomUtil.enableTextSelection();
+		L.DomUtil.enableImageDrag();
+
+		L.DomEvent
+		    .off(document, 'mousemove', this._onMouseMove)
+		    .off(document, 'mouseup', this._onMouseUp)
+		    .off(document, 'keydown', this._onKeyDown);
+	},
+
+	_onMouseUp: function (e) {
+
+		this._finish();
+
+		var map = this._map,
+		    layerPoint = map.mouseEventToLayerPoint(e);
+
+		if (this._startLayerPoint.equals(layerPoint)) { return; }
+
+		var bounds = new L.LatLngBounds(
+		        map.layerPointToLatLng(this._startLayerPoint),
+		        map.layerPointToLatLng(layerPoint));
+
+		map.fitBounds(bounds);
+
+		map.fire('boxzoomend', {
+			boxZoomBounds: bounds
+		});
+	},
+
+	_onKeyDown: function (e) {
+		if (e.keyCode === 27) {
+			this._finish();
+		}
+	}
+});
+
+L.Map.addInitHook('addHandler', 'boxZoom', L.Map.BoxZoom);
+
+
+/*
+ * L.Map.Keyboard is handling keyboard interaction with the map, enabled by default.
+ */
+
+L.Map.mergeOptions({
+	keyboard: true,
+	keyboardPanOffset: 80,
+	keyboardZoomOffset: 1
+});
+
+L.Map.Keyboard = L.Handler.extend({
+
+	keyCodes: {
+		left:    [37],
+		right:   [39],
+		down:    [40],
+		up:      [38],
+		zoomIn:  [187, 107, 61, 171],
+		zoomOut: [189, 109, 173]
+	},
+
+	initialize: function (map) {
+		this._map = map;
+
+		this._setPanOffset(map.options.keyboardPanOffset);
+		this._setZoomOffset(map.options.keyboardZoomOffset);
+	},
+
+	addHooks: function () {
+		var container = this._map._container;
+
+		// make the container focusable by tabbing
+		if (container.tabIndex === -1) {
+			container.tabIndex = '0';
+		}
+
+		L.DomEvent
+		    .on(container, 'focus', this._onFocus, this)
+		    .on(container, 'blur', this._onBlur, this)
+		    .on(container, 'mousedown', this._onMouseDown, this);
+
+		this._map
+		    .on('focus', this._addHooks, this)
+		    .on('blur', this._removeHooks, this);
+	},
+
+	removeHooks: function () {
+		this._removeHooks();
+
+		var container = this._map._container;
+
+		L.DomEvent
+		    .off(container, 'focus', this._onFocus, this)
+		    .off(container, 'blur', this._onBlur, this)
+		    .off(container, 'mousedown', this._onMouseDown, this);
+
+		this._map
+		    .off('focus', this._addHooks, this)
+		    .off('blur', this._removeHooks, this);
+	},
+
+	_onMouseDown: function () {
+		if (this._focused) { return; }
+
+		var body = document.body,
+		    docEl = document.documentElement,
+		    top = body.scrollTop || docEl.scrollTop,
+		    left = body.scrollLeft || docEl.scrollLeft;
+
+		this._map._container.focus();
+
+		window.scrollTo(left, top);
+	},
+
+	_onFocus: function () {
+		this._focused = true;
+		this._map.fire('focus');
+	},
+
+	_onBlur: function () {
+		this._focused = false;
+		this._map.fire('blur');
+	},
+
+	_setPanOffset: function (pan) {
+		var keys = this._panKeys = {},
+		    codes = this.keyCodes,
+		    i, len;
+
+		for (i = 0, len = codes.left.length; i < len; i++) {
+			keys[codes.left[i]] = [-1 * pan, 0];
+		}
+		for (i = 0, len = codes.right.length; i < len; i++) {
+			keys[codes.right[i]] = [pan, 0];
+		}
+		for (i = 0, len = codes.down.length; i < len; i++) {
+			keys[codes.down[i]] = [0, pan];
+		}
+		for (i = 0, len = codes.up.length; i < len; i++) {
+			keys[codes.up[i]] = [0, -1 * pan];
+		}
+	},
+
+	_setZoomOffset: function (zoom) {
+		var keys = this._zoomKeys = {},
+		    codes = this.keyCodes,
+		    i, len;
+
+		for (i = 0, len = codes.zoomIn.length; i < len; i++) {
+			keys[codes.zoomIn[i]] = zoom;
+		}
+		for (i = 0, len = codes.zoomOut.length; i < len; i++) {
+			keys[codes.zoomOut[i]] = -zoom;
+		}
+	},
+
+	_addHooks: function () {
+		L.DomEvent.on(document, 'keydown', this._onKeyDown, this);
+	},
+
+	_removeHooks: function () {
+		L.DomEvent.off(document, 'keydown', this._onKeyDown, this);
+	},
+
+	_onKeyDown: function (e) {
+		var key = e.keyCode,
+		    map = this._map;
+
+		if (key in this._panKeys) {
+
+			if (map._panAnim && map._panAnim._inProgress) { return; }
+
+			map.panBy(this._panKeys[key]);
+
+			if (map.options.maxBounds) {
+				map.panInsideBounds(map.options.maxBounds);
+			}
+
+		} else if (key in this._zoomKeys) {
+			map.setZoom(map.getZoom() + this._zoomKeys[key]);
+
+		} else {
+			return;
+		}
+
+		L.DomEvent.stop(e);
+	}
+});
+
+L.Map.addInitHook('addHandler', 'keyboard', L.Map.Keyboard);
+
+
+/*
+ * L.Handler.MarkerDrag is used internally by L.Marker to make the markers draggable.
+ */
+
+L.Handler.MarkerDrag = L.Handler.extend({
+	initialize: function (marker) {
+		this._marker = marker;
+	},
+
+	addHooks: function () {
+		var icon = this._marker._icon;
+		if (!this._draggable) {
+			this._draggable = new L.Draggable(icon, icon);
+		}
+
+		this._draggable
+			.on('dragstart', this._onDragStart, this)
+			.on('drag', this._onDrag, this)
+			.on('dragend', this._onDragEnd, this);
+		this._draggable.enable();
+		L.DomUtil.addClass(this._marker._icon, 'leaflet-marker-draggable');
+	},
+
+	removeHooks: function () {
+		this._draggable
+			.off('dragstart', this._onDragStart, this)
+			.off('drag', this._onDrag, this)
+			.off('dragend', this._onDragEnd, this);
+
+		this._draggable.disable();
+		L.DomUtil.removeClass(this._marker._icon, 'leaflet-marker-draggable');
+	},
+
+	moved: function () {
+		return this._draggable && this._draggable._moved;
+	},
+
+	_onDragStart: function () {
+		this._marker
+		    .closePopup()
+		    .fire('movestart')
+		    .fire('dragstart');
+	},
+
+	_onDrag: function () {
+		var marker = this._marker,
+		    shadow = marker._shadow,
+		    iconPos = L.DomUtil.getPosition(marker._icon),
+		    latlng = marker._map.layerPointToLatLng(iconPos);
+
+		// update shadow position
+		if (shadow) {
+			L.DomUtil.setPosition(shadow, iconPos);
+		}
+
+		marker._latlng = latlng;
+
+		marker
+		    .fire('move', {latlng: latlng})
+		    .fire('drag');
+	},
+
+	_onDragEnd: function (e) {
+		this._marker
+		    .fire('moveend')
+		    .fire('dragend', e);
+	}
+});
+
+
+/*
+ * L.Control is a base class for implementing map controls. Handles positioning.
+ * All other controls extend from this class.
+ */
+
+L.Control = L.Class.extend({
+	options: {
+		position: 'topright'
+	},
+
+	initialize: function (options) {
+		L.setOptions(this, options);
+	},
+
+	getPosition: function () {
+		return this.options.position;
+	},
+
+	setPosition: function (position) {
+		var map = this._map;
+
+		if (map) {
+			map.removeControl(this);
+		}
+
+		this.options.position = position;
+
+		if (map) {
+			map.addControl(this);
+		}
+
+		return this;
+	},
+
+	getContainer: function () {
+		return this._container;
+	},
+
+	addTo: function (map) {
+		this._map = map;
+
+		var container = this._container = this.onAdd(map),
+		    pos = this.getPosition(),
+		    corner = map._controlCorners[pos];
+
+		L.DomUtil.addClass(container, 'leaflet-control');
+
+		if (pos.indexOf('bottom') !== -1) {
+			corner.insertBefore(container, corner.firstChild);
+		} else {
+			corner.appendChild(container);
+		}
+
+		return this;
+	},
+
+	removeFrom: function (map) {
+		var pos = this.getPosition(),
+		    corner = map._controlCorners[pos];
+
+		corner.removeChild(this._container);
+		this._map = null;
+
+		if (this.onRemove) {
+			this.onRemove(map);
+		}
+
+		return this;
+	},
+
+	_refocusOnMap: function () {
+		if (this._map) {
+			this._map.getContainer().focus();
+		}
+	}
+});
+
+L.control = function (options) {
+	return new L.Control(options);
+};
+
+
+// adds control-related methods to L.Map
+
+L.Map.include({
+	addControl: function (control) {
+		control.addTo(this);
+		return this;
+	},
+
+	removeControl: function (control) {
+		control.removeFrom(this);
+		return this;
+	},
+
+	_initControlPos: function () {
+		var corners = this._controlCorners = {},
+		    l = 'leaflet-',
+		    container = this._controlContainer =
+		            L.DomUtil.create('div', l + 'control-container', this._container);
+
+		function createCorner(vSide, hSide) {
+			var className = l + vSide + ' ' + l + hSide;
+
+			corners[vSide + hSide] = L.DomUtil.create('div', className, container);
+		}
+
+		createCorner('top', 'left');
+		createCorner('top', 'right');
+		createCorner('bottom', 'left');
+		createCorner('bottom', 'right');
+	},
+
+	_clearControlPos: function () {
+		this._container.removeChild(this._controlContainer);
+	}
+});
+
+
+/*
+ * L.Control.Zoom is used for the default zoom buttons on the map.
+ */
+
+L.Control.Zoom = L.Control.extend({
+	options: {
+		position: 'topleft',
+		zoomInText: '+',
+		zoomInTitle: 'Zoom in',
+		zoomOutText: '-',
+		zoomOutTitle: 'Zoom out'
+	},
+
+	onAdd: function (map) {
+		var zoomName = 'leaflet-control-zoom',
+		    container = L.DomUtil.create('div', zoomName + ' leaflet-bar');
+
+		this._map = map;
+
+		this._zoomInButton  = this._createButton(
+		        this.options.zoomInText, this.options.zoomInTitle,
+		        zoomName + '-in',  container, this._zoomIn,  this);
+		this._zoomOutButton = this._createButton(
+		        this.options.zoomOutText, this.options.zoomOutTitle,
+		        zoomName + '-out', container, this._zoomOut, this);
+
+		this._updateDisabled();
+		map.on('zoomend zoomlevelschange', this._updateDisabled, this);
+
+		return container;
+	},
+
+	onRemove: function (map) {
+		map.off('zoomend zoomlevelschange', this._updateDisabled, this);
+	},
+
+	_zoomIn: function (e) {
+		this._map.zoomIn(e.shiftKey ? 3 : 1);
+	},
+
+	_zoomOut: function (e) {
+		this._map.zoomOut(e.shiftKey ? 3 : 1);
+	},
+
+	_createButton: function (html, title, className, container, fn, context) {
+		var link = L.DomUtil.create('a', className, container);
+		link.innerHTML = html;
+		link.href = '#';
+		link.title = title;
+
+		var stop = L.DomEvent.stopPropagation;
+
+		L.DomEvent
+		    .on(link, 'click', stop)
+		    .on(link, 'mousedown', stop)
+		    .on(link, 'dblclick', stop)
+		    .on(link, 'click', L.DomEvent.preventDefault)
+		    .on(link, 'click', fn, context)
+		    .on(link, 'click', this._refocusOnMap, context);
+
+		return link;
+	},
+
+	_updateDisabled: function () {
+		var map = this._map,
+			className = 'leaflet-disabled';
+
+		L.DomUtil.removeClass(this._zoomInButton, className);
+		L.DomUtil.removeClass(this._zoomOutButton, className);
+
+		if (map._zoom === map.getMinZoom()) {
+			L.DomUtil.addClass(this._zoomOutButton, className);
+		}
+		if (map._zoom === map.getMaxZoom()) {
+			L.DomUtil.addClass(this._zoomInButton, className);
+		}
+	}
+});
+
+L.Map.mergeOptions({
+	zoomControl: true
+});
+
+L.Map.addInitHook(function () {
+	if (this.options.zoomControl) {
+		this.zoomControl = new L.Control.Zoom();
+		this.addControl(this.zoomControl);
+	}
+});
+
+L.control.zoom = function (options) {
+	return new L.Control.Zoom(options);
+};
+
+
+
+/*
+ * L.Control.Attribution is used for displaying attribution on the map (added by default).
+ */
+
+L.Control.Attribution = L.Control.extend({
+	options: {
+		position: 'bottomright',
+		prefix: '<a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>'
+	},
+
+	initialize: function (options) {
+		L.setOptions(this, options);
+
+		this._attributions = {};
+	},
+
+	onAdd: function (map) {
+		this._container = L.DomUtil.create('div', 'leaflet-control-attribution');
+		L.DomEvent.disableClickPropagation(this._container);
+
+		for (var i in map._layers) {
+			if (map._layers[i].getAttribution) {
+				this.addAttribution(map._layers[i].getAttribution());
+			}
+		}
+		
+		map
+		    .on('layeradd', this._onLayerAdd, this)
+		    .on('layerremove', this._onLayerRemove, this);
+
+		this._update();
+
+		return this._container;
+	},
+
+	onRemove: function (map) {
+		map
+		    .off('layeradd', this._onLayerAdd)
+		    .off('layerremove', this._onLayerRemove);
+
+	},
+
+	setPrefix: function (prefix) {
+		this.options.prefix = prefix;
+		this._update();
+		return this;
+	},
+
+	addAttribution: function (text) {
+		if (!text) { return; }
+
+		if (!this._attributions[text]) {
+			this._attributions[text] = 0;
+		}
+		this._attributions[text]++;
+
+		this._update();
+
+		return this;
+	},
+
+	removeAttribution: function (text) {
+		if (!text) { return; }
+
+		if (this._attributions[text]) {
+			this._attributions[text]--;
+			this._update();
+		}
+
+		return this;
+	},
+
+	_update: function () {
+		if (!this._map) { return; }
+
+		var attribs = [];
+
+		for (var i in this._attributions) {
+			if (this._attributions[i]) {
+				attribs.push(i);
+			}
+		}
+
+		var prefixAndAttribs = [];
+
+		if (this.options.prefix) {
+			prefixAndAttribs.push(this.options.prefix);
+		}
+		if (attribs.length) {
+			prefixAndAttribs.push(attribs.join(', '));
+		}
+
+		this._container.innerHTML = prefixAndAttribs.join(' | ');
+	},
+
+	_onLayerAdd: function (e) {
+		if (e.layer.getAttribution) {
+			this.addAttribution(e.layer.getAttribution());
+		}
+	},
+
+	_onLayerRemove: function (e) {
+		if (e.layer.getAttribution) {
+			this.removeAttribution(e.layer.getAttribution());
+		}
+	}
+});
+
+L.Map.mergeOptions({
+	attributionControl: true
+});
+
+L.Map.addInitHook(function () {
+	if (this.options.attributionControl) {
+		this.attributionControl = (new L.Control.Attribution()).addTo(this);
+	}
+});
+
+L.control.attribution = function (options) {
+	return new L.Control.Attribution(options);
+};
+
+
+/*
+ * L.Control.Scale is used for displaying metric/imperial scale on the map.
+ */
+
+L.Control.Scale = L.Control.extend({
+	options: {
+		position: 'bottomleft',
+		maxWidth: 100,
+		metric: true,
+		imperial: true,
+		updateWhenIdle: false
+	},
+
+	onAdd: function (map) {
+		this._map = map;
+
+		var className = 'leaflet-control-scale',
+		    container = L.DomUtil.create('div', className),
+		    options = this.options;
+
+		this._addScales(options, className, container);
+
+		map.on(options.updateWhenIdle ? 'moveend' : 'move', this._update, this);
+		map.whenReady(this._update, this);
+
+		return container;
+	},
+
+	onRemove: function (map) {
+		map.off(this.options.updateWhenIdle ? 'moveend' : 'move', this._update, this);
+	},
+
+	_addScales: function (options, className, container) {
+		if (options.metric) {
+			this._mScale = L.DomUtil.create('div', className + '-line', container);
+		}
+		if (options.imperial) {
+			this._iScale = L.DomUtil.create('div', className + '-line', container);
+		}
+	},
+
+	_update: function () {
+		var bounds = this._map.getBounds(),
+		    centerLat = bounds.getCenter().lat,
+		    halfWorldMeters = 6378137 * Math.PI * Math.cos(centerLat * Math.PI / 180),
+		    dist = halfWorldMeters * (bounds.getNorthEast().lng - bounds.getSouthWest().lng) / 180,
+
+		    size = this._map.getSize(),
+		    options = this.options,
+		    maxMeters = 0;
+
+		if (size.x > 0) {
+			maxMeters = dist * (options.maxWidth / size.x);
+		}
+
+		this._updateScales(options, maxMeters);
+	},
+
+	_updateScales: function (options, maxMeters) {
+		if (options.metric && maxMeters) {
+			this._updateMetric(maxMeters);
+		}
+
+		if (options.imperial && maxMeters) {
+			this._updateImperial(maxMeters);
+		}
+	},
+
+	_updateMetric: function (maxMeters) {
+		var meters = this._getRoundNum(maxMeters);
+
+		this._mScale.style.width = this._getScaleWidth(meters / maxMeters) + 'px';
+		this._mScale.innerHTML = meters < 1000 ? meters + ' m' : (meters / 1000) + ' km';
+	},
+
+	_updateImperial: function (maxMeters) {
+		var maxFeet = maxMeters * 3.2808399,
+		    scale = this._iScale,
+		    maxMiles, miles, feet;
+
+		if (maxFeet > 5280) {
+			maxMiles = maxFeet / 5280;
+			miles = this._getRoundNum(maxMiles);
+
+			scale.style.width = this._getScaleWidth(miles / maxMiles) + 'px';
+			scale.innerHTML = miles + ' mi';
+
+		} else {
+			feet = this._getRoundNum(maxFeet);
+
+			scale.style.width = this._getScaleWidth(feet / maxFeet) + 'px';
+			scale.innerHTML = feet + ' ft';
+		}
+	},
+
+	_getScaleWidth: function (ratio) {
+		return Math.round(this.options.maxWidth * ratio) - 10;
+	},
+
+	_getRoundNum: function (num) {
+		var pow10 = Math.pow(10, (Math.floor(num) + '').length - 1),
+		    d = num / pow10;
+
+		d = d >= 10 ? 10 : d >= 5 ? 5 : d >= 3 ? 3 : d >= 2 ? 2 : 1;
+
+		return pow10 * d;
+	}
+});
+
+L.control.scale = function (options) {
+	return new L.Control.Scale(options);
+};
+
+
+/*
+ * L.Control.Layers is a control to allow users to switch between different layers on the map.
+ */
+
+L.Control.Layers = L.Control.extend({
+	options: {
+		collapsed: true,
+		position: 'topright',
+		autoZIndex: true
+	},
+
+	initialize: function (baseLayers, overlays, options) {
+		L.setOptions(this, options);
+
+		this._layers = {};
+		this._lastZIndex = 0;
+		this._handlingClick = false;
+
+		for (var i in baseLayers) {
+			this._addLayer(baseLayers[i], i);
+		}
+
+		for (i in overlays) {
+			this._addLayer(overlays[i], i, true);
+		}
+	},
+
+	onAdd: function (map) {
+		this._initLayout();
+		this._update();
+
+		map
+		    .on('layeradd', this._onLayerChange, this)
+		    .on('layerremove', this._onLayerChange, this);
+
+		return this._container;
+	},
+
+	onRemove: function (map) {
+		map
+		    .off('layeradd', this._onLayerChange, this)
+		    .off('layerremove', this._onLayerChange, this);
+	},
+
+	addBaseLayer: function (layer, name) {
+		this._addLayer(layer, name);
+		this._update();
+		return this;
+	},
+
+	addOverlay: function (layer, name) {
+		this._addLayer(layer, name, true);
+		this._update();
+		return this;
+	},
+
+	removeLayer: function (layer) {
+		var id = L.stamp(layer);
+		delete this._layers[id];
+		this._update();
+		return this;
+	},
+
+	_initLayout: function () {
+		var className = 'leaflet-control-layers',
+		    container = this._container = L.DomUtil.create('div', className);
+
+		//Makes this work on IE10 Touch devices by stopping it from firing a mouseout event when the touch is released
+		container.setAttribute('aria-haspopup', true);
+
+		if (!L.Browser.touch) {
+			L.DomEvent
+				.disableClickPropagation(container)
+				.disableScrollPropagation(container);
+		} else {
+			L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation);
+		}
+
+		var form = this._form = L.DomUtil.create('form', className + '-list');
+
+		if (this.options.collapsed) {
+			if (!L.Browser.android) {
+				L.DomEvent
+				    .on(container, 'mouseover', this._expand, this)
+				    .on(container, 'mouseout', this._collapse, this);
+			}
+			var link = this._layersLink = L.DomUtil.create('a', className + '-toggle', container);
+			link.href = '#';
+			link.title = 'Layers';
+
+			if (L.Browser.touch) {
+				L.DomEvent
+				    .on(link, 'click', L.DomEvent.stop)
+				    .on(link, 'click', this._expand, this);
+			}
+			else {
+				L.DomEvent.on(link, 'focus', this._expand, this);
+			}
+			//Work around for Firefox android issue https://github.com/Leaflet/Leaflet/issues/2033
+			L.DomEvent.on(form, 'click', function () {
+				setTimeout(L.bind(this._onInputClick, this), 0);
+			}, this);
+
+			this._map.on('click', this._collapse, this);
+			// TODO keyboard accessibility
+		} else {
+			this._expand();
+		}
+
+		this._baseLayersList = L.DomUtil.create('div', className + '-base', form);
+		this._separator = L.DomUtil.create('div', className + '-separator', form);
+		this._overlaysList = L.DomUtil.create('div', className + '-overlays', form);
+
+		container.appendChild(form);
+	},
+
+	_addLayer: function (layer, name, overlay) {
+		var id = L.stamp(layer);
+
+		this._layers[id] = {
+			layer: layer,
+			name: name,
+			overlay: overlay
+		};
+
+		if (this.options.autoZIndex && layer.setZIndex) {
+			this._lastZIndex++;
+			layer.setZIndex(this._lastZIndex);
+		}
+	},
+
+	_update: function () {
+		if (!this._container) {
+			return;
+		}
+
+		this._baseLayersList.innerHTML = '';
+		this._overlaysList.innerHTML = '';
+
+		var baseLayersPresent = false,
+		    overlaysPresent = false,
+		    i, obj;
+
+		for (i in this._layers) {
+			obj = this._layers[i];
+			this._addItem(obj);
+			overlaysPresent = overlaysPresent || obj.overlay;
+			baseLayersPresent = baseLayersPresent || !obj.overlay;
+		}
+
+		this._separator.style.display = overlaysPresent && baseLayersPresent ? '' : 'none';
+	},
+
+	_onLayerChange: function (e) {
+		var obj = this._layers[L.stamp(e.layer)];
+
+		if (!obj) { return; }
+
+		if (!this._handlingClick) {
+			this._update();
+		}
+
+		var type = obj.overlay ?
+			(e.type === 'layeradd' ? 'overlayadd' : 'overlayremove') :
+			(e.type === 'layeradd' ? 'baselayerchange' : null);
+
+		if (type) {
+			this._map.fire(type, obj);
+		}
+	},
+
+	// IE7 bugs out if you create a radio dynamically, so you have to do it this hacky way (see http://bit.ly/PqYLBe)
+	_createRadioElement: function (name, checked) {
+
+		var radioHtml = '<input type="radio" class="leaflet-control-layers-selector" name="' + name + '"';
+		if (checked) {
+			radioHtml += ' checked="checked"';
+		}
+		radioHtml += '/>';
+
+		var radioFragment = document.createElement('div');
+		radioFragment.innerHTML = radioHtml;
+
+		return radioFragment.firstChild;
+	},
+
+	_addItem: function (obj) {
+		var label = document.createElement('label'),
+		    input,
+		    checked = this._map.hasLayer(obj.layer);
+
+		if (obj.overlay) {
+			input = document.createElement('input');
+			input.type = 'checkbox';
+			input.className = 'leaflet-control-layers-selector';
+			input.defaultChecked = checked;
+		} else {
+			input = this._createRadioElement('leaflet-base-layers', checked);
+		}
+
+		input.layerId = L.stamp(obj.layer);
+
+		L.DomEvent.on(input, 'click', this._onInputClick, this);
+
+		var name = document.createElement('span');
+		name.innerHTML = ' ' + obj.name;
+
+		label.appendChild(input);
+		label.appendChild(name);
+
+		var container = obj.overlay ? this._overlaysList : this._baseLayersList;
+		container.appendChild(label);
+
+		return label;
+	},
+
+	_onInputClick: function () {
+		var i, input, obj,
+		    inputs = this._form.getElementsByTagName('input'),
+		    inputsLen = inputs.length;
+
+		this._handlingClick = true;
+
+		for (i = 0; i < inputsLen; i++) {
+			input = inputs[i];
+			obj = this._layers[input.layerId];
+
+			if (input.checked && !this._map.hasLayer(obj.layer)) {
+				this._map.addLayer(obj.layer);
+
+			} else if (!input.checked && this._map.hasLayer(obj.layer)) {
+				this._map.removeLayer(obj.layer);
+			}
+		}
+
+		this._handlingClick = false;
+
+		this._refocusOnMap();
+	},
+
+	_expand: function () {
+		L.DomUtil.addClass(this._container, 'leaflet-control-layers-expanded');
+	},
+
+	_collapse: function () {
+		this._container.className = this._container.className.replace(' leaflet-control-layers-expanded', '');
+	}
+});
+
+L.control.layers = function (baseLayers, overlays, options) {
+	return new L.Control.Layers(baseLayers, overlays, options);
+};
+
+
+/*
+ * L.PosAnimation is used by Leaflet internally for pan animations.
+ */
+
+L.PosAnimation = L.Class.extend({
+	includes: L.Mixin.Events,
+
+	run: function (el, newPos, duration, easeLinearity) { // (HTMLElement, Point[, Number, Number])
+		this.stop();
+
+		this._el = el;
+		this._inProgress = true;
+		this._newPos = newPos;
+
+		this.fire('start');
+
+		el.style[L.DomUtil.TRANSITION] = 'all ' + (duration || 0.25) +
+		        's cubic-bezier(0,0,' + (easeLinearity || 0.5) + ',1)';
+
+		L.DomEvent.on(el, L.DomUtil.TRANSITION_END, this._onTransitionEnd, this);
+		L.DomUtil.setPosition(el, newPos);
+
+		// toggle reflow, Chrome flickers for some reason if you don't do this
+		L.Util.falseFn(el.offsetWidth);
+
+		// there's no native way to track value updates of transitioned properties, so we imitate this
+		this._stepTimer = setInterval(L.bind(this._onStep, this), 50);
+	},
+
+	stop: function () {
+		if (!this._inProgress) { return; }
+
+		// if we just removed the transition property, the element would jump to its final position,
+		// so we need to make it stay at the current position
+
+		L.DomUtil.setPosition(this._el, this._getPos());
+		this._onTransitionEnd();
+		L.Util.falseFn(this._el.offsetWidth); // force reflow in case we are about to start a new animation
+	},
+
+	_onStep: function () {
+		var stepPos = this._getPos();
+		if (!stepPos) {
+			this._onTransitionEnd();
+			return;
+		}
+		// jshint camelcase: false
+		// make L.DomUtil.getPosition return intermediate position value during animation
+		this._el._leaflet_pos = stepPos;
+
+		this.fire('step');
+	},
+
+	// you can't easily get intermediate values of properties animated with CSS3 Transitions,
+	// we need to parse computed style (in case of transform it returns matrix string)
+
+	_transformRe: /([-+]?(?:\d*\.)?\d+)\D*, ([-+]?(?:\d*\.)?\d+)\D*\)/,
+
+	_getPos: function () {
+		var left, top, matches,
+		    el = this._el,
+		    style = window.getComputedStyle(el);
+
+		if (L.Browser.any3d) {
+			matches = style[L.DomUtil.TRANSFORM].match(this._transformRe);
+			if (!matches) { return; }
+			left = parseFloat(matches[1]);
+			top  = parseFloat(matches[2]);
+		} else {
+			left = parseFloat(style.left);
+			top  = parseFloat(style.top);
+		}
+
+		return new L.Point(left, top, true);
+	},
+
+	_onTransitionEnd: function () {
+		L.DomEvent.off(this._el, L.DomUtil.TRANSITION_END, this._onTransitionEnd, this);
+
+		if (!this._inProgress) { return; }
+		this._inProgress = false;
+
+		this._el.style[L.DomUtil.TRANSITION] = '';
+
+		// jshint camelcase: false
+		// make sure L.DomUtil.getPosition returns the final position value after animation
+		this._el._leaflet_pos = this._newPos;
+
+		clearInterval(this._stepTimer);
+
+		this.fire('step').fire('end');
+	}
+
+});
+
+
+/*
+ * Extends L.Map to handle panning animations.
+ */
+
+L.Map.include({
+
+	setView: function (center, zoom, options) {
+
+		zoom = zoom === undefined ? this._zoom : this._limitZoom(zoom);
+		center = this._limitCenter(L.latLng(center), zoom, this.options.maxBounds);
+		options = options || {};
+
+		if (this._panAnim) {
+			this._panAnim.stop();
+		}
+
+		if (this._loaded && !options.reset && options !== true) {
+
+			if (options.animate !== undefined) {
+				options.zoom = L.extend({animate: options.animate}, options.zoom);
+				options.pan = L.extend({animate: options.animate}, options.pan);
+			}
+
+			// try animating pan or zoom
+			var animated = (this._zoom !== zoom) ?
+				this._tryAnimatedZoom && this._tryAnimatedZoom(center, zoom, options.zoom) :
+				this._tryAnimatedPan(center, options.pan);
+
+			if (animated) {
+				// prevent resize handler call, the view will refresh after animation anyway
+				clearTimeout(this._sizeTimer);
+				return this;
+			}
+		}
+
+		// animation didn't start, just reset the map view
+		this._resetView(center, zoom);
+
+		return this;
+	},
+
+	panBy: function (offset, options) {
+		offset = L.point(offset).round();
+		options = options || {};
+
+		if (!offset.x && !offset.y) {
+			return this;
+		}
+
+		if (!this._panAnim) {
+			this._panAnim = new L.PosAnimation();
+
+			this._panAnim.on({
+				'step': this._onPanTransitionStep,
+				'end': this._onPanTransitionEnd
+			}, this);
+		}
+
+		// don't fire movestart if animating inertia
+		if (!options.noMoveStart) {
+			this.fire('movestart');
+		}
+
+		// animate pan unless animate: false specified
+		if (options.animate !== false) {
+			L.DomUtil.addClass(this._mapPane, 'leaflet-pan-anim');
+
+			var newPos = this._getMapPanePos().subtract(offset);
+			this._panAnim.run(this._mapPane, newPos, options.duration || 0.25, options.easeLinearity);
+		} else {
+			this._rawPanBy(offset);
+			this.fire('move').fire('moveend');
+		}
+
+		return this;
+	},
+
+	_onPanTransitionStep: function () {
+		this.fire('move');
+	},
+
+	_onPanTransitionEnd: function () {
+		L.DomUtil.removeClass(this._mapPane, 'leaflet-pan-anim');
+		this.fire('moveend');
+	},
+
+	_tryAnimatedPan: function (center, options) {
+		// difference between the new and current centers in pixels
+		var offset = this._getCenterOffset(center)._floor();
+
+		// don't animate too far unless animate: true specified in options
+		if ((options && options.animate) !== true && !this.getSize().contains(offset)) { return false; }
+
+		this.panBy(offset, options);
+
+		return true;
+	}
+});
+
+
+/*
+ * L.PosAnimation fallback implementation that powers Leaflet pan animations
+ * in browsers that don't support CSS3 Transitions.
+ */
+
+L.PosAnimation = L.DomUtil.TRANSITION ? L.PosAnimation : L.PosAnimation.extend({
+
+	run: function (el, newPos, duration, easeLinearity) { // (HTMLElement, Point[, Number, Number])
+		this.stop();
+
+		this._el = el;
+		this._inProgress = true;
+		this._duration = duration || 0.25;
+		this._easeOutPower = 1 / Math.max(easeLinearity || 0.5, 0.2);
+
+		this._startPos = L.DomUtil.getPosition(el);
+		this._offset = newPos.subtract(this._startPos);
+		this._startTime = +new Date();
+
+		this.fire('start');
+
+		this._animate();
+	},
+
+	stop: function () {
+		if (!this._inProgress) { return; }
+
+		this._step();
+		this._complete();
+	},
+
+	_animate: function () {
+		// animation loop
+		this._animId = L.Util.requestAnimFrame(this._animate, this);
+		this._step();
+	},
+
+	_step: function () {
+		var elapsed = (+new Date()) - this._startTime,
+		    duration = this._duration * 1000;
+
+		if (elapsed < duration) {
+			this._runFrame(this._easeOut(elapsed / duration));
+		} else {
+			this._runFrame(1);
+			this._complete();
+		}
+	},
+
+	_runFrame: function (progress) {
+		var pos = this._startPos.add(this._offset.multiplyBy(progress));
+		L.DomUtil.setPosition(this._el, pos);
+
+		this.fire('step');
+	},
+
+	_complete: function () {
+		L.Util.cancelAnimFrame(this._animId);
+
+		this._inProgress = false;
+		this.fire('end');
+	},
+
+	_easeOut: function (t) {
+		return 1 - Math.pow(1 - t, this._easeOutPower);
+	}
+});
+
+
+/*
+ * Extends L.Map to handle zoom animations.
+ */
+
+L.Map.mergeOptions({
+	zoomAnimation: true,
+	zoomAnimationThreshold: 4
+});
+
+if (L.DomUtil.TRANSITION) {
+
+	L.Map.addInitHook(function () {
+		// don't animate on browsers without hardware-accelerated transitions or old Android/Opera
+		this._zoomAnimated = this.options.zoomAnimation && L.DomUtil.TRANSITION &&
+				L.Browser.any3d && !L.Browser.android23 && !L.Browser.mobileOpera;
+
+		// zoom transitions run with the same duration for all layers, so if one of transitionend events
+		// happens after starting zoom animation (propagating to the map pane), we know that it ended globally
+		if (this._zoomAnimated) {
+			L.DomEvent.on(this._mapPane, L.DomUtil.TRANSITION_END, this._catchTransitionEnd, this);
+		}
+	});
+}
+
+L.Map.include(!L.DomUtil.TRANSITION ? {} : {
+
+	_catchTransitionEnd: function (e) {
+		if (this._animatingZoom && e.propertyName.indexOf('transform') >= 0) {
+			this._onZoomTransitionEnd();
+		}
+	},
+
+	_nothingToAnimate: function () {
+		return !this._container.getElementsByClassName('leaflet-zoom-animated').length;
+	},
+
+	_tryAnimatedZoom: function (center, zoom, options) {
+
+		if (this._animatingZoom) { return true; }
+
+		options = options || {};
+
+		// don't animate if disabled, not supported or zoom difference is too large
+		if (!this._zoomAnimated || options.animate === false || this._nothingToAnimate() ||
+		        Math.abs(zoom - this._zoom) > this.options.zoomAnimationThreshold) { return false; }
+
+		// offset is the pixel coords of the zoom origin relative to the current center
+		var scale = this.getZoomScale(zoom),
+		    offset = this._getCenterOffset(center)._divideBy(1 - 1 / scale),
+			origin = this._getCenterLayerPoint()._add(offset);
+
+		// don't animate if the zoom origin isn't within one screen from the current center, unless forced
+		if (options.animate !== true && !this.getSize().contains(offset)) { return false; }
+
+		this
+		    .fire('movestart')
+		    .fire('zoomstart');
+
+		this._animateZoom(center, zoom, origin, scale, null, true);
+
+		return true;
+	},
+
+	_animateZoom: function (center, zoom, origin, scale, delta, backwards, forTouchZoom) {
+
+		if (!forTouchZoom) {
+			this._animatingZoom = true;
+		}
+
+		// put transform transition on all layers with leaflet-zoom-animated class
+		L.DomUtil.addClass(this._mapPane, 'leaflet-zoom-anim');
+
+		// remember what center/zoom to set after animation
+		this._animateToCenter = center;
+		this._animateToZoom = zoom;
+
+		// disable any dragging during animation
+		if (L.Draggable) {
+			L.Draggable._disabled = true;
+		}
+
+		L.Util.requestAnimFrame(function () {
+			this.fire('zoomanim', {
+				center: center,
+				zoom: zoom,
+				origin: origin,
+				scale: scale,
+				delta: delta,
+				backwards: backwards
+			});
+			// horrible hack to work around a Chrome bug https://github.com/Leaflet/Leaflet/issues/3689
+			setTimeout(L.bind(this._onZoomTransitionEnd, this), 250);
+		}, this);
+	},
+
+	_onZoomTransitionEnd: function () {
+		if (!this._animatingZoom) { return; }
+
+		this._animatingZoom = false;
+
+		L.DomUtil.removeClass(this._mapPane, 'leaflet-zoom-anim');
+
+		L.Util.requestAnimFrame(function () {
+			this._resetView(this._animateToCenter, this._animateToZoom, true, true);
+
+			if (L.Draggable) {
+				L.Draggable._disabled = false;
+			}
+		}, this);
+	}
+});
+
+
+/*
+	Zoom animation logic for L.TileLayer.
+*/
+
+L.TileLayer.include({
+	_animateZoom: function (e) {
+		if (!this._animating) {
+			this._animating = true;
+			this._prepareBgBuffer();
+		}
+
+		var bg = this._bgBuffer,
+		    transform = L.DomUtil.TRANSFORM,
+		    initialTransform = e.delta ? L.DomUtil.getTranslateString(e.delta) : bg.style[transform],
+		    scaleStr = L.DomUtil.getScaleString(e.scale, e.origin);
+
+		bg.style[transform] = e.backwards ?
+				scaleStr + ' ' + initialTransform :
+				initialTransform + ' ' + scaleStr;
+	},
+
+	_endZoomAnim: function () {
+		var front = this._tileContainer,
+		    bg = this._bgBuffer;
+
+		front.style.visibility = '';
+		front.parentNode.appendChild(front); // Bring to fore
+
+		// force reflow
+		L.Util.falseFn(bg.offsetWidth);
+
+		var zoom = this._map.getZoom();
+		if (zoom > this.options.maxZoom || zoom < this.options.minZoom) {
+			this._clearBgBuffer();
+		}
+
+		this._animating = false;
+	},
+
+	_clearBgBuffer: function () {
+		var map = this._map;
+
+		if (map && !map._animatingZoom && !map.touchZoom._zooming) {
+			this._bgBuffer.innerHTML = '';
+			this._bgBuffer.style[L.DomUtil.TRANSFORM] = '';
+		}
+	},
+
+	_prepareBgBuffer: function () {
+
+		var front = this._tileContainer,
+		    bg = this._bgBuffer;
+
+		// if foreground layer doesn't have many tiles but bg layer does,
+		// keep the existing bg layer and just zoom it some more
+
+		var bgLoaded = this._getLoadedTilesPercentage(bg),
+		    frontLoaded = this._getLoadedTilesPercentage(front);
+
+		if (bg && bgLoaded > 0.5 && frontLoaded < 0.5) {
+
+			front.style.visibility = 'hidden';
+			this._stopLoadingImages(front);
+			return;
+		}
+
+		// prepare the buffer to become the front tile pane
+		bg.style.visibility = 'hidden';
+		bg.style[L.DomUtil.TRANSFORM] = '';
+
+		// switch out the current layer to be the new bg layer (and vice-versa)
+		this._tileContainer = bg;
+		bg = this._bgBuffer = front;
+
+		this._stopLoadingImages(bg);
+
+		//prevent bg buffer from clearing right after zoom
+		clearTimeout(this._clearBgBufferTimer);
+	},
+
+	_getLoadedTilesPercentage: function (container) {
+		var tiles = container.getElementsByTagName('img'),
+		    i, len, count = 0;
+
+		for (i = 0, len = tiles.length; i < len; i++) {
+			if (tiles[i].complete) {
+				count++;
+			}
+		}
+		return count / len;
+	},
+
+	// stops loading all tiles in the background layer
+	_stopLoadingImages: function (container) {
+		var tiles = Array.prototype.slice.call(container.getElementsByTagName('img')),
+		    i, len, tile;
+
+		for (i = 0, len = tiles.length; i < len; i++) {
+			tile = tiles[i];
+
+			if (!tile.complete) {
+				tile.onload = L.Util.falseFn;
+				tile.onerror = L.Util.falseFn;
+				tile.src = L.Util.emptyImageUrl;
+
+				tile.parentNode.removeChild(tile);
+			}
+		}
+	}
+});
+
+
+/*
+ * Provides L.Map with convenient shortcuts for using browser geolocation features.
+ */
+
+L.Map.include({
+	_defaultLocateOptions: {
+		watch: false,
+		setView: false,
+		maxZoom: Infinity,
+		timeout: 10000,
+		maximumAge: 0,
+		enableHighAccuracy: false
+	},
+
+	locate: function (/*Object*/ options) {
+
+		options = this._locateOptions = L.extend(this._defaultLocateOptions, options);
+
+		if (!navigator.geolocation) {
+			this._handleGeolocationError({
+				code: 0,
+				message: 'Geolocation not supported.'
+			});
+			return this;
+		}
+
+		var onResponse = L.bind(this._handleGeolocationResponse, this),
+			onError = L.bind(this._handleGeolocationError, this);
+
+		if (options.watch) {
+			this._locationWatchId =
+			        navigator.geolocation.watchPosition(onResponse, onError, options);
+		} else {
+			navigator.geolocation.getCurrentPosition(onResponse, onError, options);
+		}
+		return this;
+	},
+
+	stopLocate: function () {
+		if (navigator.geolocation) {
+			navigator.geolocation.clearWatch(this._locationWatchId);
+		}
+		if (this._locateOptions) {
+			this._locateOptions.setView = false;
+		}
+		return this;
+	},
+
+	_handleGeolocationError: function (error) {
+		var c = error.code,
+		    message = error.message ||
+		            (c === 1 ? 'permission denied' :
+		            (c === 2 ? 'position unavailable' : 'timeout'));
+
+		if (this._locateOptions.setView && !this._loaded) {
+			this.fitWorld();
+		}
+
+		this.fire('locationerror', {
+			code: c,
+			message: 'Geolocation error: ' + message + '.'
+		});
+	},
+
+	_handleGeolocationResponse: function (pos) {
+		var lat = pos.coords.latitude,
+		    lng = pos.coords.longitude,
+		    latlng = new L.LatLng(lat, lng),
+
+		    latAccuracy = 180 * pos.coords.accuracy / 40075017,
+		    lngAccuracy = latAccuracy / Math.cos(L.LatLng.DEG_TO_RAD * lat),
+
+		    bounds = L.latLngBounds(
+		            [lat - latAccuracy, lng - lngAccuracy],
+		            [lat + latAccuracy, lng + lngAccuracy]),
+
+		    options = this._locateOptions;
+
+		if (options.setView) {
+			var zoom = Math.min(this.getBoundsZoom(bounds), options.maxZoom);
+			this.setView(latlng, zoom);
+		}
+
+		var data = {
+			latlng: latlng,
+			bounds: bounds,
+			timestamp: pos.timestamp
+		};
+
+		for (var i in pos.coords) {
+			if (typeof pos.coords[i] === 'number') {
+				data[i] = pos.coords[i];
+			}
+		}
+
+		this.fire('locationfound', data);
+	}
+});
+
+
+}(window, document));
+(function(window, document, undefined) {
+
+"use strict";
+
+L.Toolbar = L.Class.extend({
+	statics: {
+		baseClass: 'leaflet-toolbar'
+	},
+
+	includes: L.Mixin.Events,
+
+	options: {
+		className: '',
+		filter: function() { return true; },
+		actions: []
+	},
+
+	initialize: function(options) {
+		L.setOptions(this, options);
+		this._toolbar_type = this.constructor._toolbar_class_id;
+	},
+
+	addTo: function(map) {
+		this._arguments = [].slice.call(arguments);
+
+		map.addLayer(this);
+
+		return this;
+	},
+
+	onAdd: function(map) {
+		var currentToolbar = map._toolbars[this._toolbar_type];
+
+		if (this._calculateDepth() === 0) {
+			if (currentToolbar) { map.removeLayer(currentToolbar); }
+			map._toolbars[this._toolbar_type] = this;
+		}
+	},
+
+	onRemove: function(map) {
+		/* 
+		 * TODO: Cleanup event listeners. 
+		 * For some reason, this throws:
+		 * "Uncaught TypeError: Cannot read property 'dragging' of null"
+		 * on this._marker when a toolbar icon is clicked.
+		 */
+		// for (var i = 0, l = this._disabledEvents.length; i < l; i++) {
+		// 	L.DomEvent.off(this._ul, this._disabledEvents[i], L.DomEvent.stopPropagation);
+		// }
+
+		if (this._calculateDepth() === 0) {
+			delete map._toolbars[this._toolbar_type];
+		}
+	},
+
+	appendToContainer: function(container) {
+		var baseClass = this.constructor.baseClass + '-' + this._calculateDepth(),
+			className = baseClass + ' ' + this.options.className,
+			Action, action,
+			i, j, l, m;
+
+		this._container = container;
+		this._ul = L.DomUtil.create('ul', className, container);
+
+		/* Ensure that clicks, drags, etc. don't bubble up to the map. */
+		this._disabledEvents = ['click', 'mousemove', 'dblclick'];
+
+		for (j = 0, m = this._disabledEvents.length; j < m; j++) {
+			L.DomEvent.on(this._ul, this._disabledEvents[j], L.DomEvent.stopPropagation);
+		}
+
+		/* Instantiate each toolbar action and add its corresponding toolbar icon. */
+		for (i = 0, l = this.options.actions.length; i < l; i++) {
+			Action = this._getActionConstructor(this.options.actions[i]);
+
+			action = new Action();
+			action._createIcon(this, this._ul, this._arguments);
+		}
+	},
+
+	_getActionConstructor: function(Action) {
+		var args = this._arguments,
+			toolbar = this;
+
+		return Action.extend({
+			initialize: function() {
+				Action.prototype.initialize.apply(this, args);
+			},
+			enable: function() {
+				/* Ensure that only one action in a toolbar will be active at a time. */
+				if (toolbar._active) { toolbar._active.disable(); }
+				toolbar._active = this;
+
+				Action.prototype.enable.call(this);
+			}
+		});
+	},
+
+	/* Used to hide subToolbars without removing them from the map. */
+	_hide: function() {
+		this._ul.style.display = 'none';
+	},
+
+	/* Used to show subToolbars without removing them from the map. */
+	_show: function() {
+		this._ul.style.display = 'block';
+	},
+
+	_calculateDepth: function() {
+		var depth = 0,
+			toolbar = this.parentToolbar;
+
+		while (toolbar) {
+			depth += 1;
+			toolbar = toolbar.parentToolbar;
+		}
+
+		return depth;
+	}
+});
+
+L.toolbar = {};
+
+var toolbar_class_id = 0;
+
+L.Toolbar.extend = function extend(props) {
+	var statics = L.extend({}, props.statics, {
+		"_toolbar_class_id": toolbar_class_id
+	});
+
+	toolbar_class_id += 1;
+	L.extend(props, { statics: statics });
+
+	return L.Class.extend.call(this, props);
+};
+
+L.Map.addInitHook(function() {
+	this._toolbars = {};
+});
+
+L.ToolbarAction = L.Handler.extend({
+	statics: {
+		baseClass: 'leaflet-toolbar-icon'
+	},
+
+	options: {
+		toolbarIcon: {
+			html: '',
+			className: '',
+			tooltip: ''
+		},
+		subToolbar: new L.Toolbar()
+	},
+
+	initialize: function(options) {
+		var defaultIconOptions = L.ToolbarAction.prototype.options.toolbarIcon;
+
+		L.setOptions(this, options);
+		this.options.toolbarIcon = L.extend({}, defaultIconOptions, this.options.toolbarIcon);
+	},
+
+	enable: function() {
+		if (this._enabled) { return; }
+		this._enabled = true;
+
+		if (this.addHooks) { this.addHooks(); }
+	},
+
+	disable: function() {
+		if (!this._enabled) { return; }
+		this._enabled = false;
+
+		if (this.removeHooks) { this.removeHooks(); }
+	},
+
+	_createIcon: function(toolbar, container, args) {
+		var iconOptions = this.options.toolbarIcon;
+
+		this.toolbar = toolbar;
+		this._icon = L.DomUtil.create('li', '', container);
+		this._link = L.DomUtil.create('a', '', this._icon);
+
+		this._link.innerHTML = iconOptions.html;
+		this._link.setAttribute('href', '#');
+		this._link.setAttribute('title', iconOptions.tooltip);
+
+		L.DomUtil.addClass(this._link, this.constructor.baseClass);
+		if (iconOptions.className) {
+			L.DomUtil.addClass(this._link, iconOptions.className);
+		}
+
+		L.DomEvent.on(this._link, 'click', this.enable, this);
+
+		/* Add secondary toolbar */
+		this._addSubToolbar(toolbar, this._icon, args);
+	},
+
+	_addSubToolbar: function(toolbar, container, args) {
+		var subToolbar = this.options.subToolbar,
+			addHooks = this.addHooks,
+			removeHooks = this.removeHooks;
+
+		/* For calculating the nesting depth. */
+		subToolbar.parentToolbar = toolbar;
+
+		if (subToolbar.options.actions.length > 0) {
+			/* Make a copy of args so as not to pollute the args array used by other actions. */
+			args = [].slice.call(args);
+			args.push(this);
+
+			subToolbar.addTo.apply(subToolbar, args);
+			subToolbar.appendToContainer(container);
+
+			this.addHooks = function(map) {
+				if (typeof addHooks === 'function') { addHooks.call(this, map); }
+				subToolbar._show();
+			};
+
+			this.removeHooks = function(map) {
+				if (typeof removeHooks === 'function') { removeHooks.call(this, map); }
+				subToolbar._hide();
+			};
+		}
+	}
+});
+
+L.toolbarAction = function toolbarAction(options) {
+	return new L.ToolbarAction(options);
+};
+
+L.ToolbarAction.extendOptions = function(options) {
+	return this.extend({ options: options });
+};
+
+L.Toolbar.Control = L.Toolbar.extend({
+	statics: {
+		baseClass: 'leaflet-control-toolbar ' + L.Toolbar.baseClass
+	},
+
+	initialize: function(options) {
+		L.Toolbar.prototype.initialize.call(this, options);
+
+		this._control = new L.Control.Toolbar(this.options);
+	},
+
+	onAdd: function(map) {
+		this._control.addTo(map);
+
+		L.Toolbar.prototype.onAdd.call(this, map);
+
+		this.appendToContainer(this._control.getContainer());
+	},
+
+	onRemove: function(map) {
+		L.Toolbar.prototype.onRemove.call(this, map);
+		this._control.removeFrom(map);
+	}
+});
+
+L.Control.Toolbar = L.Control.extend({
+	onAdd: function() {
+		return L.DomUtil.create('div', '');
+	}
+});
+
+L.toolbar.control = function(options) {
+    return new L.Toolbar.Control(options);
+};
+
+// A convenience class for built-in popup toolbars.
+
+L.Toolbar.Popup = L.Toolbar.extend({
+	statics: {
+		baseClass: 'leaflet-popup-toolbar ' + L.Toolbar.baseClass
+	},
+
+	options: {
+		anchor: [0, 0]
+	},
+
+	initialize: function(latlng, options) {
+		L.Toolbar.prototype.initialize.call(this, options);
+
+		/* 
+		 * Developers can't pass a DivIcon in the options for L.Toolbar.Popup
+		 * (the use of DivIcons is an implementation detail which may change).
+		 */
+		this._marker = new L.Marker(latlng, {
+			icon : new L.DivIcon({
+				className: this.options.className,
+				iconAnchor: [0, 0]
+			})
+		});
+	},
+
+	onAdd: function(map) {
+		this._map = map;
+		this._marker.addTo(map);
+
+		L.Toolbar.prototype.onAdd.call(this, map);
+
+		this.appendToContainer(this._marker._icon);
+
+		this._setStyles();
+	},
+
+	onRemove: function(map) {
+		map.removeLayer(this._marker);
+
+		L.Toolbar.prototype.onRemove.call(this, map);
+
+		delete this._map;
+	},
+
+	setLatLng: function(latlng) {
+		this._marker.setLatLng(latlng);
+
+		return this;
+	},
+
+	_setStyles: function() {
+		var container = this._container,
+			toolbar = this._ul,
+			anchor = L.point(this.options.anchor),
+			icons = toolbar.querySelectorAll('.leaflet-toolbar-icon'),
+			buttonHeights = [],
+			toolbarWidth = 0,
+			toolbarHeight,
+			tipSize,
+			tipAnchor;
+
+		/* Calculate the dimensions of the toolbar. */
+		for (var i = 0, l = icons.length; i < l; i++) {
+			if (icons[i].parentNode.parentNode === toolbar) {
+				buttonHeights.push(parseInt(L.DomUtil.getStyle(icons[i], 'height'), 10));
+				toolbarWidth += Math.ceil(parseFloat(L.DomUtil.getStyle(icons[i], 'width')));
+			}
+		}
+		toolbar.style.width = toolbarWidth + 'px';
+
+		/* Create and place the toolbar tip. */
+		this._tipContainer = L.DomUtil.create('div', 'leaflet-toolbar-tip-container', container);
+		this._tipContainer.style.width = toolbarWidth + 'px';
+
+		this._tip = L.DomUtil.create('div', 'leaflet-toolbar-tip', this._tipContainer);
+
+		/* Set the tipAnchor point. */
+		toolbarHeight = Math.max.apply(undefined, buttonHeights);
+		tipSize = parseInt(L.DomUtil.getStyle(this._tip, 'width'), 10);
+		tipAnchor = new L.Point(toolbarWidth/2, toolbarHeight + 0.7071*tipSize);
+
+		/* The anchor option allows app developers to adjust the toolbar's position. */
+		container.style.marginLeft = (anchor.x - tipAnchor.x) + 'px';
+		container.style.marginTop = (anchor.y - tipAnchor.y) + 'px';
+	}
+});
+
+L.toolbar.popup = function(options) {
+    return new L.Toolbar.Popup(options);
+};
+
+
+})(window, document);
+L.DomUtil = L.extend(L.DomUtil, {
+	getMatrixString: function(m) {
+		var is3d = L.Browser.webkit3d || L.Browser.gecko3d,
+
+			/* 
+		     * Since matrix3d takes a 4*4 matrix, we add in an empty row and column, which act as the identity on the z-axis.
+		     * See:
+		     *     http://franklinta.com/2014/09/08/computing-css-matrix3d-transforms/
+		     *     https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function#M.C3.B6bius'_homogeneous_coordinates_in_projective_geometry
+		     */
+			matrix = [
+				m[0], m[3], 0, m[6],
+				m[1], m[4], 0, m[7],
+				   0,    0, 1,    0,
+				m[2], m[5], 0, m[8]
+			],
+
+			str = is3d ? 'matrix3d(' + matrix.join(',') + ')' : '';
+
+		if (!is3d) {
+			console.log('Your browser must support 3D CSS transforms in order to use DistortableImageOverlay.');
+		}
+
+		return str;
+	},
+
+	getRotateString: function(angle, units) {
+		var is3d = L.Browser.webkit3d,
+			open = 'rotate' + (is3d ? '3d' : '') + '(',
+			rotateString = (is3d ? '0, 0, 1, ' : '') + angle + units;
+			
+		return open + rotateString + ')';
+	}
+});
+
+L.Map.include({
+	_newLayerPointToLatLng: function(point, newZoom, newCenter) {
+		var topLeft = L.Map.prototype._getNewTopLeftPoint.call(this, newCenter, newZoom)
+				.add(L.Map.prototype._getMapPanePos.call(this));
+		return this.unproject(point.add(topLeft), newZoom);
+	}
+});
+L.MatrixUtil = {
+
+	// Compute the adjugate of m
+	adj: function(m) { 
+		return [
+			m[4]*m[8]-m[5]*m[7], m[2]*m[7]-m[1]*m[8], m[1]*m[5]-m[2]*m[4],
+			m[5]*m[6]-m[3]*m[8], m[0]*m[8]-m[2]*m[6], m[2]*m[3]-m[0]*m[5],
+			m[3]*m[7]-m[4]*m[6], m[1]*m[6]-m[0]*m[7], m[0]*m[4]-m[1]*m[3]
+		];
+	},
+
+	// multiply two 3*3 matrices
+	multmm: function(a, b) { 
+		var c = [],
+			i;
+
+		for (i = 0; i < 3; i++) {
+			for (var j = 0; j < 3; j++) {
+				var cij = 0;
+				for (var k = 0; k < 3; k++) {
+					cij += a[3*i + k]*b[3*k + j];
+				}
+				c[3*i + j] = cij;
+			}
+		}
+		return c;
+	},
+
+	// multiply a 3*3 matrix and a 3-vector
+	multmv: function(m, v) { 
+		return [
+			m[0]*v[0] + m[1]*v[1] + m[2]*v[2],
+			m[3]*v[0] + m[4]*v[1] + m[5]*v[2],
+			m[6]*v[0] + m[7]*v[1] + m[8]*v[2]
+		];
+	},
+
+	// multiply a scalar and a 3*3 matrix
+	multsm: function(s, m) {
+		var matrix = [];
+
+		for (var i = 0, l = m.length; i < l; i++) {
+			matrix.push(s*m[i]);
+		}
+
+		return matrix;
+	},
+
+	basisToPoints: function(x1, y1, x2, y2, x3, y3, x4, y4) {
+		var m = [
+				x1, x2, x3,
+				y1, y2, y3,
+				1,  1,  1
+			],
+			v = L.MatrixUtil.multmv(L.MatrixUtil.adj(m), [x4, y4, 1]);
+
+		return L.MatrixUtil.multmm(m, [
+			v[0], 0, 0,
+			0, v[1], 0,
+			0, 0, v[2]
+		]);
+	},
+
+
+	project: function(m, x, y) {
+		var v = L.MatrixUtil.multmv(m, [x, y, 1]);
+		return [v[0]/v[2], v[1]/v[2]];
+	},
+
+	general2DProjection: function(
+	x1s, y1s, x1d, y1d,
+	x2s, y2s, x2d, y2d,
+	x3s, y3s, x3d, y3d,
+	x4s, y4s, x4d, y4d
+	) {
+		var s = L.MatrixUtil.basisToPoints(x1s, y1s, x2s, y2s, x3s, y3s, x4s, y4s),
+			d = L.MatrixUtil.basisToPoints(x1d, y1d, x2d, y2d, x3d, y3d, x4d, y4d),
+			m = L.MatrixUtil.multmm(d, L.MatrixUtil.adj(s));
+
+		/* 
+		 *	Normalize to the unique matrix with m[8] == 1. 
+		 * 	See: http://franklinta.com/2014/09/08/computing-css-matrix3d-transforms/
+		 */
+		return L.MatrixUtil.multsm(1/m[8], m);
+	}
+};
+L.EditHandle = L.Marker.extend({
+	initialize: function(overlay, corner, options) {
+		var markerOptions,
+			latlng = overlay._corners[corner];
+
+		L.setOptions(this, options);
+
+		this._handled = overlay;
+		this._corner = corner;
+
+		markerOptions = {
+			draggable: true,
+			zIndexOffset: 10
+		};
+
+		if (options && options.hasOwnProperty('draggable')) {
+			markerOptions.draggable = options.draggable;
+		}
+
+		L.Marker.prototype.initialize.call(this, latlng, markerOptions);
+	},
+
+	onAdd: function(map) {
+		L.Marker.prototype.onAdd.call(this, map);
+		this._bindListeners();
+
+		this.updateHandle();
+	},
+
+	onRemove: function(map) {
+		this._unbindListeners();
+		L.Marker.prototype.onRemove.call(this, map);
+	},
+
+	_onHandleDragStart: function() {
+		this._handled.fire('editstart');
+	},
+
+	_onHandleDragEnd: function() {
+		this._fireEdit();
+	},
+
+	_fireEdit: function() {
+		this._handled.edited = true;
+		this._handled.fire('edit');
+	},
+
+	_bindListeners: function() {
+		this.on({
+			'dragstart': this._onHandleDragStart,
+			'drag': this._onHandleDrag,
+			'dragend': this._onHandleDragEnd
+		}, this);
+
+		this._handled._map.on('zoomend', this.updateHandle, this);
+
+		this._handled.on('update', this.updateHandle, this);
+	},
+
+	_unbindListeners: function() {
+		this.off({
+			'dragstart': this._onHandleDragStart,
+			'drag': this._onHandleDrag,
+			'dragend': this._onHandleDragEnd
+		}, this);
+
+		this._handled._map.off('zoomend', this.updateHandle, this);
+		this._handled.off('update', this.updateHandle, this);
+	}
+});
+
+L.LockHandle = L.EditHandle.extend({
+	options: {
+		TYPE: 'lock',
+		icon: new L.Icon({ 
+			iconUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA3ElEQVR4nM3TMU4CQRSH8d8qJ6AgFia2xksYkj0AhVa2JhRGbfEENJyA3oIjUHkFG42tHUE08QAGC8YwjG8LQsOrdnfm+/Y/7+1WdV3bpQ52ogPBJW6CfUcY4aRcaGXX1xijwjEeMvgJp7jAOd6jBKMEwwDDApYS3DYdoY+f7H6AlwyGt/SiUDDBVSFpF3AXsybBn+TO//qK4EjQEU+hjfvg+YagY9Wws2ijdWMbBdMCfk1pysZuJMy/g48C7mKOTzziEEssmhL0UornDGY9nW+rUU9yQbV3P9PW9QuPNylUonujQAAAAABJRU5ErkJggg%3D%3D',
+			iconSize: [16, 16],
+			iconAnchor: [8, 8]}
+		)
+	},
+
+	/* cannot be dragged */
+	_onHandleDrag: function() {
+	},
+
+	updateHandle: function() {
+		this.setLatLng(this._handled._corners[this._corner]);
+	}
+
+});
+
+L.DistortHandle = L.EditHandle.extend({
+	options: {
+		TYPE: 'distort',
+		icon: new L.Icon({
+			iconUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABH0lEQVR4nKXTvy5EURDH8c8V/SJBr9HzBFiN/7wAzWolIoqloCBRiJ7GvoBd/0IhnsB6hO0pWE+wintOcnKzZMUkN5Mzmd/3zNyZk5XLZf+xvi6xUeyjiU984AVVDBeT+wvnZVxioBCfDN8O1nHbrYIl1IP4HjMYxBBm8RDO11gsAkZQQ4Y9LOAZ7dDGE+ZwEHJqsZ0IqISb73Bc7DOxQzyGSiopYC34s1/E0U5TTQSMBf/aA6CZaiIgC77TAyDmZCmgFfxED4CY00oB9eC3egBsp5oIOMeXfJF2fxFXMS8f70UKeJNvWAcnaGAKJfl4p+XbdxRyNoJGVnhMK/JVLv1QQTtcdBMDxbfQwDg2sSofVUf+w65C2e+poFjBn+0bdEY280EXr3wAAAAASUVORK5CYII%3D',
+			iconSize: [16, 16],
+			iconAnchor: [8, 8]}
+		)
+	},
+
+	updateHandle: function() {
+		this.setLatLng(this._handled._corners[this._corner]);
+	},
+
+	_onHandleDrag: function() {
+		this._handled._updateCorner(this._corner, this.getLatLng());
+
+		this._handled.fire('update');
+	}
+});
+
+L.RotateHandle = L.EditHandle.extend({
+	options: {
+		TYPE: 'rotate',
+		icon: new L.Icon({ 
+			iconUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABG0lEQVR4nKXSvS5EURTF8d8V/SBBr9F7A4zGNy9AQytRKIaCgkQhehrzAmZ8hUI8wYxHmJ7CjCcYxT0nublmJlecZueerPXf69y9k0a57D9nqMfdJI7QRBtfaKCC8bw4ySVYww1G+jRsYwsPvRKsohbMT5jHKMawgOfwfYeVPGACVSQ4xDLe0AldX7GI46CpxudEwE7o/IizPvHhBC8hyU4WsBnq5QBzPBdZTwRMhfpeANDMeiIgCbVbABA1SRbQCnWmACBqWllALdS9AoD9rCcCrvAtXaSDAeYKlqTjvc4CPqQb1sU56phFSTreOen2nQbNdvD8WuV16SqX+iTohEb38WI4J6hjGrvYkI6qK/1htyH2Z9aQT/Dn8wMV5jnxJDAcbAAAAABJRU5ErkJggg%3D%3D',
+			iconSize: [16, 16],
+			iconAnchor: [8, 8]}
+		)
+	},
+
+	_onHandleDrag: function() {
+		var overlay = this._handled,
+			formerLatLng = this._handled._corners[this._corner],
+			newLatLng = this.getLatLng(),
+
+			angle = this._calculateAngle(formerLatLng, newLatLng),
+			scale = this._calculateScalingFactor(formerLatLng, newLatLng);
+
+		overlay.editing._rotateBy(angle);
+		overlay.editing._scaleBy(scale);
+
+		overlay.fire('update');
+	},
+
+	updateHandle: function() {
+		this.setLatLng(this._handled._corners[this._corner]);
+	},
+
+	/* Takes two latlngs and calculates the angle between them. */
+	_calculateAngle: function(latlngA, latlngB) {
+		var map = this._handled._map,
+
+			centerPoint = map.latLngToLayerPoint(this._handled.getCenter()),
+			formerPoint = map.latLngToLayerPoint(latlngA),
+			newPoint = map.latLngToLayerPoint(latlngB),
+
+			initialAngle = Math.atan2(centerPoint.y - formerPoint.y, centerPoint.x - formerPoint.x),
+			newAngle = Math.atan2(centerPoint.y - newPoint.y, centerPoint.x - newPoint.x);
+
+		return newAngle - initialAngle;
+	},
+
+	/* Takes two latlngs and calculates the scaling difference. */
+	_calculateScalingFactor: function(latlngA, latlngB) {
+		var map = this._handled._map,
+
+			centerPoint = map.latLngToLayerPoint(this._handled.getCenter()),
+			formerPoint = map.latLngToLayerPoint(latlngA),
+			newPoint = map.latLngToLayerPoint(latlngB),
+
+			formerRadiusSquared = this._d2(centerPoint, formerPoint),
+			newRadiusSquared = this._d2(centerPoint, newPoint);
+
+		return Math.sqrt(newRadiusSquared / formerRadiusSquared);
+	},
+
+	/* Distance between two points in cartesian space, squared (distance formula). */
+	_d2: function(a, b) {
+		var dx = a.x - b.x,
+			dy = a.y - b.y;
+
+		return Math.pow(dx, 2) + Math.pow(dy, 2);
+	}
+});
+
+L.DistortableImageOverlay = L.ImageOverlay.extend({
+	include: L.Mixin.Events,
+
+	options: {
+		alt: '',
+		height: 200
+	},
+
+	initialize: function(url, options) {
+		this._url = url;
+		this._rotation = this.options.rotation;
+
+		L.setOptions(this, options);
+	},
+
+	onAdd: function(map) {
+		/* Copied from L.ImageOverlay */
+		this._map = map;
+
+		if (!this._image) { this._initImage(); }
+		if (!this._events) { this._initEvents(); }
+
+		map._panes.overlayPane.appendChild(this._image);
+
+		map.on('viewreset', this._reset, this);
+		/* End copied from L.ImageOverlay */
+
+		/* Use provided corners if available */
+		if (this.options.corners) { 
+			this._corners = this.options.corners; 
+			if (map.options.zoomAnimation && L.Browser.any3d) {
+				map.on('zoomanim', this._animateZoom, this);
+			}
+
+			/* This reset happens before image load; it allows 
+			 * us to place the image on the map earlier with 
+			 * "guessed" dimensions. */
+			this._reset();
+		}
+
+		/* Have to wait for the image to load because 
+		 * we need to access its width and height. */
+		L.DomEvent.on(this._image, 'load', function() {
+			this._initImageDimensions();
+			this._reset();
+			/* Initialize default corners if not already set */
+			if (!this._corners) { 
+				if (map.options.zoomAnimation && L.Browser.any3d) {
+					map.on('zoomanim', this._animateZoom, this);
+				}
+			}
+		}, this);		
+
+		this.fire('add');	
+	},
+
+	onRemove: function(map) {
+		this.fire('remove');
+
+		L.ImageOverlay.prototype.onRemove.call(this, map);
+	},
+
+	_initImage: function () {
+		L.ImageOverlay.prototype._initImage.call(this);
+
+		L.extend(this._image, {
+			alt: this.options.alt
+		});
+	},
+
+	_initImageDimensions: function() {
+		var map = this._map,
+
+			originalImageWidth = L.DomUtil.getStyle(this._image, 'width'),
+			originalImageHeight = L.DomUtil.getStyle(this._image, 'height'),
+
+			aspectRatio = parseInt(originalImageWidth) / parseInt(originalImageHeight),
+
+			imageHeight = this.options.height,
+			imageWidth = parseInt(aspectRatio*imageHeight),
+
+			center = map.latLngToContainerPoint(map.getCenter()),
+			offset = new L.Point(imageWidth, imageHeight).divideBy(2);
+
+		if (this.options.corners) { this._corners = this.options.corners; }
+		else {
+			this._corners = [
+				map.containerPointToLatLng(center.subtract(offset)),
+				map.containerPointToLatLng(center.add(new L.Point(offset.x, - offset.y))),
+				map.containerPointToLatLng(center.add(new L.Point(- offset.x, offset.y))),
+				map.containerPointToLatLng(center.add(offset))
+			];
+		}
+	},
+
+ 	_initEvents: function() {
+ 		this._events = [ 'click' ];
+
+ 		for (var i = 0, l = this._events.length; i < l; i++) {
+	 		L.DomEvent.on(this._image, this._events[i], this._fireMouseEvent, this);
+ 		}
+ 	},
+
+ 	/* See src/layer/vector/Path.SVG.js in the Leaflet source. */
+ 	_fireMouseEvent: function(event) {
+ 		if (!this.hasEventListeners(event.type)) { return; }
+
+		var map = this._map,
+			containerPoint = map.mouseEventToContainerPoint(event),
+			layerPoint = map.containerPointToLayerPoint(containerPoint),
+			latlng = map.layerPointToLatLng(layerPoint);
+
+		this.fire(event.type, {
+			latlng: latlng,
+			layerPoint: layerPoint,
+			containerPoint: containerPoint,
+			originalEvent: event
+		});
+ 	},
+
+	_updateCorner: function(corner, latlng) {
+		this._corners[corner] = latlng;
+		this._reset();
+	},
+
+	_reset: function() {
+		var map = this._map,
+			image = this._image,
+			latLngToLayerPoint = L.bind(map.latLngToLayerPoint, map),
+
+			transformMatrix = this._calculateProjectiveTransform(latLngToLayerPoint),
+			topLeft = latLngToLayerPoint(this._corners[0]),
+
+			warp = L.DomUtil.getMatrixString(transformMatrix),
+			translation = L.DomUtil.getTranslateString(topLeft);
+
+		/* See L.DomUtil.setPosition. Mainly for the purposes of L.Draggable. */
+		image._leaflet_pos = topLeft;
+
+		image.style[L.DomUtil.TRANSFORM] = [translation, warp].join(' ');
+
+		/* Set origin to the upper-left corner rather than the center of the image, which is the default. */
+		image.style[L.DomUtil.TRANSFORM + '-origin'] = "0 0 0";
+	},
+
+	/*
+	 * Calculates the transform string that will be correct *at the end* of zooming.
+	 * Leaflet then generates a CSS3 animation between the current transform and 
+	 *		 future transform which makes the transition appear smooth.
+	 */
+	_animateZoom: function(event) {
+		var map = this._map,
+			image = this._image,
+			latLngToNewLayerPoint = function(latlng) {
+				return map._latLngToNewLayerPoint(latlng, event.zoom, event.center);
+			},
+	
+			transformMatrix = this._calculateProjectiveTransform(latLngToNewLayerPoint),
+			topLeft = latLngToNewLayerPoint(this._corners[0]),
+	
+			warp = L.DomUtil.getMatrixString(transformMatrix),
+			translation = L.DomUtil.getTranslateString(topLeft);
+	
+		/* See L.DomUtil.setPosition. Mainly for the purposes of L.Draggable. */
+		image._leaflet_pos = topLeft;
+	
+		if (!L.Browser.gecko) {
+			image.style[L.DomUtil.TRANSFORM] = [translation, warp].join(' ');
+		}
+	},
+
+	getCorners: function() {
+		return this._corners;
+	},
+
+	/*
+	 * Calculates the centroid of the image.
+	 *		 See http://stackoverflow.com/questions/6149175/logical-question-given-corners-find-center-of-quadrilateral
+	 */
+	getCenter: function(ll2c, c2ll) {
+		var map = this._map,
+			latLngToCartesian = ll2c ? ll2c : map.latLngToLayerPoint,
+			cartesianToLatLng = c2ll ? c2ll: map.layerPointToLatLng,
+			nw = latLngToCartesian.call(map, this._corners[0]),
+			ne = latLngToCartesian.call(map, this._corners[1]),
+			se = latLngToCartesian.call(map, this._corners[2]),
+			sw = latLngToCartesian.call(map, this._corners[3]),
+
+			nmid = nw.add(ne.subtract(nw).divideBy(2)),
+			smid = sw.add(se.subtract(sw).divideBy(2));
+
+		return cartesianToLatLng.call(map, nmid.add(smid.subtract(nmid).divideBy(2)));
+	},
+
+	_calculateProjectiveTransform: function(latLngToCartesian) {
+		/* Setting reasonable but made-up image defaults 
+		 * allow us to place images on the map before 
+		 * they've finished downloading. */
+		var offset = latLngToCartesian(this._corners[0]),
+			w = this._image.offsetWidth || 500, 
+			h = this._image.offsetHeight || 375,
+			c = [],
+			j;
+		/* Convert corners to container points (i.e. cartesian coordinates). */
+		for (j = 0; j < this._corners.length; j++) {
+			c.push(latLngToCartesian(this._corners[j])._subtract(offset));
+		}
+		
+		/*
+		 * This matrix describes the action of the CSS transform on each corner of the image.
+		 * It maps from the coordinate system centered at the upper left corner of the image
+		 *		 to the region bounded by the latlngs in this._corners.
+		 * For example:
+		 *		 0, 0, c[0].x, c[0].y
+		 *		 says that the upper-left corner of the image maps to the first latlng in this._corners.
+		 */
+		return L.MatrixUtil.general2DProjection(
+			0, 0, c[0].x, c[0].y,
+			w, 0, c[1].x, c[1].y,
+			0, h, c[2].x, c[2].y,
+			w, h, c[3].x, c[3].y
+		);
+	}
+});
+
+L.DistortableImage = L.DistortableImage || {};
+
+var EditOverlayAction = L.ToolbarAction.extend({
+		initialize: function(map, overlay, options) {
+			this._overlay = overlay;
+			this._map = map;
+
+			L.ToolbarAction.prototype.initialize.call(this, options);
+		}
+	}),
+
+	ToggleTransparency = EditOverlayAction.extend({
+		options: { toolbarIcon: { 
+			html: '<span class="fa fa-adjust"></span>',
+			tooltip: 'Toggle Image Transparency',
+			title: 'Toggle Image Transparency'	
+		}},
+
+		addHooks: function() {
+			var editing = this._overlay.editing;
+
+			editing._toggleTransparency();
+			this.disable();
+		}
+	}),
+
+	ToggleOutline = EditOverlayAction.extend({
+		options: { toolbarIcon: { 
+			html: '<span class="fa fa-square-o"></span>',
+			tooltip: 'Toggle Image Outline',
+			title: 'Toggle Image Outline'
+		}},
+
+		addHooks: function() {
+			var editing = this._overlay.editing;
+
+			editing._toggleOutline();
+			this.disable();
+		}
+	}),
+
+	RemoveOverlay = EditOverlayAction.extend({
+		options: { toolbarIcon: { 
+			html: '<span class="fa fa-trash"></span>',
+			tooltip: 'Delete image',
+			title: 'Delete image'
+		}},
+
+		addHooks: function() {
+			var map = this._map;
+
+			map.removeLayer(this._overlay);
+			this._overlay.fire('delete');
+			this.disable();
+		}
+	}),
+
+	ToggleEditable = EditOverlayAction.extend({
+		options: { toolbarIcon: {
+			html: '<span class="fa fa-lock"></span>',
+			tooltip: 'Lock / Unlock editing',
+			title: 'Lock / Unlock editing'			
+		}},
+
+		addHooks: function() {
+			var editing = this._overlay.editing;
+
+			editing._toggleLock();
+			this.disable();
+		}
+	}),
+
+	ToggleRotateDistort = EditOverlayAction.extend({
+		initialize: function(map, overlay, options) {
+			var icon = overlay.editing._mode === 'rotate' ? 'image' : 'rotate-left';
+
+			options = options || {};
+			options.toolbarIcon = {
+				html: '<span class="fa fa-' + icon + '"></span>',
+				tooltip: 'Rotate',
+				title: 'Rotate'	
+			};
+
+			EditOverlayAction.prototype.initialize.call(this, map, overlay, options);
+		},
+
+		addHooks: function() {
+			var editing = this._overlay.editing;
+
+			editing._toggleRotateDistort();
+			this.disable();
+		}
+	});
+
+L.DistortableImage.EditToolbar = L.Toolbar.Popup.extend({
+	options: {
+		actions: [
+			ToggleTransparency,
+			RemoveOverlay,
+			ToggleOutline,
+			ToggleEditable,
+			ToggleRotateDistort
+		]
+	},
+
+	/* Remove the toolbar after each action. */
+	_getActionConstructor: function(Action) {
+		var A = Action.extend({
+			removeHooks: function() {
+				var map = this._map;
+
+				map.removeLayer(this.toolbar);
+			}
+		});
+
+		return L.Toolbar.prototype._getActionConstructor.call(this, A);
+	}
+});
+
+L.DistortableImage = L.DistortableImage || {};
+
+L.DistortableImage.Edit = L.Handler.extend({
+	options: {
+		opacity: 0.7,
+		outline: '1px solid red',
+		keymap: {
+			68: '_toggleRotateDistort', // d
+			73: '_toggleIsolate', // i
+			76: '_toggleLock', // l
+			79: '_toggleOutline', // o
+			82: '_toggleRotateDistort', // r
+			84: '_toggleTransparency', // t
+		}
+	},
+
+	initialize: function(overlay) {
+		this._overlay = overlay;
+
+		/* Interaction modes. */
+		this._mode = this._overlay.options.mode || 'distort';
+		this._transparent = false;
+		this._outlined = false;
+	},
+
+	/* Run on image seletion. */
+	addHooks: function() {
+		var overlay = this._overlay,
+			map = overlay._map,
+			i;
+
+		this._lockHandles = new L.LayerGroup();
+		for (i = 0; i < 4; i++) {
+			this._lockHandles.addLayer(new L.LockHandle(overlay, i, { draggable: false }));
+		}
+
+		this._distortHandles = new L.LayerGroup();
+		for (i = 0; i < 4; i++) {
+			this._distortHandles.addLayer(new L.DistortHandle(overlay, i));
+		}
+
+		this._rotateHandles = new L.LayerGroup();
+		for (i = 0; i < 4; i++) {
+			this._rotateHandles.addLayer(new L.RotateHandle(overlay, i));
+		}
+
+		this._handles = { 
+			'lock':		 this._lockHandles, 
+			'distort': this._distortHandles, 
+			'rotate':	this._rotateHandles
+		};
+
+		if (this._mode === 'lock') {
+			map.addLayer(this._lockHandles);
+		} else {
+			this._mode = 'distort';
+			map.addLayer(this._distortHandles);
+			this._enableDragging();
+		}
+
+		//overlay.on('click', this._showToolbar, this);
+		L.DomEvent.on(overlay, 'click', this._showToolbar, this);
+
+		/* Enable hotkeys. */
+		L.DomEvent.on(window, 'keydown', this._onKeyDown, this);
+
+		overlay.fire('select');
+	},
+
+	/* Run on image deseletion. */
+	removeHooks: function() {
+		var overlay = this._overlay,
+			map = overlay._map;
+
+		// L.DomEvent.off(window, 'keydown', this._onKeyDown, this);
+
+		overlay.off('click', this._showToolbar, this);
+
+		// First, check if dragging exists;
+		// it may be off due to locking
+		if (this.dragging) { this.dragging.disable(); }
+		delete this.dragging;
+
+		map.removeLayer(this._handles[this._mode]);
+
+ 		/* Disable hotkeys. */
+		L.DomEvent.off(window, 'keydown', this._onKeyDown, this);
+
+		overlay.fire('deselect');
+	},
+
+	_rotateBy: function(angle) {
+		var overlay = this._overlay,
+			map = overlay._map,
+			center = map.latLngToLayerPoint(overlay.getCenter()),
+			i, p, q;
+
+		for (i = 0; i < 4; i++) {
+			p = map.latLngToLayerPoint(overlay._corners[i]).subtract(center);
+			q = new L.Point(
+				Math.cos(angle)*p.x - Math.sin(angle)*p.y,
+				Math.sin(angle)*p.x + Math.cos(angle)*p.y
+			);
+			overlay._corners[i] = map.layerPointToLatLng(q.add(center));
+		}
+
+		overlay._reset();
+	},
+
+	_scaleBy: function(scale) {
+		var overlay = this._overlay,
+			map = overlay._map,
+			center = map.latLngToLayerPoint(overlay.getCenter()),
+			i, p;
+
+		for (i = 0; i < 4; i++) {
+			p = map.latLngToLayerPoint(overlay._corners[i])
+				.subtract(center)
+				.multiplyBy(scale)
+				.add(center);
+			overlay._corners[i] = map.layerPointToLatLng(p);
+		}
+
+		overlay._reset();
+	},
+
+	_enableDragging: function() {
+		var overlay = this._overlay,
+			map = overlay._map;
+
+		this.dragging = new L.Draggable(overlay._image);
+		this.dragging.enable();
+
+		/* Hide toolbars while dragging; click will re-show it */
+		this.dragging.on('dragstart', this._hideToolbar, this);
+
+		/* 
+		 * Adjust default behavior of L.Draggable.
+		 * By default, L.Draggable overwrites the CSS3 distort transform 
+		 * that we want when it calls L.DomUtil.setPosition.
+		 */
+		this.dragging._updatePosition = function() {
+			var delta = this._newPos.subtract(map.latLngToLayerPoint(overlay._corners[0])),
+				currentPoint, i;
+
+			this.fire('predrag');
+
+			for (i = 0; i < 4; i++) {
+				currentPoint = map.latLngToLayerPoint(overlay._corners[i]);
+				overlay._corners[i] = map.layerPointToLatLng(currentPoint.add(delta));
+			}
+			overlay._reset();
+			overlay.fire('update');
+
+			this.fire('drag');
+		};
+	},
+
+	_onKeyDown: function(event) {
+		var keymap = this.options.keymap,
+			handlerName = keymap[event.which];
+
+		if (handlerName !== undefined) {
+			this[handlerName].call(this);
+		}
+	},	
+
+	_toggleRotateDistort: function() {
+		var map = this._overlay._map;
+
+		map.removeLayer(this._handles[this._mode]);
+
+		/* Switch mode. */
+		if (this._mode === 'rotate') { this._mode = 'distort'; }
+		else { this._mode = 'rotate'; }
+
+		map.addLayer(this._handles[this._mode]);
+	},
+
+	_toggleTransparency: function() {
+		var image = this._overlay._image,
+			opacity;
+
+		this._transparent = !this._transparent;
+		opacity = this._transparent ? this.options.opacity : 1;
+
+		L.DomUtil.setOpacity(image, opacity);
+		image.setAttribute('opacity', opacity);
+	},
+
+	_toggleOutline: function() {
+		var image = this._overlay._image,
+			opacity, outline;
+
+		this._outlined = !this._outlined;
+		opacity = this._outlined ? this.options.opacity / 2 : 1;
+		outline = this._outlined ? this.options.outline : 'none';
+
+		L.DomUtil.setOpacity(image, opacity);
+		image.setAttribute('opacity', opacity);
+
+		image.style.outline = outline;
+	},
+
+	_toggleLock: function() {
+		var map = this._overlay._map;
+
+		map.removeLayer(this._handles[this._mode]);
+		/* Switch mode. */
+		if (this._mode === 'lock') { 
+			this._mode = 'distort'; 
+			this._enableDragging();
+		} else {
+			this._mode = 'lock';
+			if (this.dragging) { this.dragging.disable(); }
+			delete this.dragging;
+		}
+
+		map.addLayer(this._handles[this._mode]);
+	},
+
+	_hideToolbar: function() {
+		var map = this._overlay._map;
+		if (this.toolbar) {
+			map.removeLayer(this.toolbar);
+			this.toolbar = false;
+		}
+	},
+
+	_showToolbar: function(event) {
+		var overlay = this._overlay,
+			map = overlay._map;
+
+		/* Ensure that there is only ever one toolbar attached to each image. */
+		this._hideToolbar();
+		
+		var point;
+		if (event.containerPoint) { point = event.containerPoint; }
+		else { point = event.target._dragStartTarget._leaflet_pos; }
+		var raised_point = map.containerPointToLatLng(new L.Point(point.x,point.y-20));
+		this.toolbar = new L.DistortableImage.EditToolbar(raised_point).addTo(map, overlay);
+		overlay.fire('toolbar:created');
+	},
+
+	toggleIsolate: function() {
+		// this.isolated = !this.isolated;
+		// if (this.isolated) {
+		// 	$.each($L.images,function(i,img) {
+		// 		img.hidden = false;
+		// 		img.setOpacity(1);
+		// 	});
+		// } else {
+		// 	$.each($L.images,function(i,img) {
+		// 		img.hidden = true;
+		// 		img.setOpacity(0);
+		// 	});
+		// }
+		// this.hidden = false;
+		// this.setOpacity(1);
+	}
+
+});
+
+L.DistortableImageOverlay.addInitHook(function() {
+	this.editing = new L.DistortableImage.Edit(this);
+
+	if (this.options.editable) {
+		L.DomEvent.on(this._image, 'load', this.editing.enable, this.editing);
+	}
+
+	this.on('remove', function () {
+		if (this.editing) { this.editing.disable(); }
+	});	
+});
+
+L.DomUtil = L.extend(L.DomUtil, {
+    getMatrixString: function (m) {
+        var is3d = L.Browser.webkit3d || L.Browser.gecko3d,
+
+            /*
+             * Since matrix3d takes a 4*4 matrix, we add in an empty row and column, which act as the identity on the z-axis.
+             * See:
+             *     http://franklinta.com/2014/09/08/computing-css-matrix3d-transforms/
+             *     https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function#M.C3.B6bius'_homogeneous_coordinates_in_projective_geometry
+             */
+            matrix = [
+                m[0], m[3], 0, m[6],
+                m[1], m[4], 0, m[7],
+                0, 0, 1, 0,
+                m[2], m[5], 0, m[8]
+            ],
+
+            str = is3d ? 'matrix3d(' + matrix.join(',') + ')' : '';
+
+        if (!is3d) {
+            console.log('Your browser must support 3D CSS transforms in order to use DistortableImageOverlay.');
+        }
+
+        return str;
+    },
+
+    getRotateString: function (angle, units) {
+        var is3d = L.Browser.webkit3d || L.Browser.gecko3d,
+            open = 'rotate' + (is3d ? '3d' : '') + '(',
+            rotateString = (is3d ? '0, 0, 1, ' : '') + angle + units;
+
+        return open + rotateString + ')';
+    }
+});
+
+L.Map.include({
+    _newLayerPointToLatLng: function (point, newZoom, newCenter) {
+        var topLeft = L.Map.prototype._getNewTopLeftPoint.call(this, newCenter, newZoom)
+            .add(L.Map.prototype._getMapPanePos.call(this));
+        return this.unproject(point.add(topLeft), newZoom);
+    }
+});
+L.MatrixUtil = {
+
+    // Compute the adjugate of m
+    adj: function (m) {
+        return [
+            m[4] * m[8] - m[5] * m[7], m[2] * m[7] - m[1] * m[8], m[1] * m[5] - m[2] * m[4],
+            m[5] * m[6] - m[3] * m[8], m[0] * m[8] - m[2] * m[6], m[2] * m[3] - m[0] * m[5],
+            m[3] * m[7] - m[4] * m[6], m[1] * m[6] - m[0] * m[7], m[0] * m[4] - m[1] * m[3]
+        ];
+    },
+
+    // multiply two 3*3 matrices
+    multmm: function (a, b) {
+        var c = [],
+            i;
+
+        for (i = 0; i < 3; i++) {
+            for (var j = 0; j < 3; j++) {
+                var cij = 0;
+                for (var k = 0; k < 3; k++) {
+                    cij += a[3 * i + k] * b[3 * k + j];
+                }
+                c[3 * i + j] = cij;
+            }
+        }
+        return c;
+    },
+
+    // multiply a 3*3 matrix and a 3-vector
+    multmv: function (m, v) {
+        return [
+            m[0] * v[0] + m[1] * v[1] + m[2] * v[2],
+            m[3] * v[0] + m[4] * v[1] + m[5] * v[2],
+            m[6] * v[0] + m[7] * v[1] + m[8] * v[2]
+        ];
+    },
+
+    // multiply a scalar and a 3*3 matrix
+    multsm: function (s, m) {
+        var matrix = [];
+
+        for (var i = 0, l = m.length; i < l; i++) {
+            matrix.push(s * m[i]);
+        }
+
+        return matrix;
+    },
+
+    basisToPoints: function (x1, y1, x2, y2, x3, y3, x4, y4) {
+        var m = [
+                x1, x2, x3,
+                y1, y2, y3,
+                1, 1, 1
+            ],
+            v = L.MatrixUtil.multmv(L.MatrixUtil.adj(m), [x4, y4, 1]);
+
+        return L.MatrixUtil.multmm(m, [
+            v[0], 0, 0,
+            0, v[1], 0,
+            0, 0, v[2]
+        ]);
+    },
+
+
+    project: function (m, x, y) {
+        var v = L.MatrixUtil.multmv(m, [x, y, 1]);
+        return [v[0] / v[2], v[1] / v[2]];
+    },
+
+    general2DProjection: function (x1s, y1s, x1d, y1d,
+                                   x2s, y2s, x2d, y2d,
+                                   x3s, y3s, x3d, y3d,
+                                   x4s, y4s, x4d, y4d) {
+        var s = L.MatrixUtil.basisToPoints(x1s, y1s, x2s, y2s, x3s, y3s, x4s, y4s),
+            d = L.MatrixUtil.basisToPoints(x1d, y1d, x2d, y2d, x3d, y3d, x4d, y4d),
+            m = L.MatrixUtil.multmm(d, L.MatrixUtil.adj(s));
+
+        /*
+         *	Normalize to the unique matrix with m[8] == 1.
+         * 	See: http://franklinta.com/2014/09/08/computing-css-matrix3d-transforms/
+         */
+        return L.MatrixUtil.multsm(1 / m[8], m);
+    }
+};
+L.EditHandle = L.Marker.extend({
+    initialize: function (overlay, corner, options) {
+        var markerOptions,
+            latlng = overlay._corners[corner];
+
+        L.setOptions(this, options);
+
+        this._handled = overlay;
+        this._corner = corner;
+
+        markerOptions = {
+            draggable: true,
+            zIndexOffset: 10
+        };
+
+        if (options && options.hasOwnProperty('draggable')) {
+            markerOptions.draggable = options.draggable;
+        }
+
+        L.Marker.prototype.initialize.call(this, latlng, markerOptions);
+    },
+
+    onAdd: function (map) {
+        L.Marker.prototype.onAdd.call(this, map);
+        this._bindListeners();
+
+        this.updateHandle();
+    },
+
+    onRemove: function (map) {
+        this._unbindListeners();
+        L.Marker.prototype.onRemove.call(this, map);
+    },
+
+    _onHandleDragStart: function () {
+        this._handled.fire('editstart');
+    },
+
+    _onHandleDragEnd: function () {
+        this._fireEdit();
+    },
+
+    _fireEdit: function () {
+        this._handled.edited = true;
+        this._handled.fire('edit');
+    },
+
+    _bindListeners: function () {
+        this.on({
+            'dragstart': this._onHandleDragStart,
+            'drag': this._onHandleDrag,
+            'dragend': this._onHandleDragEnd
+        }, this);
+
+        this._handled._map.on('zoomend', this.updateHandle, this);
+
+        this._handled.on('update', this.updateHandle, this);
+    },
+
+    _unbindListeners: function () {
+        this.off({
+            'dragstart': this._onHandleDragStart,
+            'drag': this._onHandleDrag,
+            'dragend': this._onHandleDragEnd
+        }, this);
+
+        this._handled._map.off('zoomend', this.updateHandle, this);
+        this._handled.off('update', this.updateHandle, this);
+    }
+});
+
+L.LockHandle = L.EditHandle.extend({
+    options: {
+        TYPE: 'lock',
+        icon: new L.Icon({
+                iconUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA3ElEQVR4nM3TMU4CQRSH8d8qJ6AgFia2xksYkj0AhVa2JhRGbfEENJyA3oIjUHkFG42tHUE08QAGC8YwjG8LQsOrdnfm+/Y/7+1WdV3bpQ52ogPBJW6CfUcY4aRcaGXX1xijwjEeMvgJp7jAOd6jBKMEwwDDApYS3DYdoY+f7H6AlwyGt/SiUDDBVSFpF3AXsybBn+TO//qK4EjQEU+hjfvg+YagY9Wws2ijdWMbBdMCfk1pysZuJMy/g48C7mKOTzziEEssmhL0UornDGY9nW+rUU9yQbV3P9PW9QuPNylUonujQAAAAABJRU5ErkJggg%3D%3D',
+                iconSize: [16, 16],
+                iconAnchor: [8, 8]
+            }
+        )
+    },
+
+    /* cannot be dragged */
+    _onHandleDrag: function () {
+    },
+
+    updateHandle: function () {
+        this.setLatLng(this._handled._corners[this._corner]);
+    }
+
+});
+
+L.DistortHandle = L.EditHandle.extend({
+    options: {
+        TYPE: 'distort',
+        icon: new L.Icon({
+                iconUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABH0lEQVR4nKXTvy5EURDH8c8V/SJBr9HzBFiN/7wAzWolIoqloCBRiJ7GvoBd/0IhnsB6hO0pWE+wintOcnKzZMUkN5Mzmd/3zNyZk5XLZf+xvi6xUeyjiU984AVVDBeT+wvnZVxioBCfDN8O1nHbrYIl1IP4HjMYxBBm8RDO11gsAkZQQ4Y9LOAZ7dDGE+ZwEHJqsZ0IqISb73Bc7DOxQzyGSiopYC34s1/E0U5TTQSMBf/aA6CZaiIgC77TAyDmZCmgFfxED4CY00oB9eC3egBsp5oIOMeXfJF2fxFXMS8f70UKeJNvWAcnaGAKJfl4p+XbdxRyNoJGVnhMK/JVLv1QQTtcdBMDxbfQwDg2sSofVUf+w65C2e+poFjBn+0bdEY280EXr3wAAAAASUVORK5CYII%3D',
+                iconSize: [16, 16],
+                iconAnchor: [8, 8]
+            }
+        )
+    },
+
+    updateHandle: function () {
+        this.setLatLng(this._handled._corners[this._corner]);
+    },
+
+    _onHandleDrag: function () {
+        this._handled._updateCorner(this._corner, this.getLatLng());
+
+        this._handled.fire('update');
+    }
+});
+
+L.RotateHandle = L.EditHandle.extend({
+    options: {
+        TYPE: 'rotate',
+        icon: new L.Icon({
+                iconUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABG0lEQVR4nKXSvS5EURTF8d8V/SBBr9F7A4zGNy9AQytRKIaCgkQhehrzAmZ8hUI8wYxHmJ7CjCcYxT0nublmJlecZueerPXf69y9k0a57D9nqMfdJI7QRBtfaKCC8bw4ySVYww1G+jRsYwsPvRKsohbMT5jHKMawgOfwfYeVPGACVSQ4xDLe0AldX7GI46CpxudEwE7o/IizPvHhBC8hyU4WsBnq5QBzPBdZTwRMhfpeANDMeiIgCbVbABA1SRbQCnWmACBqWllALdS9AoD9rCcCrvAtXaSDAeYKlqTjvc4CPqQb1sU56phFSTreOen2nQbNdvD8WuV16SqX+iTohEb38WI4J6hjGrvYkI6qK/1htyH2Z9aQT/Dn8wMV5jnxJDAcbAAAAABJRU5ErkJggg%3D%3D',
+                iconSize: [16, 16],
+                iconAnchor: [8, 8]
+            }
+        )
+    },
+
+    _onHandleDrag: function () {
+        var overlay = this._handled,
+            formerLatLng = this._handled._corners[this._corner],
+            newLatLng = this.getLatLng(),
+
+            angle = this._calculateAngle(formerLatLng, newLatLng),
+            scale = this._calculateScalingFactor(formerLatLng, newLatLng);
+
+        overlay.editing._rotateBy(angle);
+        overlay.editing._scaleBy(scale);
+
+        overlay.fire('update');
+    },
+
+    updateHandle: function () {
+        this.setLatLng(this._handled._corners[this._corner]);
+    },
+
+    /* Takes two latlngs and calculates the angle between them. */
+    _calculateAngle: function (latlngA, latlngB) {
+        var map = this._handled._map,
+
+            centerPoint = map.latLngToLayerPoint(this._handled.getCenter()),
+            formerPoint = map.latLngToLayerPoint(latlngA),
+            newPoint = map.latLngToLayerPoint(latlngB),
+
+            initialAngle = Math.atan2(centerPoint.y - formerPoint.y, centerPoint.x - formerPoint.x),
+            newAngle = Math.atan2(centerPoint.y - newPoint.y, centerPoint.x - newPoint.x);
+
+        return newAngle - initialAngle;
+    },
+
+    /* Takes two latlngs and calculates the scaling difference. */
+    _calculateScalingFactor: function (latlngA, latlngB) {
+        var map = this._handled._map,
+
+            centerPoint = map.latLngToLayerPoint(this._handled.getCenter()),
+            formerPoint = map.latLngToLayerPoint(latlngA),
+            newPoint = map.latLngToLayerPoint(latlngB),
+
+            formerRadiusSquared = this._d2(centerPoint, formerPoint),
+            newRadiusSquared = this._d2(centerPoint, newPoint);
+
+        return Math.sqrt(newRadiusSquared / formerRadiusSquared);
+    },
+
+    /* Distance between two points in cartesian space, squared (distance formula). */
+    _d2: function (a, b) {
+        var dx = a.x - b.x,
+            dy = a.y - b.y;
+
+        return Math.pow(dx, 2) + Math.pow(dy, 2);
+    }
+});
+
+/*
+ * @class ImageOverlay
+ * @aka L.ImageOverlay
+ * @inherits Interactive layer
+ *
+ * Used to load and display a single image over specific bounds of the map. Extends `Layer`.
+ *
+ * @example
+ *
+ * ```js
+ * var imageUrl = 'http://www.lib.utexas.edu/maps/historical/newark_nj_1922.jpg',
+ * 	imageBounds = [[40.712216, -74.22655], [40.773941, -74.12544]];
+ * L.imageOverlay(imageUrl, imageBounds).addTo(map);
+ * ```
+ */
+
+L.CanvasOverlay = L.Class.extend({
+    includes: L.Mixin.Events,
+
+    // @section
+    // @aka ImageOverlay options
+    options: {
+        // @option opacity: Number = 1.0
+        // The opacity of the image overlay.
+        opacity: 1,
+
+        // @option alt: String = ''
+        // Text for the `alt` attribute of the image (useful for accessibility).
+        alt: '',
+
+        // @option interactive: Boolean = false
+        // If `true`, the image overlay will emit [mouse events](#interactive-layer) when clicked or hovered.
+        interactive: false,
+
+        // @option attribution: String = null
+        // An optional string containing HTML to be shown on the `Attribution control`
+        attribution: null,
+
+        // @option crossOrigin: Boolean = false
+        // If true, the image will have its crossOrigin attribute set to ''. This is needed if you want to access image pixel data.
+        crossOrigin: false
+    },
+
+    initialize: function (width, height, options) {
+        this._canvasWidth = width;
+        this._canvasHeight = height;
+        L.setOptions(this, options);
+
+        if (options.corners) {
+            this._corners = options.corners;
+        }
+    },
+
+    onAdd: function (map) {
+        this._map = map;
+        if (!this._canvas) {
+            this._initCanvas();
+            if (this.options.opacity < 1) {
+                this._updateOpacity();
+            }
+        }
+
+        if (!this._events) {
+            this._initEvents();
+        }
+
+        map._panes.overlayPane.appendChild(this._canvas);
+
+        map.on('viewreset', this._reset, this);
+
+        if (map.options.zoomAnimation && L.Browser.any3d) {
+            map.on('zoomanim', this._animateZoom, this);
+        }
+
+        if (!this._corners) {
+            this._initCanvasDimensions(map);
+        }
+
+        this._reset();
+        this.fire('add');
+    },
+
+    resetTransformation: function () {
+        var map = this._map;
+        if (map) {
+            this._initCanvasDimensions(map);
+            this._reset();
+        }
+    },
+
+    _initCanvasDimensions: function (map) {
+        var aspectRatio = parseInt(this._canvas.width) / parseInt(this._canvas.height);
+
+        var canvasHeight = this._canvas.height;
+        var canvasWidth = parseInt(aspectRatio * canvasHeight);
+
+        var center = map.latLngToContainerPoint(map.getCenter());
+        var offset = new L.Point(canvasWidth, canvasHeight).divideBy(2);
+
+        this._corners = [
+            map.containerPointToLatLng(center.subtract(offset)),
+            map.containerPointToLatLng(center.add(new L.Point(offset.x, -offset.y))),
+            map.containerPointToLatLng(center.add(new L.Point(-offset.x, offset.y))),
+            map.containerPointToLatLng(center.add(offset))
+        ];
+    },
+
+    _initEvents: function () {
+        this._events = ['click'];
+
+        for (var i = 0, l = this._events.length; i < l; i++) {
+            L.DomEvent.on(this._canvas, this._events[i], this._fireMouseEvent, this);
+        }
+    },
+
+    _fireMouseEvent: function (event) {
+        if (!this.hasEventListeners(event.type)) {
+            return;
+        }
+
+        var map = this._map,
+            containerPoint = map.mouseEventToContainerPoint(event),
+            layerPoint = map.containerPointToLayerPoint(containerPoint),
+            latlng = map.layerPointToLatLng(layerPoint);
+
+        this.fire(event.type, {
+            latlng: latlng,
+            layerPoint: layerPoint,
+            containerPoint: containerPoint,
+            originalEvent: event
+        });
+    },
+
+    addTo: function (map) {
+        map.addLayer(this);
+        return this;
+    },
+
+    onRemove: function () {
+        this._map._panes.overlayPane.removeChild(this._canvas);
+        this.editing.removeHooks()
+        if (this.options.interactive) {
+            this.removeInteractiveTarget(this._canvas);
+        }
+    },
+
+    // @method setOpacity(opacity: Number): this
+    // Sets the opacity of the overlay.
+    setOpacity: function (opacity) {
+        this.options.opacity = opacity;
+
+        if (this._canvas) {
+            this._updateOpacity();
+        }
+        return this;
+    },
+
+    setStyle: function (styleOpts) {
+        if (styleOpts.opacity) {
+            this.setOpacity(styleOpts.opacity);
+        }
+        return this;
+    },
+
+    // @method bringToFront(): this
+    // Brings the layer to the top of all overlays.
+    bringToFront: function () {
+        if (this._map) {
+            L.DomUtil.toFront(this._canvas);
+        }
+        return this;
+    },
+
+    // @method bringToBack(): this
+    // Brings the layer to the bottom of all overlays.
+    bringToBack: function () {
+        if (this._map) {
+            L.DomUtil.toBack(this._canvas);
+        }
+        return this;
+    },
+
+    getAttribution: function () {
+        return this.options.attribution;
+    },
+
+    getEvents: function () {
+        var events = {
+            zoom: this._reset,
+            viewreset: this._reset
+        };
+
+        if (this._zoomAnimated) {
+            events.zoomanim = this._animateZoom;
+        }
+
+        return events;
+    },
+
+    getBounds: function () {
+        var corners = this.getCorners(),
+            southWest = corners[2],
+            northEast = corners[1];
+        return L.latLngBounds(southWest, northEast);
+    },
+
+    getElement: function () {
+        return this._canvas;
+    },
+
+    _initCanvas: function () {
+        var canvas = this._canvas = L.DomUtil.create('canvas',
+            'leaflet-image-layer ' + (this._zoomAnimated ? 'leaflet-zoom-animated' : ''));
+
+        canvas.width = this._canvasWidth;
+        canvas.height = this._canvasHeight;
+
+        L.DomUtil.addClass(this._canvas, 'leaflet-zoom-animated');
+
+        canvas.onselectstart = L.Util.falseFn;
+        canvas.onmousemove = L.Util.falseFn;
+
+        // canvas.onload = L.bind(this.fire, this, 'load');
+        this.fire('load');
+    },
+
+    _updateCorner: function (corner, latlng) {
+        this._corners[corner] = latlng;
+        this._reset();
+    },
+
+    _reset: function () {
+        var map = this._map,
+            canvas = this._canvas,
+            latLngToLayerPoint = L.bind(map.latLngToLayerPoint, map),
+
+            transformMatrix = this._calculateProjectiveTransform(latLngToLayerPoint),
+            topLeft = latLngToLayerPoint(this._corners[0]),
+
+            warp = L.DomUtil.getMatrixString(transformMatrix),
+            translation = L.DomUtil.getTranslateString(topLeft);
+
+        /* See L.DomUtil.setPosition. Mainly for the purposes of L.Draggable. */
+        canvas._leaflet_pos = topLeft;
+
+        canvas.style[L.DomUtil.TRANSFORM] = [translation, warp].join(' ');
+
+        /* Set origin to the upper-left corner rather than the center of the image, which is the default. */
+        canvas.style[L.DomUtil.TRANSFORM + '-origin'] = "0 0 0";
+    },
+
+    _updateOpacity: function () {
+        L.DomUtil.setOpacity(this._canvas, this.options.opacity);
+    },
+
+    /*
+     * Calculates the transform string that will be correct *at the end* of zooming.
+     * Leaflet then generates a CSS3 animation between the current transform and
+     *		 future transform which makes the transition appear smooth.
+     */
+    _animateZoom: function (event) {
+        var map = this._map,
+            canvas = this._canvas,
+            latLngToNewLayerPoint = function (latlng) {
+                return map._latLngToNewLayerPoint(latlng, event.zoom, event.center);
+            },
+
+            transformMatrix = this._calculateProjectiveTransform(latLngToNewLayerPoint),
+            topLeft = latLngToNewLayerPoint(this._corners[0]),
+
+            warp = L.DomUtil.getMatrixString(transformMatrix),
+            translation = L.DomUtil.getTranslateString(topLeft);
+
+        /* See L.DomUtil.setPosition. Mainly for the purposes of L.Draggable. */
+        canvas._leaflet_pos = topLeft;
+
+        if (!L.Browser.gecko) {
+            canvas.style[L.DomUtil.TRANSFORM] = [translation, warp].join(' ');
+        }
+    },
+
+    getCorners: function () {
+        return this._corners;
+    },
+
+    /*
+     * Calculates the centroid of the image.
+     *		 See http://stackoverflow.com/questions/6149175/logical-question-given-corners-find-center-of-quadrilateral
+     */
+    getCenter: function (ll2c, c2ll) {
+        var map = this._map,
+            latLngToCartesian = ll2c ? ll2c : map.latLngToLayerPoint,
+            cartesianToLatLng = c2ll ? c2ll : map.layerPointToLatLng,
+            nw = latLngToCartesian.call(map, this._corners[0]),
+            ne = latLngToCartesian.call(map, this._corners[1]),
+            se = latLngToCartesian.call(map, this._corners[2]),
+            sw = latLngToCartesian.call(map, this._corners[3]),
+
+            nmid = nw.add(ne.subtract(nw).divideBy(2)),
+            smid = sw.add(se.subtract(sw).divideBy(2));
+
+        return cartesianToLatLng.call(map, nmid.add(smid.subtract(nmid).divideBy(2)));
+    },
+
+    _calculateProjectiveTransform: function (latLngToCartesian) {
+        /* Setting reasonable but made-up image defaults
+         * allow us to place images on the map before
+         * they've finished downloading. */
+        var offset = latLngToCartesian(this._corners[0]),
+            w = this._canvas.offsetWidth || 500,
+            h = this._canvas.offsetHeight || 375,
+            c = [],
+            j;
+        /* Convert corners to container points (i.e. cartesian coordinates). */
+        for (j = 0; j < this._corners.length; j++) {
+            c.push(latLngToCartesian(this._corners[j])._subtract(offset));
+        }
+
+        /*
+         * This matrix describes the action of the CSS transform on each corner of the image.
+         * It maps from the coordinate system centered at the upper left corner of the image
+         *		 to the region bounded by the latlngs in this._corners.
+         * For example:
+         *		 0, 0, c[0].x, c[0].y
+         *		 says that the upper-left corner of the image maps to the first latlng in this._corners.
+         */
+        return L.MatrixUtil.general2DProjection(
+            0, 0, c[0].x, c[0].y,
+            w, 0, c[1].x, c[1].y,
+            0, h, c[2].x, c[2].y,
+            w, h, c[3].x, c[3].y
+        );
+    }
+});
+
+L.DistortableCanvas = L.DistortableCanvas || {};
+
+var EditOverlayAction = L.ToolbarAction.extend({
+        initialize: function (map, overlay, options) {
+            this._overlay = overlay;
+            this._map = map;
+
+            L.ToolbarAction.prototype.initialize.call(this, options);
+        }
+    }),
+
+    ToggleTransparency = EditOverlayAction.extend({
+        options: {
+            toolbarIcon: {
+                html: '<span class="fa fa-adjust"></span>',
+                tooltip: 'Toggle Image Transparency',
+                title: 'Toggle Image Transparency'
+            }
+        },
+
+        addHooks: function () {
+            var editing = this._overlay.editing;
+
+            editing._toggleTransparency();
+            this.disable();
+        }
+    }),
+
+    ToggleOutline = EditOverlayAction.extend({
+        options: {
+            toolbarIcon: {
+                html: '<span class="fa fa-square-o"></span>',
+                tooltip: 'Toggle Image Outline',
+                title: 'Toggle Image Outline'
+            }
+        },
+
+        addHooks: function () {
+            var editing = this._overlay.editing;
+
+            editing._toggleOutline();
+            this.disable();
+        }
+    }),
+
+    RemoveOverlay = EditOverlayAction.extend({
+        options: {
+            toolbarIcon: {
+                html: '<span class="fa fa-trash"></span>',
+                tooltip: 'Delete image',
+                title: 'Delete image'
+            }
+        },
+
+        addHooks: function () {
+            var map = this._map;
+
+            map.removeLayer(this._overlay);
+            this._overlay.fire('delete');
+            this.disable();
+        }
+    }),
+
+    ToggleEditable = EditOverlayAction.extend({
+        options: {
+            toolbarIcon: {
+                html: '<span class="fa fa-lock"></span>',
+                tooltip: 'Lock / Unlock editing',
+                title: 'Lock / Unlock editing'
+            }
+        },
+
+        addHooks: function () {
+            var editing = this._overlay.editing;
+
+            editing._toggleLock();
+            this.disable();
+        }
+    }),
+
+    ToggleRotateDistort = EditOverlayAction.extend({
+        initialize: function (map, overlay, options) {
+            var icon = overlay.editing._mode === 'rotate' ? 'image' : 'rotate-left';
+
+            options = options || {};
+            options.toolbarIcon = {
+                html: '<span class="fa fa-' + icon + '"></span>',
+                tooltip: 'Rotate',
+                title: 'Rotate'
+            };
+
+            EditOverlayAction.prototype.initialize.call(this, map, overlay, options);
+        },
+
+        addHooks: function () {
+            var editing = this._overlay.editing;
+
+            editing._toggleRotateDistort();
+            this.disable();
+        }
+    });
+
+L.DistortableCanvas.EditToolbar = L.Toolbar.Popup.extend({
+    options: {
+        actions: [
+            ToggleTransparency,
+            RemoveOverlay,
+            ToggleOutline,
+            ToggleEditable,
+            ToggleRotateDistort
+        ]
+    },
+
+    /* Remove the toolbar after each action. */
+    _getActionConstructor: function (Action) {
+        var A = Action.extend({
+            removeHooks: function () {
+                var map = this._map;
+
+                map.removeLayer(this.toolbar);
+            }
+        });
+
+        return L.Toolbar.prototype._getActionConstructor.call(this, A);
+    }
+});
+
+L.DistortableCanvas = L.DistortableCanvas || {};
+
+L.DistortableCanvas.Edit = L.Handler.extend({
+    options: {
+        opacity: 0.7,
+        outline: '1px solid red',
+        keymap: {
+            68: '_toggleRotateDistort', // d
+            73: '_toggleIsolate', // i
+            76: '_toggleLock', // l
+            79: '_toggleOutline', // o
+            82: '_toggleRotateDistort', // r
+            84: '_toggleTransparency', // t
+        }
+    },
+
+    initialize: function (overlay) {
+        this._overlay = overlay;
+
+        /* Interaction modes. */
+        this._mode = this._overlay.options.mode || 'distort';
+        this._transparent = false;
+        this._outlined = false;
+    },
+
+    /* Run on image seletion. */
+    addHooks: function () {
+        var overlay = this._overlay,
+            map = overlay._map,
+            i;
+
+        this._lockHandles = new L.LayerGroup();
+        for (i = 0; i < 4; i++) {
+            this._lockHandles.addLayer(new L.LockHandle(overlay, i, {draggable: false}));
+        }
+
+        this._distortHandles = new L.LayerGroup();
+        for (i = 0; i < 4; i++) {
+            this._distortHandles.addLayer(new L.DistortHandle(overlay, i));
+        }
+
+        this._rotateHandles = new L.LayerGroup();
+        for (i = 0; i < 4; i++) {
+            this._rotateHandles.addLayer(new L.RotateHandle(overlay, i));
+        }
+
+        this._handles = {
+            'lock': this._lockHandles,
+            'distort': this._distortHandles,
+            'rotate': this._rotateHandles
+        };
+
+        if (this._mode === 'lock') {
+            map.addLayer(this._lockHandles);
+        } else {
+            this._mode = 'distort';
+            map.addLayer(this._distortHandles);
+            this._enableDragging();
+        }
+
+        //overlay.on('click', this._showToolbar, this);
+        // L.DomEvent.on(overlay, 'click', this._showToolbar, this);
+
+        /* Enable hotkeys. */
+        // L.DomEvent.on(window, 'keydown', this._onKeyDown, this);
+
+        overlay.fire('select');
+    },
+
+    /* Run on image deseletion. */
+    removeHooks: function () {
+        var overlay = this._overlay,
+            map = overlay._map;
+
+        // L.DomEvent.off(window, 'keydown', this._onKeyDown, this);
+
+        overlay.off('click', this._showToolbar, this);
+
+        // First, check if dragging exists;
+        // it may be off due to locking
+        if (this.dragging) {
+            this.dragging.disable();
+        }
+        delete this.dragging;
+
+        map.removeLayer(this._handles[this._mode]);
+
+        /* Disable hotkeys. */
+        L.DomEvent.off(window, 'keydown', this._onKeyDown, this);
+
+        overlay.fire('deselect');
+    },
+
+    _rotateBy: function (angle) {
+        var overlay = this._overlay,
+            map = overlay._map,
+            center = map.latLngToLayerPoint(overlay.getCenter()),
+            i, p, q;
+
+        for (i = 0; i < 4; i++) {
+            p = map.latLngToLayerPoint(overlay._corners[i]).subtract(center);
+            q = new L.Point(
+                Math.cos(angle) * p.x - Math.sin(angle) * p.y,
+                Math.sin(angle) * p.x + Math.cos(angle) * p.y
+            );
+            overlay._corners[i] = map.layerPointToLatLng(q.add(center));
+        }
+
+        overlay._reset();
+    },
+
+    _scaleBy: function (scale) {
+        var overlay = this._overlay,
+            map = overlay._map,
+            center = map.latLngToLayerPoint(overlay.getCenter()),
+            i, p;
+
+        for (i = 0; i < 4; i++) {
+            p = map.latLngToLayerPoint(overlay._corners[i])
+                .subtract(center)
+                .multiplyBy(scale)
+                .add(center);
+            overlay._corners[i] = map.layerPointToLatLng(p);
+        }
+
+        overlay._reset();
+    },
+
+    _enableDragging: function () {
+        var overlay = this._overlay,
+            map = overlay._map;
+
+        this.dragging = new L.Draggable(overlay._canvas);
+        this.dragging.enable();
+
+        /* Hide toolbars while dragging; click will re-show it */
+        // this.dragging.on('dragstart', this._hideToolbar, this);
+
+        /*
+         * Adjust default behavior of L.Draggable.
+         * By default, L.Draggable overwrites the CSS3 distort transform
+         * that we want when it calls L.DomUtil.setPosition.
+         */
+        this.dragging._updatePosition = function () {
+            var delta = this._newPos.subtract(map.latLngToLayerPoint(overlay._corners[0])),
+                currentPoint, i;
+
+            this.fire('predrag');
+
+            for (i = 0; i < 4; i++) {
+                currentPoint = map.latLngToLayerPoint(overlay._corners[i]);
+                overlay._corners[i] = map.layerPointToLatLng(currentPoint.add(delta));
+            }
+            overlay._reset();
+            overlay.fire('update');
+
+            this.fire('drag');
+        };
+    },
+
+    _onKeyDown: function (event) {
+        var keymap = this.options.keymap,
+            handlerName = keymap[event.which];
+
+        if (handlerName !== undefined) {
+            this[handlerName].call(this);
+        }
+    },
+
+    _toggleRotateDistort: function () {
+        var map = this._overlay._map;
+
+        map.removeLayer(this._handles[this._mode]);
+
+        /* Switch mode. */
+        if (this._mode === 'rotate') {
+            this._mode = 'distort';
+        }
+        else {
+            this._mode = 'rotate';
+        }
+
+        map.addLayer(this._handles[this._mode]);
+    },
+
+    _toggleTransparency: function () {
+        var canvas = this._overlay._canvas,
+            opacity;
+
+        this._transparent = !this._transparent;
+        opacity = this._transparent ? this.options.opacity : 1;
+
+        L.DomUtil.setOpacity(canvas, opacity);
+        canvas.setAttribute('opacity', opacity);
+    },
+
+    _toggleOutline: function () {
+        var canvas = this._overlay._canvas,
+            opacity, outline;
+
+        this._outlined = !this._outlined;
+        opacity = this._outlined ? this.options.opacity / 2 : 1;
+        outline = this._outlined ? this.options.outline : 'none';
+
+        L.DomUtil.setOpacity(canvas, opacity);
+        canvas.setAttribute('opacity', opacity);
+
+        canvas.style.outline = outline;
+    },
+
+    _toggleLock: function () {
+        var map = this._overlay._map;
+
+        map.removeLayer(this._handles[this._mode]);
+        /* Switch mode. */
+        if (this._mode === 'lock') {
+            this._mode = 'distort';
+            this._enableDragging();
+        } else {
+            this._mode = 'lock';
+            if (this.dragging) {
+                this.dragging.disable();
+            }
+            delete this.dragging;
+        }
+
+        map.addLayer(this._handles[this._mode]);
+    },
+
+    _hideToolbar: function () {
+        var map = this._overlay._map;
+        if (this.toolbar) {
+            map.removeLayer(this.toolbar);
+            this.toolbar = false;
+        }
+    },
+
+    _showToolbar: function (event) {
+        var overlay = this._overlay,
+            map = overlay._map;
+
+        /* Ensure that there is only ever one toolbar attached to each image. */
+        this._hideToolbar();
+
+        var point;
+        if (event.containerPoint) {
+            point = event.containerPoint;
+        }
+        else {
+            point = event.target._dragStartTarget._leaflet_pos;
+        }
+        var raised_point = map.containerPointToLatLng(new L.Point(point.x, point.y - 20));
+        this.toolbar = new L.DistortableCanvas.EditToolbar(raised_point).addTo(map, overlay);
+        overlay.fire('toolbar:created');
+    },
+
+    toggleIsolate: function () {
+        // this.isolated = !this.isolated;
+        // if (this.isolated) {
+        // 	$.each($L.images,function(i,img) {
+        // 		img.hidden = false;
+        // 		img.setOpacity(1);
+        // 	});
+        // } else {
+        // 	$.each($L.images,function(i,img) {
+        // 		img.hidden = true;
+        // 		img.setOpacity(0);
+        // 	});
+        // }
+        // this.hidden = false;
+        // this.setOpacity(1);
+    }
+
+});
+
+L.CanvasOverlay.addInitHook(function () {
+    this.editing = new L.DistortableCanvas.Edit(this);
+
+    if (this.options.editable) {
+        L.DomEvent.on(this._canvas, 'load', this.editing.enable, this.editing);
+    }
+
+    this.on('remove', function () {
+        if (this.editing) {
+            this.editing.disable();
+        }
+    });
+});
+
+/*
+ * @class ImageOverlay
+ * @aka L.ImageOverlay
+ * @inherits Interactive layer
+ *
+ * Used to load and display a single image over specific bounds of the map. Extends `Layer`.
+ *
+ * @example
+ *
+ * ```js
+ * var imageUrl = 'http://www.lib.utexas.edu/maps/historical/newark_nj_1922.jpg',
+ * 	imageBounds = [[40.712216, -74.22655], [40.773941, -74.12544]];
+ * L.imageOverlay(imageUrl, imageBounds).addTo(map);
+ * ```
+ */
+
+L.DistortableVideo = L.CanvasOverlay.extend({
+    options: {},
+    _video: null,
+
+    initialize: function (url, width, height, fps, options) {
+        this._url = url;
+        this._fps = fps;
+        L.CanvasOverlay.prototype.initialize.call(this, width, height, options);
+    },
+
+    onAdd: function (map) {
+        L.CanvasOverlay.prototype.onAdd.call(this, map);
+
+        if (!this._video) {
+            this._initVideo();
+        }
+        document.body.appendChild(this._video);
+        this._video.play();
+        this._initRendering();
+    },
+
+    _initVideo: function () {
+        var video = this._video = L.DomUtil.create('video', 'hide');
+        video.autoplay = true;
+        video.loop = true;
+        video.muted = true;
+        var source = this._source = L.DomUtil.create('source');
+        source.src = this._url;
+        video.appendChild(source);
+    },
+
+    _initRendering: function () {
+        this._video.addEventListener('play', this._playHandler.bind(this), 0);
+    },
+
+    _playHandler: function () {
+        var $this = this._video,
+            canvas = this._canvas,
+            ctx = canvas.getContext('2d');
+
+        (function loop() {
+            if (!$this.paused && !$this.ended) {
+                ctx.drawImage($this, 0, 0);
+                setTimeout(loop, 1000 / $this._fts); // drawing at 30fps
+            }
+        })();
+    },
+
+    onRemove: function () {
+        this._video.removeEventListener('play', this._playHandler, 0);
+        document.body.removeChild(this._video);
+        L.CanvasOverlay.prototype.onRemove.call(this);
+    }
+});
