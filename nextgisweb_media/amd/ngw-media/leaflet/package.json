@@ -18,15 +18,19 @@
     "video"
   ],
   "dependencies": {
-    "leaflet": "1.0.1",
+    "leaflet": "0.7.7",
     "leaflet.toolbar": "git@github.com:Leaflet/Leaflet.toolbar.git#v0.1.2",
-    "leaflet.DistortableImage": "git://github.com/publiclab/Leaflet.DistortableImage.git#v0.0.25"
+    "leaflet.DistortableImage": "git://github.com/publiclab/Leaflet.DistortableImage.git#v0.0.25",
+    "font-awesome": "4.6.3"
   },
   "devDependencies": {
     "grunt": "~0.4.5",
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-contrib-nodeunit": "~0.4.1",
-    "grunt-contrib-uglify": "~0.5.0"
+    "grunt-contrib-uglify": "~0.5.0",
+    "grunt-contrib-cssmin": "git://github.com/gruntjs/grunt-contrib-cssmin.git#v1.0.2",
+    "grunt-contrib-copy": "git://github.com/gruntjs/grunt-contrib-copy#v1.0.0",
+    "grunt-contrib-concat": "^0.5.0"
   },
   "author": "NextGIS",
   "license": "GPL-3.0",
